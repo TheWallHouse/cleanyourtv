@@ -1,3 +1,9 @@
+> **This is CleanYourTV · Nothing edition**, a fork with the Nothing OS look: dot-matrix font, one red,
+> greyscale apps and a day-dots screensaver. What it changes and how to install it: **[NOTHING.md](NOTHING.md)**.
+> Everything below is the original CleanYourTV README.
+>
+> ![Nothing edition](themes/nothing/screenshot.jpg)
+
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
