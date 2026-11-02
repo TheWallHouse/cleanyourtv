@@ -4,11 +4,9 @@ A fork of [CleanYourTV](https://github.com/Gathin23/cleanyourtv) that gives its 
 **Nothing OS**: pure black, a dot-matrix font, one red, white lines. Everything else is CleanYourTV as it is:
 the same launcher, the same debloat lists and tools, no ads, no network permission.
 
-*[Versión en castellano más abajo](#en-castellano).*
+![Home: before and after](docs/nothing/before-after-home.jpg)
 
-![Home](themes/nothing/screenshot.jpg)
-
-![Screensaver](docs/nothing/screensaver.jpg)
+![Screensaver: before and after](docs/nothing/before-after-screensaver.jpg)
 
 ## What changes
 
@@ -47,7 +45,7 @@ is a handful of commits on top: **[see only the changes](https://github.com/Gath
 | `launcher/app/src/main/java/com/gathin/tvhome/DayDots.java` | New: the 24 dots of the day under the screensaver clock |
 | `themes/nothing/` | New: the theme (config, wallpaper, screenshot) |
 | `themes/README.md` | The theme's row and the `nothing_tiles` key |
-| `.github/README.md`, `NOTHING.md`, `docs/nothing/screensaver.jpg` | This documentation (GitHub shows `.github/README.md` on the front page; CleanYourTV's `README.md` is left as it is) |
+| `.github/README.md`, `NOTHING.md`, `docs/nothing/*.jpg` | This documentation (GitHub shows `.github/README.md` on the front page; CleanYourTV's `README.md` is left as it is) |
 
 To bring in what CleanYourTV adds later: `git fetch upstream && git merge upstream/main` on the `nothing` branch.
 
@@ -84,31 +82,3 @@ but were only built, not seen on a TV.
   adjusted; the OFL allows it and the font keeps its licence.
 - Nothing OS is a trademark of Nothing Technology Limited. This fork is not affiliated with Nothing; it only
   borrows the style.
-
----
-
-## En castellano
-
-Un fork de [CleanYourTV](https://github.com/Gathin23/cleanyourtv) que le da al launcher el aspecto de
-**Nothing OS**: negro puro, tipografía de puntos, un solo rojo y líneas blancas. Lo demás es CleanYourTV tal
-cual: el mismo launcher, las mismas listas y herramientas, sin anuncios y sin permiso de internet.
-
-**Qué cambia:**
-
-- **Tipografía de puntos (Doto)** en el reloj, el saludo, la fecha, los botones de arriba y el nombre de la app
-  seleccionada, con los dos puntos del reloj alineados con los números.
-- **Rojo Nothing** en el reloj y en el nombre del saludo. El icono de red sale rojo con conexión y gris sin ella.
-- **Punto rojo** junto al nombre de la app seleccionada.
-- **Apps en blanco y negro** (`nothing_tiles: mono`) o en blanco y negro conservando su rojo (`mono_red`).
-- **Salvapantallas** con el reloj en puntos rojos y la **barra del día**: 24 puntos, con la hora actual
-  latiendo en rojo.
-- **Tema `nothing`** listo para usar, con fondo de puntos y un punto rojo.
-
-**Solo los cambios:** este repo es una copia completa de CleanYourTV, porque el launcher se compila
-entero; lo que añade el fork son unos pocos commits encima. Se ven aquí: **[ver solo los cambios](https://github.com/Gathin23/cleanyourtv/compare/main...TheWallHouse:cleanyourtv:nothing)**, y la
-tabla de archivos tocados está más arriba.
-
-**Instalación:** igual que CleanYourTV, desde la rama `nothing` de este fork (comandos arriba). Tu nombre en
-rojo en el saludo se pone con `"greeting_name"` en el `config.json` del tema.
-
-Probado en una Vestel Cosmos con Android TV 11.

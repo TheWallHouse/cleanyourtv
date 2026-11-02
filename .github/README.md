@@ -3,9 +3,9 @@
 The [CleanYourTV](https://github.com/Gathin23/cleanyourtv) launcher for Android TV with the look of **Nothing OS**:
 dot-matrix font, one red, white lines. No ads, no network.
 
-![Home](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/themes/nothing/screenshot.jpg)
+![Home: before and after](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/before-after-home.jpg)
 
-![Screensaver](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/screensaver.jpg)
+![Screensaver: before and after](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/before-after-screensaver.jpg)
 
 ## What's new
 
@@ -33,9 +33,3 @@ Your name in red: add `"greeting_name": "your name"` to `themes/nothing/config.j
 
 Tested on a Vestel Cosmos, Android TV 11. Built on CleanYourTV (MIT) by Gathin23; Doto by Oliver Lalan (OFL).
 Not affiliated with Nothing.
-
----
-
-**En castellano:** el launcher de CleanYourTV con el estilo de Nothing OS: tipografía de puntos, un solo rojo,
-apps en blanco y negro y un salvapantallas con la barra del día. Se instala con los mismos tres comandos de
-arriba. Todos los detalles están en [NOTHING.md](https://github.com/TheWallHouse/cleanyourtv/blob/nothing/NOTHING.md).
