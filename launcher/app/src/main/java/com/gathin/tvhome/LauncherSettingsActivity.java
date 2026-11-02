@@ -35,6 +35,9 @@ public final class LauncherSettingsActivity extends Activity {
     private static final String[] CLOCK_FORMATS = {"system", "12", "24"};
     private final TextView[] clockChoices = new TextView[CLOCK_FORMATS.length];
     private TextView wallpaperChoice;
+    // Nothing edition: Apps style and Your name, set from the remote.
+    private TextView appsStyleChoice;
+    private TextView yourNameChoice;
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
@@ -125,6 +128,10 @@ public final class LauncherSettingsActivity extends Activity {
         }
         wallpaperChoice = findViewById(R.id.wallpaperChoice);
         wallpaperChoice.setOnClickListener(v -> showWallpaperPicker());
+        appsStyleChoice = findViewById(R.id.appsStyleChoice);
+        appsStyleChoice.setOnClickListener(v -> showAppsStylePicker());
+        yourNameChoice = findViewById(R.id.yourNameChoice);
+        yourNameChoice.setOnClickListener(v -> showYourNameEditor());
         animationsChoice = findViewById(R.id.animationsChoice);
         animationsChoice.setOnClickListener(v -> {
             animations = !animations;
@@ -157,7 +164,8 @@ public final class LauncherSettingsActivity extends Activity {
             if (!hasOnTvChoices()) return;
             choices.edit().remove("columns").remove(Config.ROWS_BELOW_DOCK_KEY).remove("animations")
                     .remove("advanced_effects").remove(Config.WALLPAPER_CHOICE_KEY)
-                    .remove(Config.DOCK_OPACITY_KEY).remove(Config.CLOCK_FORMAT_KEY).remove(OpenOnStart.KEY).commit();
+                    .remove(Config.DOCK_OPACITY_KEY).remove(Config.CLOCK_FORMAT_KEY).remove(OpenOnStart.KEY)
+                    .remove(NothingTone.KEY).remove(Config.GREETING_NAME_KEY).commit();
             Config current = Config.load(this);
             columns = current.columns;
             rowsBelowDock = current.rowsBelowDock;
@@ -172,6 +180,7 @@ public final class LauncherSettingsActivity extends Activity {
                 open(new Intent(this, HomeSettingsActivity.class)));
         findViewById(R.id.tvSettingsChoice).setOnClickListener(v ->
                 open(SystemSettings.intent(this, Settings.ACTION_SETTINGS)));
+        findViewById(R.id.removeNothingChoice).setOnClickListener(v -> showRemoveNothing());
         refresh();
         if (config.launcherSettingsButton) reorderChoice.requestFocus();
         else columnChoices[Math.max(0, Math.min(columns - 4, 3))].requestFocus();
@@ -215,6 +224,71 @@ public final class LauncherSettingsActivity extends Activity {
                     changed();
                     refresh();
                 })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    // Nothing edition --------------------------------------------------------------------------------------
+
+    private static final String[] APPS_STYLES = {NothingTone.MONO_RED, NothingTone.MONO, NothingTone.OFF};
+
+    private String appsStyleLabel(String mode) {
+        if (NothingTone.MONO.equals(mode)) return getString(R.string.nothing_apps_style_mono);
+        if (NothingTone.OFF.equals(mode)) return getString(R.string.nothing_apps_style_colour);
+        return getString(R.string.nothing_apps_style_mono_red);
+    }
+
+    private void showAppsStylePicker() {
+        String[] labels = new String[APPS_STYLES.length];
+        for (int i = 0; i < labels.length; i++) labels[i] = appsStyleLabel(APPS_STYLES[i]);
+        String current = NothingTone.mode(this);
+        int checked = 0;
+        for (int i = 0; i < APPS_STYLES.length; i++) if (APPS_STYLES[i].equals(current)) checked = i;
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.nothing_apps_style)
+                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                    dialog.dismiss();
+                    choices.edit().putString(NothingTone.KEY, APPS_STYLES[which]).apply();
+                    changed();
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showYourNameEditor() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setSingleLine(true);
+        input.setText(Config.load(this).greetingName);
+        input.setSelection(input.getText().length());
+        input.setHint(R.string.nothing_your_name_hint);
+        int pad = Math.round(24 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout box = new android.widget.FrameLayout(this);
+        box.setPadding(pad, pad / 2, pad, 0);
+        box.addView(input);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.nothing_your_name)
+                .setMessage(R.string.nothing_your_name_help)
+                .setView(box)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    choices.edit().putString(Config.GREETING_NAME_KEY, input.getText().toString().trim()).apply();
+                    changed();
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    /** The two steps that put the TV back as it was: its own home again, then this launcher uninstalled. */
+    private void showRemoveNothing() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.nothing_remove)
+                .setMessage(R.string.nothing_remove_steps)
+                .setPositiveButton(R.string.home_settings, (dialog, which) ->
+                        open(new Intent(this, HomeSettingsActivity.class)))
+                .setNeutralButton(R.string.nothing_remove_uninstall, (dialog, which) ->
+                        open(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                android.net.Uri.fromParts("package", getPackageName(), null))))
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
@@ -317,6 +391,10 @@ public final class LauncherSettingsActivity extends Activity {
                         : wallpaperCurrent != null ? wallpaperCurrent
                         : getString(R.string.wallpaper_theme_default)));
         openOnStartChoice.setText(getString(R.string.open_on_start_state, openOnStartLabel()));
+        appsStyleChoice.setText(getString(R.string.nothing_apps_style_state, appsStyleLabel(NothingTone.mode(this))));
+        String name = Config.load(this).greetingName;
+        yourNameChoice.setText(getString(R.string.nothing_your_name_state,
+                name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }
 
@@ -324,7 +402,8 @@ public final class LauncherSettingsActivity extends Activity {
         return choices.contains("columns") || choices.contains(Config.ROWS_BELOW_DOCK_KEY)
                 || choices.contains("animations") || choices.contains("advanced_effects")
                 || choices.contains(Config.WALLPAPER_CHOICE_KEY) || choices.contains(Config.DOCK_OPACITY_KEY)
-                || choices.contains(Config.CLOCK_FORMAT_KEY) || choices.contains(OpenOnStart.KEY);
+                || choices.contains(Config.CLOCK_FORMAT_KEY) || choices.contains(OpenOnStart.KEY)
+                || choices.contains(NothingTone.KEY) || choices.contains(Config.GREETING_NAME_KEY);
     }
 
     private void open(Intent intent) {

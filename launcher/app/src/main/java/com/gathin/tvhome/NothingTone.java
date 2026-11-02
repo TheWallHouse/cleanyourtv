@@ -14,13 +14,15 @@ import java.nio.file.Files;
 
 /**
  * Nothing edition: app banners and icons in greyscale ("mono"), or greyscale with their reds
- * turned into Nothing red ("mono_red"). Set with "nothing_tiles" in config.json; "off" or missing keeps colour.
+ * turned into Nothing red ("mono_red", the default). Set in Launcher settings or with "nothing_tiles" in config.json.
  * Each picture is converted once, when the tiles are loaded.
  */
 final class NothingTone {
     static final String OFF = "off";
     static final String MONO = "mono";
     static final String MONO_RED = "mono_red";
+    /** Launcher settings' "Apps style" choice, which wins over the theme. */
+    static final String KEY = "nothing_tiles";
     private static final int MAX_WIDTH = 640;
 
     private NothingTone() {
@@ -40,11 +42,20 @@ final class NothingTone {
         return null;
     }
 
-    /** The "nothing_tiles" value from the pushed config.json, or its private copy; OFF when absent. */
+    /**
+     * The apps style: Launcher settings' choice first, then "nothing_tiles" from the pushed config.json, and
+     * mono_red when neither says, the Nothing edition's own look.
+     */
     static String mode(Context ctx) {
+        String chosen = ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(KEY, null);
+        if (valid(chosen)) return chosen;
         JSONObject json = read(ctx);
-        String mode = json == null ? OFF : json.optString("nothing_tiles", OFF);
-        return MONO.equals(mode) || MONO_RED.equals(mode) ? mode : OFF;
+        String themed = json == null ? null : json.optString(KEY, null);
+        return valid(themed) ? themed : MONO_RED;
+    }
+
+    static boolean valid(String mode) {
+        return OFF.equals(mode) || MONO.equals(mode) || MONO_RED.equals(mode);
     }
 
     static Drawable apply(Context ctx, Drawable drawable, String mode) {

@@ -112,6 +112,17 @@
             style="@style/SettingsRow"
             android:layout_marginTop="28dp" />
 
+        <!-- Nothing edition -->
+        <TextView
+            android:id="@+id/appsStyleChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/yourNameChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="10dp" />
+
         <TextView
             android:id="@+id/animationsChoice"
             style="@style/SettingsRow"
@@ -169,5 +180,19 @@
             style="@style/SettingsRow"
             android:layout_marginTop="18dp"
             android:text="@string/tv_settings" />
+
+        <TextView
+            android:id="@+id/removeNothingChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="28dp"
+            android:text="@string/nothing_remove" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/nothing_remove_help"
+            android:textColor="#FFACB8C1"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>

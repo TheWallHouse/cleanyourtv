@@ -158,4 +158,20 @@
     <string name="clock_format_system">System</string>
     <string name="clock_format_12">12-hour</string>
     <string name="clock_format_24">24-hour</string>
+
+    <!-- Nothing edition (English only, so not translated) -->
+    <string name="nothing_apps_style" translatable="false">Apps style</string>
+    <string name="nothing_apps_style_state" translatable="false">Apps style: %1$s</string>
+    <string name="nothing_apps_style_mono_red" translatable="false">Black and white, reds kept</string>
+    <string name="nothing_apps_style_mono" translatable="false">Black and white</string>
+    <string name="nothing_apps_style_colour" translatable="false">Colour</string>
+    <string name="nothing_your_name" translatable="false">Your name</string>
+    <string name="nothing_your_name_state" translatable="false">Your name: %1$s</string>
+    <string name="nothing_your_name_none" translatable="false">none</string>
+    <string name="nothing_your_name_hint" translatable="false">Name</string>
+    <string name="nothing_your_name_help" translatable="false">Shown in red after the greeting. Leave it empty for the greeting alone.</string>
+    <string name="nothing_remove" translatable="false">Remove Nothing edition</string>
+    <string name="nothing_remove_help" translatable="false">Puts the TV back as it was before: its own home screen, and this launcher uninstalled. Nothing else on the TV changes.</string>
+    <string name="nothing_remove_steps" translatable="false">1. Choose your TV\'s own home screen under Choose default home. If it is not in the list, it was switched off: in the TV\'s Settings, open Apps, show the system apps, open it and choose Enable.\n\n2. Then open this launcher\'s app page and choose Uninstall.</string>
+    <string name="nothing_remove_uninstall" translatable="false">Uninstall page</string>
 </resources>
