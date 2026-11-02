@@ -3,9 +3,9 @@
 The [CleanYourTV](https://github.com/Gathin23/cleanyourtv) launcher for Android TV with the look of **Nothing OS**:
 dot-matrix font, one red, white lines. No ads, no network.
 
-![Home](../themes/nothing/screenshot.jpg)
+![Home](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/themes/nothing/screenshot.jpg)
 
-![Screensaver](../docs/nothing/screensaver.jpg)
+![Screensaver](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/screensaver.jpg)
 
 ## What's new
 
@@ -28,8 +28,8 @@ Your name in red: add `"greeting_name": "your name"` to `themes/nothing/config.j
 ## More
 
 - [Only the changes](https://github.com/Gathin23/cleanyourtv/compare/main...TheWallHouse:cleanyourtv:nothing) against CleanYourTV
-- [NOTHING.md](../NOTHING.md): every file touched, the screensaver setup, how to undo, credits
-- [CleanYourTV's own README](../README.md): debloating, supported TVs, tools
+- [NOTHING.md](https://github.com/TheWallHouse/cleanyourtv/blob/nothing/NOTHING.md): every file touched, the screensaver setup, how to undo, credits
+- [CleanYourTV's own README](https://github.com/TheWallHouse/cleanyourtv/blob/nothing/README.md): debloating, supported TVs, tools
 
 Tested on a Vestel Cosmos, Android TV 11. Built on CleanYourTV (MIT) by Gathin23; Doto by Oliver Lalan (OFL).
 Not affiliated with Nothing.
@@ -38,4 +38,4 @@ Not affiliated with Nothing.
 
 **En castellano:** el launcher de CleanYourTV con el estilo de Nothing OS: tipografía de puntos, un solo rojo,
 apps en blanco y negro y un salvapantallas con la barra del día. Se instala con los mismos tres comandos de
-arriba. Todos los detalles están en [NOTHING.md](../NOTHING.md).
+arriba. Todos los detalles están en [NOTHING.md](https://github.com/TheWallHouse/cleanyourtv/blob/nothing/NOTHING.md).
