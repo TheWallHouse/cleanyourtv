@@ -47,7 +47,7 @@ is a handful of commits on top: **[see only the changes](https://github.com/Gath
 | `launcher/app/src/main/java/com/gathin/tvhome/DayDots.java` | New: the 24 dots of the day under the screensaver clock |
 | `themes/nothing/` | New: the theme (config, wallpaper, screenshot) |
 | `themes/README.md` | The theme's row and the `nothing_tiles` key |
-| `docs/nothing/screensaver.jpg`, `NOTHING.md`, the note on top of `README.md` | This documentation |
+| `.github/README.md`, `NOTHING.md`, `docs/nothing/screensaver.jpg` | This documentation (GitHub shows `.github/README.md` on the front page; CleanYourTV's `README.md` is left as it is) |
 
 To bring in what CleanYourTV adds later: `git fetch upstream && git merge upstream/main` on the `nothing` branch.
 
