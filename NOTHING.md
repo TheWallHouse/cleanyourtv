@@ -21,6 +21,11 @@ the same launcher, the same debloat lists and tools, no ads, no network permissi
 | **Built in** | The look is the default, so the APK alone is enough: the dot-grid wallpaper ships inside the app, and `config.xml` turns on the glass dock, white rim focus, no colour glow, red network icon and wallpaper behind the screensaver clock |
 | **Launcher settings** | **Apps style** and **Your name**, set with the remote; and **Remove Nothing edition**, the two steps back to the TV's own home and this app's Uninstall page |
 
+**Own app ID:** `io.github.thewallhouse.nothingtv` (set in `launcher/gradle.properties`, upstream's `launcherApplicationId`), so it never
+passes itself off as CleanYourTV and both can be installed. The code keeps CleanYourTV's `com.gathin.tvhome` namespace,
+so its screens are named like `io.github.thewallhouse.nothingtv/com.gathin.tvhome.ClockDream`; the fork's `tools/`
+scripts use the new ID.
+
 Not changed: permissions (still no `INTERNET`), `minSdk` 26, the Home guard, the debloat flow. The APK is
 about 700 KB, over upstream's 576 KB gate, because of the font and the wallpaper inside it.
 
@@ -51,6 +56,7 @@ is a handful of commits on top: **[see only the changes](https://github.com/Gath
 | `launcher/app/src/main/java/com/gathin/tvhome/LauncherSettingsActivity.java`, `res/layout/activity_launcher_settings.xml`, `res/values/strings.xml` | Apps style, Your name and Remove Nothing edition in Launcher settings (English only) |
 | `themes/nothing/` | New: the theme (config, wallpaper, screenshot) |
 | `themes/README.md` | The theme's row and the `nothing_tiles` key |
+| `launcher/gradle.properties`, `launcher/build-and-install.*`, `tools/*` | The fork's own app ID, `io.github.thewallhouse.nothingtv` |
 | `.github/README.md`, `NOTHING.md`, `docs/nothing/*.jpg` | This documentation (GitHub shows `.github/README.md` on the front page; CleanYourTV's `README.md` is left as it is) |
 
 To bring in what CleanYourTV adds later: `git fetch upstream && git merge upstream/main` on the `nothing` branch.

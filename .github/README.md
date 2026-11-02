@@ -29,8 +29,8 @@ dot-matrix font, one red, white lines. No ads, no network.
 4. In Tellyscope, **Install apps** → pick the APK. Then open it in the Apps list and choose **Make Home**.
 5. **Turn debugging off** on the TV when you're done.
 
-Everything Nothing comes built in, wallpaper included. If CleanYourTV is already on the TV, uninstall it first:
-the two apps share a name but not a signature.
+Everything Nothing comes built in, wallpaper included. It is its own app (`io.github.thewallhouse.nothingtv`), so
+it installs beside CleanYourTV if that is already on the TV; pick which one is Home.
 
 ### With a computer (Linux, macOS or Windows)
 
