@@ -1,6 +1,6 @@
 > **This is CleanYourTV · Nothing edition**, a fork with the Nothing OS look: dot-matrix font, one red,
 > greyscale apps and a day-dots screensaver. What it changes and how to install it: **[NOTHING.md](NOTHING.md)**.
-> Everything below is the original CleanYourTV README.
+> Only the changes: **[compare with CleanYourTV](https://github.com/Gathin23/cleanyourtv/compare/main...TheWallHouse:cleanyourtv:nothing)**. Everything below is the original CleanYourTV README.
 >
 > ![Nothing edition](themes/nothing/screenshot.jpg)
 

@@ -24,6 +24,33 @@ the same launcher, the same debloat lists and tools, no ads, no network permissi
 Not changed: permissions (still no `INTERNET`), `minSdk` 26, the Home guard, the debloat flow. The APK is
 about 580 KB, a little over upstream's 576 KB gate, because of the font.
 
+## Only the changes
+
+This repository is a full copy of CleanYourTV, because the launcher has to be built whole. What this fork adds
+is a handful of commits on top: **[see only the changes](https://github.com/Gathin23/cleanyourtv/compare/main...TheWallHouse:cleanyourtv:nothing)**. Every other file is CleanYourTV as it is.
+
+| File | What it does here |
+|---|---|
+| `launcher/app/src/main/res/font/doto.ttf` | New: the Doto font, Latin subset, colon aligned |
+| `launcher/FONT-LICENSE-DOTO-OFL.txt` | New: the font's licence |
+| `launcher/app/src/main/res/values/fonts.xml` | `font_dot`, pointing at Doto |
+| `launcher/app/src/main/res/values/styles.xml` | Top buttons in Doto |
+| `launcher/app/src/main/res/layout/activity_main.xml` | Clock, greeting, date and app name in Doto; red clock; red dot beside the app name |
+| `launcher/app/src/main/res/layout/item_app.xml` | Red dot beside the focused tile's name |
+| `launcher/app/src/main/res/layout/dream_clock.xml` | Screensaver in red dots, with the day-dots row |
+| `launcher/app/src/main/res/layout-iw/*.xml` | The same two changes for right-to-left languages |
+| `launcher/app/src/main/res/drawable/nothing_focus_dot_*.xml` | New: the red focus dot |
+| `launcher/app/src/main/res/color/pill_icon_*.xml` | Network icon: red online, grey offline |
+| `launcher/app/src/main/java/com/gathin/tvhome/MainActivity.java` | The name after the greeting in red |
+| `launcher/app/src/main/java/com/gathin/tvhome/AppAdapter.java` | Tiles go through NothingTone; the name wraps its text so the dot sits beside it |
+| `launcher/app/src/main/java/com/gathin/tvhome/NothingTone.java` | New: `nothing_tiles`, greyscale apps with their reds kept |
+| `launcher/app/src/main/java/com/gathin/tvhome/DayDots.java` | New: the 24 dots of the day under the screensaver clock |
+| `themes/nothing/` | New: the theme (config, wallpaper, screenshot) |
+| `themes/README.md` | The theme's row and the `nothing_tiles` key |
+| `docs/nothing/screensaver.jpg`, `NOTHING.md`, the note on top of `README.md` | This documentation |
+
+To bring in what CleanYourTV adds later: `git fetch upstream && git merge upstream/main` on the `nothing` branch.
+
 ## Install
 
 Exactly as CleanYourTV ([README](README.md)), from this fork and the `nothing` branch:
@@ -76,6 +103,10 @@ cual: el mismo launcher, las mismas listas y herramientas, sin anuncios y sin pe
 - **Salvapantallas** con el reloj en puntos rojos y la **barra del día**: 24 puntos, con la hora actual
   latiendo en rojo.
 - **Tema `nothing`** listo para usar, con fondo de puntos y un punto rojo.
+
+**Solo los cambios:** este repo es una copia completa de CleanYourTV, porque el launcher se compila
+entero; lo que añade el fork son unos pocos commits encima. Se ven aquí: **[ver solo los cambios](https://github.com/Gathin23/cleanyourtv/compare/main...TheWallHouse:cleanyourtv:nothing)**, y la
+tabla de archivos tocados está más arriba.
 
 **Instalación:** igual que CleanYourTV, desde la rama `nothing` de este fork (comandos arriba). Tu nombre en
 rojo en el saludo se pone con `"greeting_name"` en el `config.json` del tema.
