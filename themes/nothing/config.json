@@ -1,0 +1,18 @@
+{
+  "background_color": "#000000",
+  "wallpaper": true,
+  "ambient_glow": false,
+  "app_glow": false,
+  "glass_style": "rim",
+  "focus_overshoot": false,
+  "dock_band": true,
+  "dock_glass": true,
+  "rows_below_dock": 1,
+  "header_white": true,
+  "wifi_status_color": true,
+  "wifi_status_warnings": true,
+  "nothing_tiles": "mono_red",
+  "clock_wallpaper": true,
+  "clock_glow": false,
+  "clock_wallpaper_dim": 35
+}
