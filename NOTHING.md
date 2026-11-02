@@ -15,12 +15,14 @@ the same launcher, the same debloat lists and tools, no ads, no network permissi
 | **Font** | [Doto](https://github.com/oliverlalan/Doto), a dot-matrix font (OFL), for the clock, greeting, date, top buttons and the focused app's name. Built in as a Latin subset with round dots; the colon's two crosses are moved up one dot so they line up with the digits |
 | **Red** | The clock and the name after the greeting (`greeting_name`) in Nothing red `#D71921`. With `wifi_status_color`, the network icon is red while online and grey without a connection |
 | **Focus** | A red dot beside the focused app's name, in the grid and on the big name above the dock |
-| **Apps** | `nothing_tiles`: app banners in greyscale (`mono`) or greyscale with their reds kept in Nothing red (`mono_red`), so YouTube and Netflix keep their red. Converted once when the tiles load |
+| **Apps** | `nothing_tiles`: app banners in greyscale (`mono`) or greyscale with their reds kept in Nothing red (`mono_red`, the default), so YouTube and Netflix keep their red. Converted once when the tiles load |
 | **Screensaver** | The clock screensaver in red dots, and under the date the day as 24 dots: hours gone by in white, the hours to come in grey, the current hour pulsing red |
 | **Theme** | [`themes/nothing/`](themes/nothing/): black, a faint dot grid with one red dot, frosted-glass dock, white rim focus, no colour glow, `mono_red` apps |
+| **Built in** | The look is the default, so the APK alone is enough: the dot-grid wallpaper ships inside the app, and `config.xml` turns on the glass dock, white rim focus, no colour glow, red network icon and wallpaper behind the screensaver clock |
+| **Launcher settings** | **Apps style** and **Your name**, set with the remote; and **Remove Nothing edition**, the two steps back to the TV's own home and this app's Uninstall page |
 
 Not changed: permissions (still no `INTERNET`), `minSdk` 26, the Home guard, the debloat flow. The APK is
-about 580 KB, a little over upstream's 576 KB gate, because of the font.
+about 700 KB, over upstream's 576 KB gate, because of the font and the wallpaper inside it.
 
 ## Only the changes
 
@@ -41,33 +43,21 @@ is a handful of commits on top: **[see only the changes](https://github.com/Gath
 | `launcher/app/src/main/res/color/pill_icon_*.xml` | Network icon: red online, grey offline |
 | `launcher/app/src/main/java/com/gathin/tvhome/MainActivity.java` | The name after the greeting in red |
 | `launcher/app/src/main/java/com/gathin/tvhome/AppAdapter.java` | Tiles go through NothingTone; the name wraps its text so the dot sits beside it |
-| `launcher/app/src/main/java/com/gathin/tvhome/NothingTone.java` | New: `nothing_tiles`, greyscale apps with their reds kept |
+| `launcher/app/src/main/java/com/gathin/tvhome/NothingTone.java` | New: `nothing_tiles`, greyscale apps with their reds kept; Apps style from Launcher settings wins |
 | `launcher/app/src/main/java/com/gathin/tvhome/DayDots.java` | New: the 24 dots of the day under the screensaver clock |
+| `launcher/app/src/main/java/com/gathin/tvhome/NothingWallpaper.java`, `res/raw/nothing_wallpaper.jpg` | New: the bundled dot-grid wallpaper, used when no theme put one on the TV |
+| `launcher/app/src/main/java/com/gathin/tvhome/Config.java` | The bundled wallpaper as a fallback; Your name from Launcher settings |
+| `launcher/app/src/main/res/values/config.xml` | The Nothing look as the default (glass dock, rim focus, no glow, red network icon, screensaver wallpaper) |
+| `launcher/app/src/main/java/com/gathin/tvhome/LauncherSettingsActivity.java`, `res/layout/activity_launcher_settings.xml`, `res/values/strings.xml` | Apps style, Your name and Remove Nothing edition in Launcher settings (English only) |
 | `themes/nothing/` | New: the theme (config, wallpaper, screenshot) |
 | `themes/README.md` | The theme's row and the `nothing_tiles` key |
 | `.github/README.md`, `NOTHING.md`, `docs/nothing/*.jpg` | This documentation (GitHub shows `.github/README.md` on the front page; CleanYourTV's `README.md` is left as it is) |
 
 To bring in what CleanYourTV adds later: `git fetch upstream && git merge upstream/main` on the `nothing` branch.
 
-## Install
+## Install and undo
 
-Exactly as CleanYourTV ([README](README.md)), from this fork and the `nothing` branch:
-
-```bash
-git clone -b nothing https://github.com/TheWallHouse/cleanyourtv.git
-cd cleanyourtv
-TV_HOST=192.168.1.50 launcher/build-and-install.sh    # build the launcher, install it, make it Home
-tools/theme.sh themes/nothing                        # the Nothing look (no rebuild)
-```
-
-For the screensaver, pick **Clock** in Settings → Device Preferences → Screen saver, or:
-`tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
-
-Your own touches go in the theme's `config.json`, for example `"greeting_name": "your name"` (shown in red)
-or `"nothing_tiles": "mono"` for plain black and white.
-
-**Undo:** `tools/restore.sh` as in CleanYourTV puts the stock launcher back; `tools/theme.sh --reset` removes
-the theme.
+With a phone or a computer, and how to undo it: see the [front page](https://github.com/TheWallHouse/cleanyourtv#install).
 
 ## Tested on
 
