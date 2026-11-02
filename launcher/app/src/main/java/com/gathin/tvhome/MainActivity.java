@@ -2742,8 +2742,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             greeting.setText(festiveGreeting);
             greeting.setTextColor(liftTowardsWhite(festival.accentColor(), 0.25f));
         } else {
-            greeting.setText(greetingName.isEmpty() ? getString(res)
-                    : getString(R.string.greeting_with_name, getString(res), greetingName));
+            if (greetingName.isEmpty()) {
+                greeting.setText(getString(res));
+            } else {
+                // Nothing edition: the name after the greeting in Nothing red.
+                String text = getString(R.string.greeting_with_name, getString(res), greetingName);
+                android.text.SpannableString styled = new android.text.SpannableString(text);
+                int at = text.lastIndexOf(greetingName);
+                if (at >= 0) styled.setSpan(new android.text.style.ForegroundColorSpan(0xFFD71921),
+                        at, at + greetingName.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                greeting.setText(styled);
+            }
             greeting.setTextColor(greetingColor);
         }
         if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));

@@ -7,4 +7,6 @@
     <string name="font_light" translatable="false">@font/outfit_light</string>
     <string name="font_extralight" translatable="false">@font/outfit_extralight</string>
     <string name="font_medium" translatable="false">@font/outfit_medium</string>
+    <!-- Nothing edition: Doto dot-matrix font, ROND 100, wght 800, Latin subset, colon crosses moved up one dot to align with the digits. OFL. -->
+    <string name="font_dot" translatable="false">@font/doto</string>
 </resources>

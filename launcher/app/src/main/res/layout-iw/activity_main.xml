@@ -132,10 +132,12 @@
             android:gravity="right"
             android:textColor="#FFFFFFFF"
             android:textSize="48sp"
-            android:fontFamily="@string/font_light"
+            android:fontFamily="@string/font_dot"
             android:letterSpacing="-0.02"
             android:includeFontPadding="false"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:drawableStart="@drawable/nothing_focus_dot_12"
+            android:drawablePadding="18dp" />
 
         <!-- Cinematic shelf only: when the app was last opened, and the dock position dots. -->
         <TextView
@@ -221,8 +223,8 @@
                         android:format12Hour="@string/date_format"
                         android:format24Hour="@string/date_format"
                         android:textColor="#A6FFFFFF"
-                        android:textSize="14sp"
-                        android:fontFamily="@string/font_regular"
+                        android:textSize="16sp"
+                        android:fontFamily="@string/font_dot"
                         android:letterSpacing="0.14"
                         android:textAllCaps="true" />
 
@@ -268,9 +270,9 @@
                         android:autoSizeMaxTextSize="12sp"
                         android:autoSizeStepGranularity="1sp"
                         android:ellipsize="end"
-                        android:textColor="#8CFFFFFF"
-                        android:textSize="12sp"
-                        android:fontFamily="@string/font_medium"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15sp"
+                        android:fontFamily="@string/font_dot"
                         android:letterSpacing="0"
                         android:textAllCaps="true" />
 
@@ -304,9 +306,9 @@
                             android:layout_marginEnd="6dp"
                             android:format12Hour="h:mm"
                             android:format24Hour="HH:mm"
-                            android:textColor="#FFFFFFFF"
+                            android:textColor="#FFD71921"
                             android:textSize="52sp"
-                            android:fontFamily="@string/font_light"
+                            android:fontFamily="@string/font_dot"
                             android:letterSpacing="-0.04"
                             android:includeFontPadding="false" />
                     </LinearLayout>

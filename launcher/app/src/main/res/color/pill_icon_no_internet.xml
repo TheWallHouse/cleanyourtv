@@ -3,5 +3,5 @@
      login page), orange; dark on the focused pill, as pill_icon_online. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true" android:color="#FF111111" />
-    <item android:color="#FFFF9F0A" />
+    <item android:color="#FF8A8A8A" />
 </selector>
