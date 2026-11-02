@@ -222,10 +222,14 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Set<String> iconTiles;
     private final List<Entry> items = new ArrayList<>();
 
+    /** Nothing edition: "nothing_tiles" in config.json, see NothingTone. */
+    private final String nothingTiles;
+
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
         this.ctx = ctx;
         this.listener = listener;
         this.dockSize = dockSize;
+        this.nothingTiles = NothingTone.mode(ctx);
         this.favourites = cfg.dockApps;
         this.fillDock = cfg.fillDock;
         this.hidden = new HashSet<>(cfg.hiddenApps);
@@ -305,6 +309,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // The icon is only drawn (and sampled for the glow) when there is no banner, so a tile with a
             // banner skips loading and decoding it.
             Drawable icon = banner == null ? ri.loadIcon(pm) : null;
+            if (card == null) {
+                banner = NothingTone.apply(ctx, banner, nothingTiles);
+                icon = NothingTone.apply(ctx, icon, nothingTiles);
+            }
             if (card != null) {
                 fresh.add(new Entry(Entry.CARD, label, component, banner, icon, card.caption, card.accent));
             } else {
@@ -423,7 +431,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         card.setLayoutParams(cardLp);
         View name = v.findViewById(R.id.name);
         ViewGroup.MarginLayoutParams nameLp = (ViewGroup.MarginLayoutParams) name.getLayoutParams();
-        nameLp.width = w;
+        // Nothing edition: the name wraps its text, so the red focus dot sits beside it.
+        nameLp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((android.widget.TextView) name).setMaxWidth(w);
         nameLp.topMargin = h + Math.round((dockRow ? 7 : 4) * density);
         if (!dockRow) {
             // Compact spacing (COMPACT_ITEM_EXTRA_DP): 4dp item padding and a 20dp name instead of 8dp and 22dp.
