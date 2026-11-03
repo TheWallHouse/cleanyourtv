@@ -99,7 +99,7 @@ public class ThemeProvider extends ContentProvider {
 
     private static JSONObject snapshot(Context ctx) throws JSONException {
         // A theme pushed just before is taken in first, so the snapshot shows what Home will show.
-        Config.load(ctx);
+        Config c = Config.load(ctx);
         SharedPreferences choices = ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE);
         JSONObject out = new JSONObject();
         for (String key : SettingsFile.KEYS.keySet()) {
@@ -113,6 +113,18 @@ public class ThemeProvider extends ContentProvider {
             // Its own package: always there.
         }
         out.put("keys", new JSONArray(SettingsFile.KEYS.keySet()));
+        // What Home uses now, the theme's value where nothing was chosen on the TV.
+        JSONObject now = new JSONObject();
+        now.put("columns", c.columns);
+        now.put(Config.ROWS_BELOW_DOCK_KEY, c.rowsBelowDock);
+        now.put(Config.DOCK_OPACITY_KEY, c.dockOpacity);
+        now.put(Config.CLOCK_FORMAT_KEY, c.clockFormat);
+        now.put(NothingTone.KEY, NothingTone.mode(ctx));
+        now.put(Config.GREETING_NAME_KEY, c.greetingName);
+        now.put("animations", c.animations);
+        now.put("advanced_effects", c.advancedEffects);
+        now.put("dock_apps", new JSONArray(c.dockApps));
+        out.put("effective", now);
         return out;
     }
 
