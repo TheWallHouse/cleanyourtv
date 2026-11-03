@@ -149,4 +149,21 @@
     <string name="clock_format_system">Sistema</string>
     <string name="clock_format_12">12 horas</string>
     <string name="clock_format_24">24 horas</string>
+    <string name="nothing_apps_style">Estilo de las apps</string>
+    <string name="nothing_apps_style_state">Estilo de las apps: %1$s</string>
+    <string name="nothing_apps_style_mono_red">Blanco y negro con rojos</string>
+    <string name="nothing_apps_style_mono">Blanco y negro</string>
+    <string name="nothing_apps_style_colour">Color</string>
+    <string name="nothing_your_name">Tu nombre</string>
+    <string name="nothing_your_name_state">Tu nombre: %1$s</string>
+    <string name="nothing_your_name_none">ninguno</string>
+    <string name="nothing_your_name_hint">Nombre</string>
+    <string name="nothing_your_name_help">Sale en rojo después del saludo. Déjalo vacío para que salga solo el saludo.</string>
+    <string name="nothing_language">Idioma</string>
+    <string name="nothing_language_state">Idioma: %1$s</string>
+    <string name="nothing_language_tv">Como la TV</string>
+    <string name="nothing_remove">Quitar Nothing edition</string>
+    <string name="nothing_remove_help">Deja la TV como estaba: su propia pantalla de inicio, y este launcher desinstalado. No cambia nada más de la TV.</string>
+    <string name="nothing_remove_uninstall">Página de desinstalación</string>
+    <string name="nothing_remove_steps">1. Elige la pantalla de inicio propia de tu TV en Elegir inicio predeterminado. Si no está en la lista, es que está desactivada: en Ajustes de la TV, abre Aplicaciones, muestra las del sistema, ábrela y elige Activar.\n\n2. Después abre la página de este launcher y elige Desinstalar.</string>
 </resources>

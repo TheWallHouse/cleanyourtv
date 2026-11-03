@@ -38,6 +38,7 @@ public final class LauncherSettingsActivity extends Activity {
     // Nothing edition: Apps style and Your name, set from the remote.
     private TextView appsStyleChoice;
     private TextView yourNameChoice;
+    private TextView languageChoice;
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
@@ -132,6 +133,8 @@ public final class LauncherSettingsActivity extends Activity {
         appsStyleChoice.setOnClickListener(v -> showAppsStylePicker());
         yourNameChoice = findViewById(R.id.yourNameChoice);
         yourNameChoice.setOnClickListener(v -> showYourNameEditor());
+        languageChoice = findViewById(R.id.languageChoice);
+        languageChoice.setOnClickListener(v -> showLanguagePicker());
         animationsChoice = findViewById(R.id.animationsChoice);
         animationsChoice.setOnClickListener(v -> {
             animations = !animations;
@@ -251,6 +254,41 @@ public final class LauncherSettingsActivity extends Activity {
                     choices.edit().putString(NothingTone.KEY, APPS_STYLES[which]).apply();
                     changed();
                     refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    /** The languages Launcher settings offers, as tags; "" follows the TV (or the theme's locale). */
+    private static final String[] LANGUAGES = {"", "es-ES", "en-US", "gl"};
+
+    /** Each language in its own words, as language pickers name them; the TV's own in the current language. */
+    private String languageLabel(String tag) {
+        switch (tag) {
+            case "es-ES": return "Castellano (España)";
+            case "en-US": return "English (US)";
+            case "gl": return "Galego";
+            default: return getString(R.string.nothing_language_tv);
+        }
+    }
+
+    private void showLanguagePicker() {
+        String current = choices.getString(Config.LOCALE_KEY, "");
+        String[] labels = new String[LANGUAGES.length];
+        int checked = 0;
+        for (int i = 0; i < LANGUAGES.length; i++) {
+            labels[i] = languageLabel(LANGUAGES[i]);
+            if (LANGUAGES[i].equals(current)) checked = i;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.nothing_language)
+                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (LANGUAGES[which].isEmpty()) choices.edit().remove(Config.LOCALE_KEY).apply();
+                    else choices.edit().putString(Config.LOCALE_KEY, LANGUAGES[which]).apply();
+                    changed();
+                    // This screen too: its context took the language when it opened.
+                    recreate();
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
@@ -395,6 +433,7 @@ public final class LauncherSettingsActivity extends Activity {
         String name = Config.load(this).greetingName;
         yourNameChoice.setText(getString(R.string.nothing_your_name_state,
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
+        languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }
 

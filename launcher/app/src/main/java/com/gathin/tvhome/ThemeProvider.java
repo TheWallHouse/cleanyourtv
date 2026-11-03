@@ -122,6 +122,7 @@ public class ThemeProvider extends ContentProvider {
         now.put(NothingTone.KEY, NothingTone.mode(ctx));
         now.put(Config.GREETING_NAME_KEY, c.greetingName);
         now.put("animations", c.animations);
+        now.put(Config.LOCALE_KEY, c.locale);
         now.put("advanced_effects", c.advancedEffects);
         now.put("dock_apps", new JSONArray(c.dockApps));
         out.put("effective", now);

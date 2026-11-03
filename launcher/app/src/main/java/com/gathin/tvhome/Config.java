@@ -46,6 +46,8 @@ final class Config {
     static final String GREETING_NAME_KEY = "nothing_greeting_name";
     static final String DOCK_OPACITY_KEY = "dock_opacity";
     static final String CLOCK_FORMAT_KEY = "clock_format";
+    /** Launcher settings' language (a BCP 47 tag): over the theme's and config.xml's locale; unset follows them. */
+    static final String LOCALE_KEY = "locale";
     /**
      * Counts the changes made in Launcher settings. Home remembers the count it was built with and rebuilds on
      * resume when it differs, however the settings were left (see MainActivity#onResume).
@@ -681,6 +683,8 @@ final class Config {
         dockOpacity = chosenDockOpacity(choices.getInt(DOCK_OPACITY_KEY, -1), dockOpacity);
         clockFormat = choices.getString(CLOCK_FORMAT_KEY, clockFormat);
         greetingName = choices.getString(GREETING_NAME_KEY, greetingName).trim();
+        String chosenLocale = choices.getString(LOCALE_KEY, null);
+        if (chosenLocale != null && LauncherLocale.parse(chosenLocale) != null) locale = chosenLocale.trim();
         String wallpaperOrder = json == null ? WallpaperRotation.ORDER_SHUFFLE
                 : string(json, "wallpaper_order", WallpaperRotation.ORDER_SHUFFLE);
         // An unknown order must not silently change how an existing collection rotates.

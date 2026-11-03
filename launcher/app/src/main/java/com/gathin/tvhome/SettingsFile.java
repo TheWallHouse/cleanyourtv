@@ -35,11 +35,15 @@ final class SettingsFile {
         k.put("animations", Kind.BOOL);
         k.put("advanced_effects", Kind.BOOL);
         k.put(OpenOnStart.KEY, Kind.STRING);
+        k.put(Config.LOCALE_KEY, Kind.STRING);
         KEYS = Collections.unmodifiableMap(k);
     }
 
     /** Longest name the greeting shows; the TV's own dialog keeps it short too. */
     static final int NAME_MAX = 40;
+
+    /** LauncherLocale's tag rule, without Locale (plain JVM tests). */
+    private static final Pattern LOCALE = Pattern.compile("[a-z]{2,3}(-[A-Za-z0-9]{1,8})*");
 
     private static final Pattern PACKAGE = Pattern.compile("[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+");
 
@@ -73,6 +77,7 @@ final class SettingsFile {
                 if (NothingTone.KEY.equals(key)) return NothingTone.OFF.equals(s) || NothingTone.MONO.equals(s) || NothingTone.MONO_RED.equals(s) ? s : null;
                 if (Config.WALLPAPER_CHOICE_KEY.equals(key)) return "none".equals(s) || ThemeFiles.collectionImage(s) ? s : null;
                 if (OpenOnStart.KEY.equals(key)) return s.isEmpty() ? REMOVE : PACKAGE.matcher(s).matches() ? s : null;
+                if (Config.LOCALE_KEY.equals(key)) return s.isEmpty() ? REMOVE : LOCALE.matcher(s).matches() ? s : null;
                 if (Config.GREETING_NAME_KEY.equals(key)) {
                     String name = s.replaceAll("[\\p{Cntrl}]", " ").trim();
                     return name.length() <= NAME_MAX ? name : null;

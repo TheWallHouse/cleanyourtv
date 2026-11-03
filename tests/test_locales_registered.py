@@ -39,6 +39,7 @@ DEFAULT = "en"
 NAMES = {
     "ar": "Arabic",
     "ast": "Asturian",
+    "gl": "Galician",
     "sr-Latn": "Serbian (Latin)",
     "bn": "Bangla",
     "ca": "Catalan",
