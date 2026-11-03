@@ -1078,6 +1078,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onResume() {
         super.onResume();
         resumed = true;
+        front = new java.lang.ref.WeakReference<>(this);
         // A festival that started or ended while Home was in the background: rebuild with or without it.
         if (festive != festival.active(LocalDate.now())) {
             recreate();
@@ -1136,6 +1137,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 handler.postDelayed(this::playPetalShower, 450);
             }
         }
+    }
+
+    /** Home while it is resumed, for ThemeProvider's pushes; empty otherwise. */
+    private static java.lang.ref.WeakReference<MainActivity> front = new java.lang.ref.WeakReference<>(null);
+
+    /**
+     * A phone app wrote settings.json or a theme file through ThemeProvider (on the main thread): Home rebuilds now
+     * if it is on screen. Otherwise the change count already makes onResume rebuild it.
+     */
+    static void settingsPushed() {
+        MainActivity home = front.get();
+        if (home != null && home.resumed && Config.settingsChanged(home.settingsRevision, home.settingsRevision())) home.recreate();
     }
 
     /** Launcher settings' change count (Config.SETTINGS_REVISION_KEY); onResume rebuilds Home when it moved. */
@@ -1294,6 +1307,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onPause() {
         super.onPause();
         resumed = false;
+        if (front.get() == this) front.clear();
         // No UP reaches a paused Home, so a vendor-key hold it saw go down would still open its app later.
         // Only Home's own share is dropped: a key service that saw the same DOWN keeps its hold.
         RemoteKeys.release(this);
