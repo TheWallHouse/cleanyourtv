@@ -134,6 +134,23 @@ public class ThemeProvider extends ContentProvider {
         now.put("dock_glass", c.dockGlass);
         now.put("dock_band", c.dockBand);
         now.put("home_idle_clock_minutes", c.homeIdleClockMinutes);
+        now.put("ambient_glow", c.ambientGlow);
+        now.put("app_glow", c.appGlow);
+        now.put("clock_glow", c.clockGlow);
+        now.put("show_network_pill", c.showNetworkPill);
+        now.put("show_inputs_pill", c.showInputsPill);
+        now.put("show_library_pill", c.showLibraryPill);
+        now.put("vpn_pill", c.vpnPill);
+        now.put("icon_only_buttons", c.iconOnlyButtons);
+        now.put("wallpaper", c.wallpaperEnabled);
+        now.put("wallpaper_rotation_minutes", c.wallpaperRotationMinutes);
+        now.put("wallpaper_dim", c.wallpaperDim);
+        now.put("wallpaper_order", c.wallpaperOrder);
+        // The collection's images (wallpapers/), by name, for a phone app to list or replace.
+        JSONArray images = new JSONArray();
+        File dir = Config.dir(ctx);
+        if (dir != null) for (File f : WallpaperRotation.images(new File(dir, ThemeFiles.WALLPAPERS))) images.put(f.getName());
+        now.put("wallpaper_images", images);
         // The theme's own font (LauncherFont): whether one is in use; the key itself says this launcher takes one.
         now.put("font_file", LauncherFont.custom(ctx) != null);
         now.put(OpenOnStart.KEY, ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(OpenOnStart.KEY, ""));
