@@ -125,6 +125,16 @@ public class ThemeProvider extends ContentProvider {
         now.put(Config.LOCALE_KEY, c.locale);
         now.put("advanced_effects", c.advancedEffects);
         now.put("dock_apps", new JSONArray(c.dockApps));
+        // Theme keys a phone app can change too (config.json), as Home uses them now.
+        now.put("hidden_apps", new JSONArray(c.hiddenApps));
+        now.put("app_keys", new JSONArray(c.appKeys));
+        now.put("always_show_names", c.alwaysShowNames);
+        now.put("show_greeting", c.showGreeting);
+        now.put("date_below_clock", c.dateBelowClock);
+        now.put("dock_glass", c.dockGlass);
+        now.put("dock_band", c.dockBand);
+        now.put("home_idle_clock_minutes", c.homeIdleClockMinutes);
+        now.put(OpenOnStart.KEY, ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(OpenOnStart.KEY, ""));
         out.put("effective", now);
         return out;
     }
