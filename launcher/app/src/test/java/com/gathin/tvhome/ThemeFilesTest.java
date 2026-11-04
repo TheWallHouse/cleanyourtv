@@ -13,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class ThemeFilesTest {
     @Test public void themeFilesAreAllowed() {
         assertEquals("config.json", ThemeFiles.path(Collections.singletonList("config.json")));
+        assertEquals("font.ttf", ThemeFiles.path(Collections.singletonList("font.ttf")));   // the theme's own font (LauncherFont)
         assertEquals("wallpaper.jpg", ThemeFiles.path(Collections.singletonList("wallpaper.jpg")));
         assertEquals("theme_revision", ThemeFiles.path(Collections.singletonList("theme_revision")));
     }

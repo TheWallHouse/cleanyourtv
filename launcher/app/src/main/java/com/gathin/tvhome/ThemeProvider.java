@@ -134,6 +134,8 @@ public class ThemeProvider extends ContentProvider {
         now.put("dock_glass", c.dockGlass);
         now.put("dock_band", c.dockBand);
         now.put("home_idle_clock_minutes", c.homeIdleClockMinutes);
+        // The theme's own font (LauncherFont): whether one is in use; the key itself says this launcher takes one.
+        now.put("font_file", LauncherFont.custom(ctx) != null);
         now.put(OpenOnStart.KEY, ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(OpenOnStart.KEY, ""));
         out.put("effective", now);
         return out;
