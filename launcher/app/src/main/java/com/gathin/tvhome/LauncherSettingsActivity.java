@@ -39,6 +39,7 @@ public final class LauncherSettingsActivity extends Activity {
     private TextView appsStyleChoice;
     private TextView yourNameChoice;
     private TextView languageChoice;
+    private TextView aspectChoice;
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
@@ -133,6 +134,8 @@ public final class LauncherSettingsActivity extends Activity {
         appsStyleChoice.setOnClickListener(v -> showAppsStylePicker());
         yourNameChoice = findViewById(R.id.yourNameChoice);
         yourNameChoice.setOnClickListener(v -> showYourNameEditor());
+        aspectChoice = findViewById(R.id.aspectChoice);
+        aspectChoice.setOnClickListener(v -> showAspectPicker());
         languageChoice = findViewById(R.id.languageChoice);
         languageChoice.setOnClickListener(v -> showLanguagePicker());
         animationsChoice = findViewById(R.id.animationsChoice);
@@ -252,6 +255,35 @@ public final class LauncherSettingsActivity extends Activity {
                 .setSingleChoiceItems(labels, checked, (dialog, which) -> {
                     dialog.dismiss();
                     choices.edit().putString(NothingTone.KEY, APPS_STYLES[which]).apply();
+                    changed();
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private String aspectLabel(String aspect) {
+        switch (aspect) {
+            case Aspect.WINDOWS: return getString(R.string.aspect_windows);
+            case Aspect.CONSOLE: return getString(R.string.aspect_console);
+            default: return getString(R.string.aspect_nothing);
+        }
+    }
+
+    /** WallHouse Launcher's looks; a pick is a choice like the others, kept through a theme push. */
+    private void showAspectPicker() {
+        String current = Aspect.mode(this);
+        String[] labels = new String[Aspect.ALL.length];
+        int checked = 0;
+        for (int i = 0; i < Aspect.ALL.length; i++) {
+            labels[i] = aspectLabel(Aspect.ALL[i]);
+            if (Aspect.ALL[i].equals(current)) checked = i;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.aspect)
+                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                    dialog.dismiss();
+                    choices.edit().putString(Aspect.KEY, Aspect.ALL[which]).apply();
                     changed();
                     refresh();
                 })
@@ -461,6 +493,7 @@ public final class LauncherSettingsActivity extends Activity {
         String name = Config.load(this).greetingName;
         yourNameChoice.setText(getString(R.string.nothing_your_name_state,
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
+        aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(Aspect.mode(this))));
         languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }

@@ -123,6 +123,8 @@ public class ThemeProvider extends ContentProvider {
         now.put(Config.GREETING_NAME_KEY, c.greetingName);
         now.put("animations", c.animations);
         now.put(Config.LOCALE_KEY, c.locale);
+        now.put(Aspect.KEY, Aspect.mode(ctx));
+        now.put("aspects", new JSONArray(java.util.Arrays.asList(Aspect.ALL)));
         now.put("advanced_effects", c.advancedEffects);
         now.put("dock_apps", new JSONArray(c.dockApps));
         // Theme keys a phone app can change too (config.json), as Home uses them now.

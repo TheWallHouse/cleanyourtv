@@ -22,6 +22,11 @@
             android:textSize="34sp" />
 
         <TextView
+            android:id="@+id/aspectChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="28dp" />
+
+        <TextView
             android:id="@+id/reorderChoice"
             style="@style/SettingsRow"
             android:layout_marginTop="28dp"

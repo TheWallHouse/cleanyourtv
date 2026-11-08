@@ -62,6 +62,20 @@ public class SettingsFileTest {
     }
 
     @Test
+    public void theAspectIsOneThisBuildDraws() {
+        for (String aspect : Aspect.ALL) assertEquals(aspect, v(Aspect.KEY, aspect));
+        assertNull(v(Aspect.KEY, "winamp"));
+        assertNull(v(Aspect.KEY, ""));
+    }
+
+    @Test
+    public void theAspectFallsBackFromTheChoiceToTheThemeToNothing() {
+        assertEquals(Aspect.NOTHING, Aspect.of(null, null));
+        assertEquals(Aspect.NOTHING, Aspect.of("winamp", "winamp"));
+        assertEquals(Aspect.NOTHING, Aspect.of(null, Aspect.NOTHING));
+    }
+
+    @Test
     public void nullRemovesAKnownChoiceOnly() {
         assertSame(SettingsFile.REMOVE, SettingsFile.valid("columns", null, true));
         assertNull(SettingsFile.valid("dock_apps", null, true));

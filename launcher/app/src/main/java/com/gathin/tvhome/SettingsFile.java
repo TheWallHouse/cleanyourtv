@@ -36,6 +36,7 @@ final class SettingsFile {
         k.put("advanced_effects", Kind.BOOL);
         k.put(OpenOnStart.KEY, Kind.STRING);
         k.put(Config.LOCALE_KEY, Kind.STRING);
+        k.put(Aspect.KEY, Kind.STRING);
         KEYS = Collections.unmodifiableMap(k);
     }
 
@@ -77,6 +78,7 @@ final class SettingsFile {
                 if (NothingTone.KEY.equals(key)) return NothingTone.OFF.equals(s) || NothingTone.MONO.equals(s) || NothingTone.MONO_RED.equals(s) ? s : null;
                 if (Config.WALLPAPER_CHOICE_KEY.equals(key)) return "none".equals(s) || ThemeFiles.collectionImage(s) ? s : null;
                 if (OpenOnStart.KEY.equals(key)) return s.isEmpty() ? REMOVE : PACKAGE.matcher(s).matches() ? s : null;
+                if (Aspect.KEY.equals(key)) return Aspect.valid(s) ? s : null;
                 if (Config.LOCALE_KEY.equals(key)) return s.isEmpty() ? REMOVE : LOCALE.matcher(s).matches() ? s : null;
                 if (Config.GREETING_NAME_KEY.equals(key)) {
                     String name = s.replaceAll("[\\p{Cntrl}]", " ").trim();
