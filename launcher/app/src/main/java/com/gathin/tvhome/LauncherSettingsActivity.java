@@ -272,6 +272,34 @@ public final class LauncherSettingsActivity extends Activity {
         }
     }
 
+    /** The flag beside each language, or the TV for its own language. */
+    static int languageMark(String tag) {
+        switch (tag) {
+            case "es-ES": return R.drawable.flag_es;
+            case "en-US": return R.drawable.flag_us;
+            case "gl": return R.drawable.flag_gl;
+            default: return R.drawable.ic_lang_tv;
+        }
+    }
+
+    /** The picker's rows: the dialog's own single-choice row, with the language's flag before its name. */
+    private final class LanguageAdapter extends android.widget.ArrayAdapter<String> {
+        LanguageAdapter(String[] labels) {
+            super(LauncherSettingsActivity.this, android.R.layout.select_dialog_singlechoice, labels);
+        }
+
+        @Override
+        public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
+            TextView row = (TextView) super.getView(position, convertView, parent);
+            android.graphics.drawable.Drawable mark = getDrawable(languageMark(LANGUAGES[position]));
+            int h = Math.round(20 * getResources().getDisplayMetrics().density);
+            if (mark != null) mark.setBounds(0, 0, h * 3 / 2, h);
+            row.setCompoundDrawablesRelative(mark, null, null, null);
+            row.setCompoundDrawablePadding(Math.round(14 * getResources().getDisplayMetrics().density));
+            return row;
+        }
+    }
+
     private void showLanguagePicker() {
         String current = choices.getString(Config.LOCALE_KEY, "");
         String[] labels = new String[LANGUAGES.length];
@@ -282,7 +310,7 @@ public final class LauncherSettingsActivity extends Activity {
         }
         new AlertDialog.Builder(this)
                 .setTitle(R.string.nothing_language)
-                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                .setSingleChoiceItems(new LanguageAdapter(labels), checked, (dialog, which) -> {
                     dialog.dismiss();
                     if (LANGUAGES[which].isEmpty()) choices.edit().remove(Config.LOCALE_KEY).apply();
                     else choices.edit().putString(Config.LOCALE_KEY, LANGUAGES[which]).apply();
