@@ -18,7 +18,7 @@ final class Aspect {
      * The looks this build can draw, in Launcher settings' order; settings.json lists them ("aspects") so the phone
      * offers only these. One not here yet is refused like any unknown value.
      */
-    static final String[] ALL = {NOTHING};
+    static final String[] ALL = {NOTHING, WINDOWS, CONSOLE};
 
     private Aspect() {
     }

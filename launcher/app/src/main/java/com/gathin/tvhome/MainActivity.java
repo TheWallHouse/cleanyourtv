@@ -145,6 +145,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private FrameLayout root;
     private WallpaperPlayer wallpaperPlayer;
     private GlassView glass;
+    /** Terminal · Windows over Home (Aspect.WINDOWS), or null in the Nothing look. */
+    private TerminalSkin terminalSkin;
+    private TerminalPalette terminalPalette;
+    /** Terminal · Console over Home (Aspect.CONSOLE), or null. */
+    private ConsoleHome consoleHome;
     private View ambient;
     private TextView heroName;
     /** The top shelf: heroName, plus the cinematic shelf's "Last opened" line and dock position dots. */
@@ -470,6 +475,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         settingsKeycodes = cfg.settingsKeycodes;
         settingsKeyPanel = cfg.settingsKeyPanel;
         COLUMNS = cfg.columns;
+        // WallHouse Launcher's look: the terminal one draws the tiles, the focus frame and the dock from its palette.
+        String aspect = Aspect.mode(this);
+        boolean windows = Aspect.WINDOWS.equals(aspect);
+        terminalPalette = Aspect.terminal(aspect) ? TerminalPalette.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
+                .getString(TerminalPalette.KEY, null)) : null;
+        AppAdapter.terminal = windows ? terminalPalette : null;
+        AppAdapter.terminalFont = windows ? TerminalSkin.font(this) : null;
         animations = cfg.animations;
         advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;
@@ -508,6 +520,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         sky.setIntensity(cfg.skyIntensity);
         glass = findViewById(R.id.glass);
         glass.setStyle(cfg.glassStyle);
+        if (windows) glass.setTerminal(new int[]{terminalPalette.accent, terminalPalette.accent2});
         if (festive) glass.setAccent(festival.accentColor());
         ambient = findViewById(R.id.ambient);
         // The glow is one bitmap, so its alpha can be applied while drawing it. Otherwise every frame of
@@ -678,8 +691,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             public void onChildViewDetachedFromWindow(@NonNull View v) {
             }
         });
-        if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density, cinematic, cfg.alwaysShowNames, cfg.dockOpacity, cfg.dockGlass, cfg.dockEvenPadding, cfg.dockBand,
-                singleRow, cfg.dockBandAll));
+        if (dockRow) {
+            DockDecoration dock = new DockDecoration(COLUMNS, density, cinematic, cfg.alwaysShowNames, cfg.dockOpacity, cfg.dockGlass, cfg.dockEvenPadding, cfg.dockBand,
+                    singleRow, cfg.dockBandAll);
+            dock.setTerminal(windows ? terminalPalette : null);
+            grid.addItemDecoration(dock);
+        }
         if (cfg.fadeRows) TopFade.attach(grid, 48 * density);
         // Reduced motion: the tiles are simply there, with no entrance (reloadApps skips it there too).
         if (animations && !reducedMotion) {
@@ -958,6 +975,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
                     .build(), vpnCallback);
         }
+        if (terminalPalette != null && Aspect.CONSOLE.equals(aspect)) {
+            // The tiles stay underneath, loaded and out of sight, so the list follows Home's order and reloads.
+            ((View) clockBlock.getParent().getParent()).setVisibility(View.INVISIBLE);
+            glass.setVisibility(View.GONE);
+            consoleHome = ConsoleHome.attach(this, terminalPalette, root, adapter, findViewById(R.id.btnWifi), clockFormat,
+                    animations && !reducedMotion, new ConsoleHome.Actions() {
+                        @Override public void inputs() { showInputs(); }
+                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                    });
+            consoleHome.focus();
+        } else if (windows) {
+            terminalSkin = TerminalSkin.apply(this, terminalPalette, root, (ViewGroup) clockBlock, findViewById(R.id.topButtons),
+                    greeting, findViewById(R.id.btnWifi), heroName, clockFormat, animations && !reducedMotion);
+        }
         // Not after recreate(): the launch intent survives it and would open the settings again.
         if (savedInstanceState == null && !openLauncherSettingsIfAsked(getIntent()) && !openLibraryIfAsked(getIntent())) {
             openInputsIfAsked(getIntent());
@@ -1126,6 +1157,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             pillsShown = true;
         }
         if (showStats) startStats();
+        if (consoleHome != null && !consoleHome.hasFocus()) consoleHome.focus();
         if (gameDay != null) gameDay.start();
         sky.update();
         wallpaperPlayer.start();
@@ -1802,6 +1834,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     @Override
     public void onTileFocused(int position, View card) {
+        if (terminalSkin != null) terminalSkin.onFocus(position, COLUMNS);
         lastFocused = position;
         lastFocusedKey = adapter.keyAt(position);
         // Focus restored before the first layout (cold start): the tile has no size yet, and the glass

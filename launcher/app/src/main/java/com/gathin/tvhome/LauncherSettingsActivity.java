@@ -40,6 +40,7 @@ public final class LauncherSettingsActivity extends Activity {
     private TextView yourNameChoice;
     private TextView languageChoice;
     private TextView aspectChoice;
+    private TextView paletteChoice;
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
@@ -136,6 +137,8 @@ public final class LauncherSettingsActivity extends Activity {
         yourNameChoice.setOnClickListener(v -> showYourNameEditor());
         aspectChoice = findViewById(R.id.aspectChoice);
         aspectChoice.setOnClickListener(v -> showAspectPicker());
+        paletteChoice = findViewById(R.id.paletteChoice);
+        paletteChoice.setOnClickListener(v -> showPalettePicker());
         languageChoice = findViewById(R.id.languageChoice);
         languageChoice.setOnClickListener(v -> showLanguagePicker());
         animationsChoice = findViewById(R.id.animationsChoice);
@@ -284,6 +287,21 @@ public final class LauncherSettingsActivity extends Activity {
                 .setSingleChoiceItems(labels, checked, (dialog, which) -> {
                     dialog.dismiss();
                     choices.edit().putString(Aspect.KEY, Aspect.ALL[which]).apply();
+                    changed();
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showPalettePicker() {
+        String current = TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name;
+        int checked = java.util.Arrays.asList(TerminalPalette.ALL).indexOf(current);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.terminal_palette)
+                .setSingleChoiceItems(TerminalPalette.ALL, Math.max(0, checked), (dialog, which) -> {
+                    dialog.dismiss();
+                    choices.edit().putString(TerminalPalette.KEY, TerminalPalette.ALL[which]).apply();
                     changed();
                     refresh();
                 })
@@ -493,7 +511,10 @@ public final class LauncherSettingsActivity extends Activity {
         String name = Config.load(this).greetingName;
         yourNameChoice.setText(getString(R.string.nothing_your_name_state,
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
-        aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(Aspect.mode(this))));
+        String aspect = Aspect.mode(this);
+        aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(aspect)));
+        paletteChoice.setVisibility(Aspect.terminal(aspect) ? View.VISIBLE : View.GONE);
+        paletteChoice.setText(getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
         languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }

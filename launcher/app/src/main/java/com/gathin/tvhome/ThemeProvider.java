@@ -124,6 +124,7 @@ public class ThemeProvider extends ContentProvider {
         now.put("animations", c.animations);
         now.put(Config.LOCALE_KEY, c.locale);
         now.put(Aspect.KEY, Aspect.mode(ctx));
+        now.put(TerminalPalette.KEY, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name);
         now.put("aspects", new JSONArray(java.util.Arrays.asList(Aspect.ALL)));
         now.put("advanced_effects", c.advancedEffects);
         now.put("dock_apps", new JSONArray(c.dockApps));

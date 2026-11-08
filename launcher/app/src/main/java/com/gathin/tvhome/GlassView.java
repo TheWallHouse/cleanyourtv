@@ -29,6 +29,8 @@ public class GlassView extends View {
     /** glass_style rim or halo: no sheen and no fill, only the crisp rim (and, for halo, a lighter outer glow). */
     private boolean flat;
     private boolean halo;
+    /** A terminal look: a square frame from one accent to the other, no glass, no glow. */
+    private int[] terminal;
 
     public GlassView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -69,6 +71,13 @@ public class GlassView extends View {
         invalidate();
     }
 
+    /** The terminal looks' focus frame, from [from] to [to] across the tile; null restores the glass. */
+    void setTerminal(int[] fromTo) {
+        terminal = fromTo;
+        rim.setShader(null);
+        invalidate();
+    }
+
     void setRadius(float px) {
         radius = px;
         invalidate();
@@ -85,6 +94,15 @@ public class GlassView extends View {
     protected void onDraw(Canvas canvas) {
         float inset = 6f * density;   // room for the glow
         rect.set(inset, inset, getWidth() - inset, getHeight() - inset);
+        if (terminal != null) {
+            float w = 3f * density;
+            rim.setStrokeWidth(w);
+            rim.setColor(0xFFFFFFFF);
+            rim.setShader(new LinearGradient(rect.left, rect.top, rect.right, rect.bottom, terminal[0], terminal[1], Shader.TileMode.CLAMP));
+            rect.inset(-w / 2, -w / 2);
+            canvas.drawRect(rect, rim);
+            return;
+        }
 
         // Outer glow: thin rings across the inset, each a little fainter, so it fades out smoothly. Three wide
         // strokes left visible bands once the glow took an app's colour at a stronger alpha. The hardware layer

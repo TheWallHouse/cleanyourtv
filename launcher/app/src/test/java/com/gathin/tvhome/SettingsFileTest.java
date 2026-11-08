@@ -76,6 +76,26 @@ public class SettingsFileTest {
     }
 
     @Test
+    public void thePaletteIsOneOfTheFour() {
+        for (String name : TerminalPalette.ALL) {
+            assertEquals(name, v(TerminalPalette.KEY, name));
+            assertEquals(name, TerminalPalette.of(name).name);
+        }
+        assertNull(v(TerminalPalette.KEY, "solarized"));
+        assertEquals(TerminalPalette.TOKYO_NIGHT, TerminalPalette.of("solarized").name);
+        assertEquals(TerminalPalette.TOKYO_NIGHT, TerminalPalette.of(null).name);
+    }
+
+    @Test
+    public void theTvsNameBecomesAHostName() {
+        assertEquals("habitacion-2", TerminalSkin.slug("Habitación 2"));
+        assertEquals("salon", TerminalSkin.slug("  Salón! "));
+        assertEquals("home", TerminalSkin.slug(null));
+        assertEquals("home", TerminalSkin.slug("★★★"));
+        assertEquals(20, TerminalSkin.slug("a very long name for the living room tv").length() <= 20 ? 20 : 0);
+    }
+
+    @Test
     public void nullRemovesAKnownChoiceOnly() {
         assertSame(SettingsFile.REMOVE, SettingsFile.valid("columns", null, true));
         assertNull(SettingsFile.valid("dock_apps", null, true));

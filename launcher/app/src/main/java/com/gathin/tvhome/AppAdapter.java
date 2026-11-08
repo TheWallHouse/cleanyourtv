@@ -462,6 +462,15 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             View label = v.findViewById(R.id.label);
             label.setPadding(label.getPaddingLeft(), label.getPaddingTop(), label.getPaddingRight(), Math.round(4f * density));
         }
+        if (terminal != null) {
+            // A terminal window's tiles: a 2dp border over the picture, the name in the monospaced font.
+            android.graphics.drawable.GradientDrawable frame = new android.graphics.drawable.GradientDrawable();
+            frame.setStroke(Math.round(2 * density), terminal.border);
+            card.setForeground(frame);
+            TextView label = (TextView) name;
+            if (terminalFont != null) label.setTypeface(terminalFont);
+            label.setTextColor(terminal.fg);
+        }
         return new Holder(v, listener, animations, advancedEffects, reducedMotion, restNameAlpha, focusOvershoot);
     }
 
@@ -570,6 +579,16 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } catch (Exception ex) {
             Toast.makeText(ctx, ctx.getString(R.string.cant_open, e.label), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /** Opens the app at [position] as its tile would: Terminal · Console lists the apps without tiles. */
+    void launchAt(int position) {
+        if (position >= 0 && position < items.size()) launch(items.get(position));
+    }
+
+    /** Whether [position] is an empty dock slot, which a list leaves out. */
+    boolean isEmptyAt(int position) {
+        return position >= 0 && position < items.size() && items.get(position).kind == Entry.EMPTY;
     }
 
     @Override
@@ -904,8 +923,16 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return Color.HSVToColor(hsv);
     }
 
-    /** Corner radius for a tile of this width: 16dp at the design width, proportionally less when smaller. */
+    /**
+     * The terminal look's palette while Home is in one (Aspect.WINDOWS): square tiles with a thin border, names in the
+     * monospaced font. Null for the rounded Nothing tiles. Set by MainActivity before the adapter makes its tiles.
+     */
+    static TerminalPalette terminal;
+    static android.graphics.Typeface terminalFont;
+
+    /** Corner radius for a tile of this width: 16dp at the design width, proportionally less when smaller; square in a terminal look. */
     static float cornerRadius(int tileWidthPx, float density) {
+        if (terminal != null) return 0f;
         return 16f * density * Math.min(1f, tileWidthPx / (DESIGN_W_DP * density));
     }
 

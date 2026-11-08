@@ -170,6 +170,24 @@
     <string name="nothing_your_name_none">none</string>
     <string name="nothing_your_name_hint">Name</string>
     <string name="nothing_your_name_help">Shown in red after the greeting. Leave it empty for the greeting alone.</string>
+    <string name="terminal_theme">theme</string>
+    <string name="terminal_network">net</string>
+    <string name="terminal_uptime">up</string>
+    <string name="terminal_uptime_value">%1$d h %2$d min</string>
+    <string name="terminal_palette">Palette</string>
+    <string name="terminal_palette_state">Palette: %1$s</string>
+    <string name="console_open">open</string>
+    <string name="console_home">home</string>
+    <string name="console_all">all</string>
+    <string name="console_system">system</string>
+    <string name="console_inputs">Inputs</string>
+    <string name="console_launcher_settings">Launcher settings</string>
+    <string name="console_tv_settings">TV settings</string>
+    <string name="console_hint">▲▼ choose · OK open · ◀▶ tabs</string>
+    <string name="console_tv">tv</string>
+    <string name="console_os">os</string>
+    <string name="console_apps">apps</string>
+    <string name="console_apps_value">%1$d installed</string>
     <string name="aspect">Look</string>
     <string name="aspect_state">Look: %1$s</string>
     <string name="aspect_nothing" translatable="false">Nothing</string>
