@@ -181,6 +181,12 @@
     <string name="aspect_state">Aspecto: %1$s</string>
     <string name="aspect_windows">Terminal · Xanelas</string>
     <string name="aspect_console">Terminal · Consola</string>
+    <string name="cyberpunk_tone">Ton</string>
+    <string name="cyberpunk_tone_state">Ton: %1$s</string>
+    <string name="cyberpunk_yellow">Amarelo</string>
+    <string name="cyberpunk_pink">Rosa</string>
+    <string name="cyberpunk_cyan">Cian</string>
+    <string name="cyberpunk_online">Sistema en liña</string>
     <string name="nothing_language">Idioma</string>
     <string name="nothing_language_state">Idioma: %1$s</string>
     <string name="nothing_language_tv">Coma a TV</string>

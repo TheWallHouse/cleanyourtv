@@ -100,4 +100,15 @@ public class SettingsFileTest {
         assertSame(SettingsFile.REMOVE, SettingsFile.valid("columns", null, true));
         assertNull(SettingsFile.valid("dock_apps", null, true));
     }
+
+    @Test
+    public void theCyberpunkToneIsOneOfItsThree() {
+        for (String name : CyberpunkTone.ALL) {
+            assertEquals(name, v(CyberpunkTone.KEY, name));
+            assertEquals(name, CyberpunkTone.of(name).name);
+        }
+        assertNull(v(CyberpunkTone.KEY, "green"));
+        assertEquals(CyberpunkTone.YELLOW, CyberpunkTone.of("green").name);
+        assertEquals(CyberpunkTone.YELLOW, CyberpunkTone.of(null).name);
+    }
 }

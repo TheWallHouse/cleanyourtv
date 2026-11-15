@@ -4,7 +4,8 @@ import android.content.Context;
 
 /**
  * WallHouse Launcher's looks: how Home is drawn over the same apps, dock and settings. "nothing" is the Nothing
- * edition's own; "windows" (Terminal · Windows) and "console" (Terminal · Console) are the terminal-styled ones.
+ * edition's own; "windows" (Terminal · Windows) and "console" (Terminal · Console) are the terminal-styled ones;
+ * "cyberpunk" is a night-city game menu (CyberpunkHome).
  * Chosen in Launcher settings or from the phone (settings.json "aspect"), or by a theme (config.json "aspect").
  * Unlike the other choices it survives a theme push, as the language does: a theme is colours, not the layout.
  */
@@ -13,12 +14,13 @@ final class Aspect {
     static final String NOTHING = "nothing";
     static final String WINDOWS = "windows";
     static final String CONSOLE = "console";
+    static final String CYBERPUNK = "cyberpunk";
 
     /**
      * The looks this build can draw, in Launcher settings' order; settings.json lists them ("aspects") so the phone
      * offers only these. One not here yet is refused like any unknown value.
      */
-    static final String[] ALL = {NOTHING, WINDOWS, CONSOLE};
+    static final String[] ALL = {NOTHING, WINDOWS, CONSOLE, CYBERPUNK};
 
     private Aspect() {
     }

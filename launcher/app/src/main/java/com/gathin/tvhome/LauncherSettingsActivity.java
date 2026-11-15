@@ -138,7 +138,10 @@ public final class LauncherSettingsActivity extends Activity {
         aspectChoice = findViewById(R.id.aspectChoice);
         aspectChoice.setOnClickListener(v -> showAspectPicker());
         paletteChoice = findViewById(R.id.paletteChoice);
-        paletteChoice.setOnClickListener(v -> showPalettePicker());
+        paletteChoice.setOnClickListener(v -> {
+            if (Aspect.CYBERPUNK.equals(Aspect.mode(this))) showTonePicker();
+            else showPalettePicker();
+        });
         languageChoice = findViewById(R.id.languageChoice);
         languageChoice.setOnClickListener(v -> showLanguagePicker());
         animationsChoice = findViewById(R.id.animationsChoice);
@@ -269,6 +272,7 @@ public final class LauncherSettingsActivity extends Activity {
         switch (aspect) {
             case Aspect.WINDOWS: return getString(R.string.aspect_windows);
             case Aspect.CONSOLE: return getString(R.string.aspect_console);
+            case Aspect.CYBERPUNK: return getString(R.string.aspect_cyberpunk);
             default: return getString(R.string.aspect_nothing);
         }
     }
@@ -287,6 +291,31 @@ public final class LauncherSettingsActivity extends Activity {
                 .setSingleChoiceItems(labels, checked, (dialog, which) -> {
                     dialog.dismiss();
                     choices.edit().putString(Aspect.KEY, Aspect.ALL[which]).apply();
+                    changed();
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private String toneLabel(String tone) {
+        switch (tone) {
+            case CyberpunkTone.PINK: return getString(R.string.cyberpunk_pink);
+            case CyberpunkTone.CYAN: return getString(R.string.cyberpunk_cyan);
+            default: return getString(R.string.cyberpunk_yellow);
+        }
+    }
+
+    /** Cyberpunk's neon colour, in the row the terminal looks use for their palette. */
+    private void showTonePicker() {
+        String current = CyberpunkTone.of(choices.getString(CyberpunkTone.KEY, null)).name;
+        String[] labels = new String[CyberpunkTone.ALL.length];
+        for (int i = 0; i < labels.length; i++) labels[i] = toneLabel(CyberpunkTone.ALL[i]);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.cyberpunk_tone)
+                .setSingleChoiceItems(labels, Math.max(0, java.util.Arrays.asList(CyberpunkTone.ALL).indexOf(current)), (dialog, which) -> {
+                    dialog.dismiss();
+                    choices.edit().putString(CyberpunkTone.KEY, CyberpunkTone.ALL[which]).apply();
                     changed();
                     refresh();
                 })
@@ -513,8 +542,11 @@ public final class LauncherSettingsActivity extends Activity {
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
         String aspect = Aspect.mode(this);
         aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(aspect)));
-        paletteChoice.setVisibility(Aspect.terminal(aspect) ? View.VISIBLE : View.GONE);
-        paletteChoice.setText(getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
+        boolean cyberpunk = Aspect.CYBERPUNK.equals(aspect);
+        paletteChoice.setVisibility(Aspect.terminal(aspect) || cyberpunk ? View.VISIBLE : View.GONE);
+        paletteChoice.setText(cyberpunk
+                ? getString(R.string.cyberpunk_tone_state, toneLabel(CyberpunkTone.of(choices.getString(CyberpunkTone.KEY, null)).name))
+                : getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
         languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }

@@ -193,6 +193,13 @@
     <string name="aspect_nothing" translatable="false">Nothing</string>
     <string name="aspect_windows">Terminal · Windows</string>
     <string name="aspect_console">Terminal · Console</string>
+    <string name="aspect_cyberpunk" translatable="false">Cyberpunk</string>
+    <string name="cyberpunk_tone">Tone</string>
+    <string name="cyberpunk_tone_state">Tone: %1$s</string>
+    <string name="cyberpunk_yellow">Yellow</string>
+    <string name="cyberpunk_pink">Pink</string>
+    <string name="cyberpunk_cyan">Cyan</string>
+    <string name="cyberpunk_online">System online</string>
     <string name="nothing_language">Language</string>
     <string name="nothing_language_state">Language: %1$s</string>
     <string name="nothing_language_tv">As the TV</string>
