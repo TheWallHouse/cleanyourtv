@@ -1,0 +1,33 @@
+# What this repo keeps of CleanYourTV: WallHouse Launcher and what installs it. tools/sync-cleanyourtv.sh drops
+# everything else when it brings in CleanYourTV's changes. A line ending in / keeps the whole folder.
+.editorconfig
+.gitattributes
+.gitignore
+.wallhouse-keep
+LICENSE
+NOTHING.md
+.github/README.md
+launcher/
+themes/nothing/
+themes/README.md
+docs/nothing/
+docs/TROUBLESHOOTING.md
+tools/tv.py
+tools/b64push.py
+tools/theme.sh
+tools/theme.ps1
+tools/theme_restart.py
+tools/disable.sh
+tools/disable.ps1
+tools/check.py
+tools/recovery.py
+tools/restore.sh
+tools/restore.ps1
+tools/adb-closed.py
+tools/docker-build.sh
+tools/docker-build.ps1
+tools/docker-build.md
+tools/docker/
+tools/native-adb.md
+tools/requirements.txt
+tools/sync-cleanyourtv.sh
