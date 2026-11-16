@@ -191,6 +191,8 @@
     <string name="dune_noon">Mediodía</string>
     <string name="dune_night">Noite</string>
     <string name="dune_open">Preme OK para abrir</string>
+    <string name="dune_launcher">Launcher</string>
+    <string name="dune_tv">Tele</string>
     <string name="aspect_legend">Mapa</string>
     <string name="legend_parchment">Pergamiño</string>
     <string name="legend_embers">Brasas</string>

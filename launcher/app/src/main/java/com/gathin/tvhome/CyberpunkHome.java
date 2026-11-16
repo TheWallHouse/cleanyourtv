@@ -89,6 +89,7 @@ final class CyberpunkHome {
         CyberpunkHome c = new CyberpunkHome(ctx, p, adapter, actions, motion);
         c.build(clockFormat);
         root.addView(c.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        Overlay.isolate(root, c.view);
         if (wifi != null) {
             c.networkText = String.valueOf(wifi.getText());
             wifi.addTextChangedListener(new TextWatcher() {
@@ -206,11 +207,13 @@ final class CyberpunkHome {
             LinearLayout cell = new LinearLayout(ctx);
             cell.setOrientation(LinearLayout.VERTICAL);
             TextView t = text(12, p.muted, true, 0.2f);
-            t.setText(upper(ctx.getString(names[i])));
+            String label = upper(ctx.getString(names[i]));
+            t.setText(label);
             cell.addView(t);
+            // The underline is as wide as the label: a MATCH_PARENT line would stretch the cell across the row.
             View line = new View(ctx);
-            LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(2.5f));
-            ll.topMargin = dp(5);
+            LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams((int) Math.ceil(t.getPaint().measureText(label)), dp(2.5f));
+            ll.topMargin = dp(6);
             cell.addView(line, ll);
             LinearLayout.LayoutParams cl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             cl.leftMargin = dp(20);
@@ -295,7 +298,7 @@ final class CyberpunkHome {
         }
         renderInfo();
         if (list.getChildCount() == 0) return;
-        if (focusFirst || (had && focusedIndex < 0)) {
+        if (focusFirst || !view.hasFocus() || (had && focusedIndex < 0)) {
             list.getChildAt(0).requestFocus();
             scroll.scrollTo(0, 0);
         } else if (had) {

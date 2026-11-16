@@ -64,6 +64,8 @@ final class DuneHome {
     private boolean all;
     private final List<Item> items = new ArrayList<>();
     private int index;
+    /** The viewer has moved along the row: a reload keeps their card; before that the row starts at the first app. */
+    private boolean moved;
 
     private DuneHome(Context ctx, DuneTone p, AppAdapter adapter, ConsoleHome.Actions actions, boolean motion) {
         this.ctx = ctx;
@@ -85,6 +87,7 @@ final class DuneHome {
         DuneHome d = new DuneHome(ctx, p, adapter, actions, motion);
         d.build(clockFormat);
         root.addView(d.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        Overlay.isolate(root, d.view);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override public void onChanged() { d.fill(false); }
             @Override public void onItemRangeInserted(int start, int count) { d.fill(false); }
@@ -150,7 +153,7 @@ final class DuneHome {
         title = text(wide, 42, p.fg, 0.5f);
         title.setSingleLine(true);
         title.setGravity(Gravity.CENTER);
-        title.setAutoSizeTextTypeUniformWithConfiguration(16, 42, 1, TypedValue.COMPLEX_UNIT_SP);
+        title.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> { if (r - l != or - ol) showTitle(); });
         FrameLayout.LayoutParams tl = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(58), Gravity.TOP);
         tl.topMargin = dp(78);
         tl.leftMargin = dp(40);
@@ -187,7 +190,7 @@ final class DuneHome {
 
     /** Rebuilds the row: the dock's apps (or all of them), then the two settings cards. */
     private void fill(boolean first) {
-        String focusedKey = !first && index < items.size() ? items.get(index).label : null;
+        String focusedKey = !first && moved && index < items.size() ? items.get(index).label : null;
         items.clear();
         int n = adapter.appCount();
         int end = all ? n : Math.min(n, Math.max(adapter.dockFilled(), 0));
@@ -197,8 +200,8 @@ final class DuneHome {
             final int pos = i;
             items.add(new Item(adapter.labelAt(i), i, () -> adapter.launchAt(pos)));
         }
-        items.add(new Item(ctx.getString(R.string.console_launcher_settings), -1, actions::launcherSettings));
-        items.add(new Item(ctx.getString(R.string.console_tv_settings), -1, () -> {
+        items.add(new Item(ctx.getString(R.string.dune_launcher), -1, actions::launcherSettings));
+        items.add(new Item(ctx.getString(R.string.dune_tv), -1, () -> {
             try {
                 ctx.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } catch (RuntimeException ignored) {
@@ -207,19 +210,21 @@ final class DuneHome {
         }));
         int keep = 0;
         if (focusedKey != null) for (int i = 0; i < items.size(); i++) if (items.get(i).label.equals(focusedKey)) keep = i;
-        index = first ? 0 : Math.min(keep, items.size() - 1);
+        index = first || !moved ? 0 : Math.min(keep, items.size() - 1);
         row.jump(index);
         down.setText("▼  " + upper(ctx.getString(all ? R.string.console_home : R.string.console_all)));
         showTitle();
     }
 
     private void showTitle() {
-        title.setText(index < items.size() ? upper(items.get(index).label) : "");
+        int width = title.getWidth() > 0 ? title.getWidth() : view.getResources().getDisplayMetrics().widthPixels - dp(80);
+        Overlay.fit(title, index < items.size() ? upper(items.get(index).label) : "", 42, 16, width);
     }
 
     private void move(int by) {
         int next = Math.max(0, Math.min(items.size() - 1, index + by));
         if (next == index) return;
+        moved = true;
         index = next;
         showTitle();
         row.slideTo(index);
@@ -311,7 +316,7 @@ final class DuneHome {
             box.set(centre - w / 2, bottom - h, centre + w / 2, bottom);
             float r = dp(5);
             fill.setColor(p.card);
-            fill.setAlpha(Math.round(Color.alpha(p.card) * a));
+            fill.setAlpha(on ? 0xF0 : Math.round(Color.alpha(p.card) * a));
             canvas.drawRoundRect(box, r, r, fill);
             stroke.setColor(on ? p.edge : p.faint);
             stroke.setStrokeWidth(on ? dp(2) : Math.max(1, dp(1)));

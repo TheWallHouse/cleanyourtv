@@ -64,6 +64,8 @@ final class LegendHome {
     private String greeting = "";
     private final List<Target> targets = new ArrayList<>();
     private int focused;
+    /** The viewer has moved on the map: a reload keeps their place; before that the first app is focused. */
+    private boolean moved;
 
     private LegendHome(Context ctx, LegendTone p, AppAdapter adapter, String clockFormat, Actions actions) {
         this.ctx = ctx;
@@ -84,6 +86,7 @@ final class LegendHome {
         LegendHome l = new LegendHome(ctx, p, adapter, clockFormat, actions);
         l.build();
         root.addView(l.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        Overlay.isolate(root, l.view);
         if (greetingView != null) {
             l.greeting = String.valueOf(greetingView.getText());
             greetingView.addTextChangedListener(new TextWatcher() {
@@ -139,7 +142,7 @@ final class LegendHome {
     }
 
     private void fill() {
-        String was = focused < targets.size() ? targets.get(focused).label : null;
+        String was = moved && focused < targets.size() ? targets.get(focused).label : null;
         targets.clear();
         int n = adapter.appCount();
         int end = Math.min(n, Math.max(adapter.dockFilled(), 0));
@@ -452,6 +455,7 @@ final class LegendHome {
                     return super.onKeyDown(keyCode, event);
             }
             if (next >= 0) {
+                moved = true;
                 focused = next;
                 invalidate();
             }

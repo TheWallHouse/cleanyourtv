@@ -97,6 +97,7 @@ final class ConsoleHome {
         ConsoleHome c = new ConsoleHome(ctx, p, adapter, actions, blink);
         c.build(clockFormat);
         root.addView(c.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        Overlay.isolate(root, c.view);
         if (wifi != null) {
             c.networkText = String.valueOf(wifi.getText());
             wifi.addTextChangedListener(new TextWatcher() {
@@ -347,7 +348,7 @@ final class ConsoleHome {
         }
         renderInfo();
         if (list.getChildCount() == 0) return;
-        if (focusFirst || (had && focusedIndex < 0)) {
+        if (focusFirst || !view.hasFocus() || (had && focusedIndex < 0)) {
             list.getChildAt(0).requestFocus();
             scroll.scrollTo(0, 0);
         } else if (had) {

@@ -129,7 +129,6 @@ final class OrbitSkin {
         name = text(light, 46, p.fg, 0.14f);
         name.setSingleLine(true);
         name.setEllipsize(TextUtils.TruncateAt.END);
-        name.setAutoSizeTextTypeUniformWithConfiguration(20, 46, 1, TypedValue.COMPLEX_UNIT_SP);
         LinearLayout.LayoutParams nl = new LinearLayout.LayoutParams(dp(520), dp(54));
         nl.topMargin = dp(8);
         column.addView(name, nl);
@@ -204,7 +203,7 @@ final class OrbitSkin {
             strip.addView(cell(ctx.getString(keys[i]), values[i]));
         }
         FrameLayout.LayoutParams sl = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.END);
-        sl.topMargin = dp(84);
+        sl.topMargin = dp(26);
         sl.rightMargin = dp(48);
         root.addView(strip, sl);
         renderUptime();
@@ -235,7 +234,7 @@ final class OrbitSkin {
             if (i <= position) place = total;
         }
         if (adapter.isEmptyAt(position)) place = 0;
-        name.setText(place > 0 ? upper(adapter.labelAt(position)) : "");
+        Overlay.fit(name, place > 0 ? upper(adapter.labelAt(position)) : "", 46, 18, dp(520));
         mission.setText(upper(ctx.getString(R.string.orbit_mission)) + (place > 0 ? String.format(Locale.ROOT, "  ·  %02d / %02d", place, total) : ""));
         ViewGroup.LayoutParams l = progress.getLayoutParams();
         l.width = total > 0 ? Math.round(progressWidth * place / (float) total) : 0;
