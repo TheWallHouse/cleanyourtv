@@ -111,4 +111,15 @@ public class SettingsFileTest {
         assertEquals(CyberpunkTone.YELLOW, CyberpunkTone.of("green").name);
         assertEquals(CyberpunkTone.YELLOW, CyberpunkTone.of(null).name);
     }
+
+    @Test
+    public void theDuneToneIsOneOfItsThree() {
+        for (String name : DuneTone.ALL) {
+            assertEquals(name, v(DuneTone.KEY, name));
+            assertEquals(name, DuneTone.of(name).name);
+        }
+        assertNull(v(DuneTone.KEY, "dawn"));
+        assertEquals(DuneTone.DUSK, DuneTone.of("dawn").name);
+        assertEquals(DuneTone.DUSK, DuneTone.of(null).name);
+    }
 }

@@ -200,6 +200,11 @@
     <string name="cyberpunk_pink">Pink</string>
     <string name="cyberpunk_cyan">Cyan</string>
     <string name="cyberpunk_online">System online</string>
+    <string name="aspect_dune" translatable="false">Dune</string>
+    <string name="dune_dusk">Dusk</string>
+    <string name="dune_noon">Noon</string>
+    <string name="dune_night">Night</string>
+    <string name="dune_open">Press OK to open</string>
     <string name="nothing_language">Language</string>
     <string name="nothing_language_state">Language: %1$s</string>
     <string name="nothing_language_tv">As the TV</string>

@@ -187,6 +187,10 @@
     <string name="cyberpunk_pink">Rosa</string>
     <string name="cyberpunk_cyan">Cian</string>
     <string name="cyberpunk_online">Sistema en línea</string>
+    <string name="dune_dusk">Atardecer</string>
+    <string name="dune_noon">Mediodía</string>
+    <string name="dune_night">Noche</string>
+    <string name="dune_open">Pulsa OK para abrir</string>
     <string name="nothing_language">Idioma</string>
     <string name="nothing_language_state">Idioma: %1$s</string>
     <string name="nothing_language_tv">Como la TV</string>

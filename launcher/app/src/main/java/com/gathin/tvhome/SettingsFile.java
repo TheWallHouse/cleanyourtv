@@ -39,6 +39,7 @@ final class SettingsFile {
         k.put(Aspect.KEY, Kind.STRING);
         k.put(TerminalPalette.KEY, Kind.STRING);
         k.put(CyberpunkTone.KEY, Kind.STRING);
+        k.put(DuneTone.KEY, Kind.STRING);
         KEYS = Collections.unmodifiableMap(k);
     }
 
@@ -83,6 +84,7 @@ final class SettingsFile {
                 if (Aspect.KEY.equals(key)) return Aspect.valid(s) ? s : null;
                 if (TerminalPalette.KEY.equals(key)) return TerminalPalette.valid(s) ? s : null;
                 if (CyberpunkTone.KEY.equals(key)) return CyberpunkTone.valid(s) ? s : null;
+                if (DuneTone.KEY.equals(key)) return DuneTone.valid(s) ? s : null;
                 if (Config.LOCALE_KEY.equals(key)) return s.isEmpty() ? REMOVE : LOCALE.matcher(s).matches() ? s : null;
                 if (Config.GREETING_NAME_KEY.equals(key)) {
                     String name = s.replaceAll("[\\p{Cntrl}]", " ").trim();

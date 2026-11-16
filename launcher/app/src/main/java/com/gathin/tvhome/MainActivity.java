@@ -153,6 +153,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private ConsoleHome consoleHome;
     /** Cyberpunk over Home (Aspect.CYBERPUNK), or null. */
     private CyberpunkHome cyberpunkHome;
+    /** Dune over Home (Aspect.DUNE), or null. */
+    private DuneHome duneHome;
     private View ambient;
     private TextView heroName;
     /** The top shelf: heroName, plus the cinematic shelf's "Last opened" line and dock position dots. */
@@ -1009,6 +1011,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
                     });
             cyberpunkHome.focus();
+        } else if (Aspect.DUNE.equals(aspect)) {
+            ((View) clockBlock.getParent().getParent()).setVisibility(View.INVISIBLE);
+            glass.setVisibility(View.GONE);
+            duneHome = DuneHome.attach(this, DuneTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
+                            .getString(DuneTone.KEY, null)), root, adapter, clockFormat,
+                    animations && !reducedMotion, new ConsoleHome.Actions() {
+                        @Override public void inputs() { showInputs(); }
+                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                    });
+            duneHome.focus();
         } else if (windows) {
             terminalSkin = TerminalSkin.apply(this, terminalPalette, root, (ViewGroup) clockBlock, findViewById(R.id.topButtons),
                     greeting, findViewById(R.id.btnWifi), heroName, clockFormat, animations && !reducedMotion);
@@ -1184,6 +1196,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (showStats) startStats();
         if (consoleHome != null && !consoleHome.hasFocus()) consoleHome.focus();
         if (cyberpunkHome != null && !cyberpunkHome.hasFocus()) cyberpunkHome.focus();
+        if (duneHome != null && !duneHome.hasFocus()) duneHome.focus();
         if (gameDay != null) gameDay.start();
         sky.update();
         wallpaperPlayer.start();

@@ -139,7 +139,8 @@ public final class LauncherSettingsActivity extends Activity {
         aspectChoice.setOnClickListener(v -> showAspectPicker());
         paletteChoice = findViewById(R.id.paletteChoice);
         paletteChoice.setOnClickListener(v -> {
-            if (Aspect.CYBERPUNK.equals(Aspect.mode(this))) showTonePicker();
+            String look = Aspect.mode(this);
+            if (Aspect.CYBERPUNK.equals(look) || Aspect.DUNE.equals(look)) showTonePicker(look);
             else showPalettePicker();
         });
         languageChoice = findViewById(R.id.languageChoice);
@@ -273,6 +274,7 @@ public final class LauncherSettingsActivity extends Activity {
             case Aspect.WINDOWS: return getString(R.string.aspect_windows);
             case Aspect.CONSOLE: return getString(R.string.aspect_console);
             case Aspect.CYBERPUNK: return getString(R.string.aspect_cyberpunk);
+            case Aspect.DUNE: return getString(R.string.aspect_dune);
             default: return getString(R.string.aspect_nothing);
         }
     }
@@ -302,20 +304,36 @@ public final class LauncherSettingsActivity extends Activity {
         switch (tone) {
             case CyberpunkTone.PINK: return getString(R.string.cyberpunk_pink);
             case CyberpunkTone.CYAN: return getString(R.string.cyberpunk_cyan);
+            case DuneTone.DUSK: return getString(R.string.dune_dusk);
+            case DuneTone.NOON: return getString(R.string.dune_noon);
+            case DuneTone.NIGHT: return getString(R.string.dune_night);
             default: return getString(R.string.cyberpunk_yellow);
         }
     }
 
-    /** Cyberpunk's neon colour, in the row the terminal looks use for their palette. */
-    private void showTonePicker() {
-        String current = CyberpunkTone.of(choices.getString(CyberpunkTone.KEY, null)).name;
-        String[] labels = new String[CyberpunkTone.ALL.length];
-        for (int i = 0; i < labels.length; i++) labels[i] = toneLabel(CyberpunkTone.ALL[i]);
+    private String toneKey(String aspect) {
+        return Aspect.DUNE.equals(aspect) ? DuneTone.KEY : CyberpunkTone.KEY;
+    }
+
+    private String[] tones(String aspect) {
+        return Aspect.DUNE.equals(aspect) ? DuneTone.ALL : CyberpunkTone.ALL;
+    }
+
+    private String currentTone(String aspect) {
+        String chosen = choices.getString(toneKey(aspect), null);
+        return Aspect.DUNE.equals(aspect) ? DuneTone.of(chosen).name : CyberpunkTone.of(chosen).name;
+    }
+
+    /** Cyberpunk's and Dune's colours, in the row the terminal looks use for their palette. */
+    private void showTonePicker(String aspect) {
+        String[] all = tones(aspect);
+        String[] labels = new String[all.length];
+        for (int i = 0; i < labels.length; i++) labels[i] = toneLabel(all[i]);
         new AlertDialog.Builder(this)
                 .setTitle(R.string.cyberpunk_tone)
-                .setSingleChoiceItems(labels, Math.max(0, java.util.Arrays.asList(CyberpunkTone.ALL).indexOf(current)), (dialog, which) -> {
+                .setSingleChoiceItems(labels, Math.max(0, java.util.Arrays.asList(all).indexOf(currentTone(aspect))), (dialog, which) -> {
                     dialog.dismiss();
-                    choices.edit().putString(CyberpunkTone.KEY, CyberpunkTone.ALL[which]).apply();
+                    choices.edit().putString(toneKey(aspect), all[which]).apply();
                     changed();
                     refresh();
                 })
@@ -542,10 +560,10 @@ public final class LauncherSettingsActivity extends Activity {
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
         String aspect = Aspect.mode(this);
         aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(aspect)));
-        boolean cyberpunk = Aspect.CYBERPUNK.equals(aspect);
-        paletteChoice.setVisibility(Aspect.terminal(aspect) || cyberpunk ? View.VISIBLE : View.GONE);
-        paletteChoice.setText(cyberpunk
-                ? getString(R.string.cyberpunk_tone_state, toneLabel(CyberpunkTone.of(choices.getString(CyberpunkTone.KEY, null)).name))
+        boolean toned = Aspect.CYBERPUNK.equals(aspect) || Aspect.DUNE.equals(aspect);
+        paletteChoice.setVisibility(Aspect.terminal(aspect) || toned ? View.VISIBLE : View.GONE);
+        paletteChoice.setText(toned
+                ? getString(R.string.cyberpunk_tone_state, toneLabel(currentTone(aspect)))
                 : getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
         languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
