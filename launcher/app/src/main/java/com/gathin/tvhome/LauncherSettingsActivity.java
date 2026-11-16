@@ -140,7 +140,7 @@ public final class LauncherSettingsActivity extends Activity {
         paletteChoice = findViewById(R.id.paletteChoice);
         paletteChoice.setOnClickListener(v -> {
             String look = Aspect.mode(this);
-            if (Aspect.CYBERPUNK.equals(look) || Aspect.DUNE.equals(look)) showTonePicker(look);
+            if (toned(look)) showTonePicker(look);
             else showPalettePicker();
         });
         languageChoice = findViewById(R.id.languageChoice);
@@ -275,6 +275,7 @@ public final class LauncherSettingsActivity extends Activity {
             case Aspect.CONSOLE: return getString(R.string.aspect_console);
             case Aspect.CYBERPUNK: return getString(R.string.aspect_cyberpunk);
             case Aspect.DUNE: return getString(R.string.aspect_dune);
+            case Aspect.LEGEND: return getString(R.string.aspect_legend);
             default: return getString(R.string.aspect_nothing);
         }
     }
@@ -307,21 +308,30 @@ public final class LauncherSettingsActivity extends Activity {
             case DuneTone.DUSK: return getString(R.string.dune_dusk);
             case DuneTone.NOON: return getString(R.string.dune_noon);
             case DuneTone.NIGHT: return getString(R.string.dune_night);
+            case LegendTone.PARCHMENT: return getString(R.string.legend_parchment);
+            case LegendTone.EMBERS: return getString(R.string.legend_embers);
             default: return getString(R.string.cyberpunk_yellow);
         }
     }
 
+    /** The looks with a tone of their own (in the palette's row). */
+    private static boolean toned(String aspect) {
+        return Aspect.CYBERPUNK.equals(aspect) || Aspect.DUNE.equals(aspect) || Aspect.LEGEND.equals(aspect);
+    }
+
     private String toneKey(String aspect) {
-        return Aspect.DUNE.equals(aspect) ? DuneTone.KEY : CyberpunkTone.KEY;
+        return Aspect.DUNE.equals(aspect) ? DuneTone.KEY : Aspect.LEGEND.equals(aspect) ? LegendTone.KEY : CyberpunkTone.KEY;
     }
 
     private String[] tones(String aspect) {
-        return Aspect.DUNE.equals(aspect) ? DuneTone.ALL : CyberpunkTone.ALL;
+        return Aspect.DUNE.equals(aspect) ? DuneTone.ALL : Aspect.LEGEND.equals(aspect) ? LegendTone.ALL : CyberpunkTone.ALL;
     }
 
     private String currentTone(String aspect) {
         String chosen = choices.getString(toneKey(aspect), null);
-        return Aspect.DUNE.equals(aspect) ? DuneTone.of(chosen).name : CyberpunkTone.of(chosen).name;
+        if (Aspect.DUNE.equals(aspect)) return DuneTone.of(chosen).name;
+        if (Aspect.LEGEND.equals(aspect)) return LegendTone.of(chosen).name;
+        return CyberpunkTone.of(chosen).name;
     }
 
     /** Cyberpunk's and Dune's colours, in the row the terminal looks use for their palette. */
@@ -560,7 +570,7 @@ public final class LauncherSettingsActivity extends Activity {
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
         String aspect = Aspect.mode(this);
         aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(aspect)));
-        boolean toned = Aspect.CYBERPUNK.equals(aspect) || Aspect.DUNE.equals(aspect);
+        boolean toned = toned(aspect);
         paletteChoice.setVisibility(Aspect.terminal(aspect) || toned ? View.VISIBLE : View.GONE);
         paletteChoice.setText(toned
                 ? getString(R.string.cyberpunk_tone_state, toneLabel(currentTone(aspect)))
