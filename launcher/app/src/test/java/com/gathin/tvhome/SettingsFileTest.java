@@ -144,4 +144,15 @@ public class SettingsFileTest {
         assertEquals(0.5299464f, r.next(), 1e-6f);
         assertEquals(0.6081186f, r.next(), 1e-6f);
     }
+
+    @Test
+    public void theOrbitToneIsOneOfItsThree() {
+        for (String name : OrbitTone.ALL) {
+            assertEquals(name, v(OrbitTone.KEY, name));
+            assertEquals(name, OrbitTone.of(name).name);
+        }
+        assertNull(v(OrbitTone.KEY, "moon"));
+        assertEquals(OrbitTone.NIGHT, OrbitTone.of("moon").name);
+        assertEquals(OrbitTone.NIGHT, OrbitTone.of(null).name);
+    }
 }

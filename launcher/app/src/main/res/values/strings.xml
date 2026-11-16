@@ -218,6 +218,15 @@
     <string name="legend_region_sea">Sea of Dusk</string>
     <string name="legend_region_ash">Ash Mountains</string>
     <string name="legend_region_isles">Silent Isles</string>
+    <string name="aspect_orbit">Orbit</string>
+    <string name="orbit_sunrise">Sunrise</string>
+    <string name="orbit_mars">Mars</string>
+    <string name="orbit_mission">Mission in progress</string>
+    <string name="orbit_launch">Press OK to launch</string>
+    <string name="orbit_time">Local time</string>
+    <string name="orbit_date">Date</string>
+    <string name="orbit_link">Link</string>
+    <string name="orbit_up">In orbit</string>
     <string name="nothing_language">Language</string>
     <string name="nothing_language_state">Language: %1$s</string>
     <string name="nothing_language_tv">As the TV</string>

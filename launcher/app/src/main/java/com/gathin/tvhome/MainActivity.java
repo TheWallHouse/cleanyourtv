@@ -157,6 +157,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private DuneHome duneHome;
     /** Legend over Home (Aspect.LEGEND), or null. */
     private LegendHome legendHome;
+    /** Orbit over Home's own tiles (Aspect.ORBIT), or null. */
+    private OrbitSkin orbitSkin;
     private View ambient;
     private TextView heroName;
     /** The top shelf: heroName, plus the cinematic shelf's "Last opened" line and dock position dots. */
@@ -1034,6 +1036,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
                     });
             legendHome.focus();
+        } else if (Aspect.ORBIT.equals(aspect)) {
+            // The scenery takes the wallpaper's place: drop its picture and stop it rotating.
+            wallpaperPlayer.releaseForMemoryPressure();
+            wallpaperPlayer.close();
+            orbitSkin = OrbitSkin.apply(this, OrbitTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
+                            .getString(OrbitTone.KEY, null)), adapter, root, sky, new View[]{sky, ambient, hero},
+                    (ViewGroup) clockBlock, findViewById(R.id.btnWifi), clockFormat);
         } else if (windows) {
             terminalSkin = TerminalSkin.apply(this, terminalPalette, root, (ViewGroup) clockBlock, findViewById(R.id.topButtons),
                     greeting, findViewById(R.id.btnWifi), heroName, clockFormat, animations && !reducedMotion);
@@ -1904,6 +1913,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public void onTileFocused(int position, View card) {
         if (terminalSkin != null) terminalSkin.onFocus(position, COLUMNS);
+        if (orbitSkin != null) orbitSkin.onFocus(position);
         lastFocused = position;
         lastFocusedKey = adapter.keyAt(position);
         // Focus restored before the first layout (cold start): the tile has no size yet, and the glass

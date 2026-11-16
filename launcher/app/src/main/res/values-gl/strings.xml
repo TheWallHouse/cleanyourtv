@@ -204,6 +204,15 @@
     <string name="legend_region_sea">Mar do Solpor</string>
     <string name="legend_region_ash">Montes de Cinza</string>
     <string name="legend_region_isles">Illas Caladas</string>
+    <string name="aspect_orbit">Órbita</string>
+    <string name="orbit_sunrise">Amencer</string>
+    <string name="orbit_mars">Marte</string>
+    <string name="orbit_mission">Misión en curso</string>
+    <string name="orbit_launch">Preme OK para lanzar</string>
+    <string name="orbit_time">Hora local</string>
+    <string name="orbit_date">Data</string>
+    <string name="orbit_link">Ligazón</string>
+    <string name="orbit_up">En órbita</string>
     <string name="nothing_language">Idioma</string>
     <string name="nothing_language_state">Idioma: %1$s</string>
     <string name="nothing_language_tv">Coma a TV</string>

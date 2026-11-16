@@ -276,6 +276,7 @@ public final class LauncherSettingsActivity extends Activity {
             case Aspect.CYBERPUNK: return getString(R.string.aspect_cyberpunk);
             case Aspect.DUNE: return getString(R.string.aspect_dune);
             case Aspect.LEGEND: return getString(R.string.aspect_legend);
+            case Aspect.ORBIT: return getString(R.string.aspect_orbit);
             default: return getString(R.string.aspect_nothing);
         }
     }
@@ -310,20 +311,25 @@ public final class LauncherSettingsActivity extends Activity {
             case DuneTone.NIGHT: return getString(R.string.dune_night);
             case LegendTone.PARCHMENT: return getString(R.string.legend_parchment);
             case LegendTone.EMBERS: return getString(R.string.legend_embers);
+            case OrbitTone.SUNRISE: return getString(R.string.orbit_sunrise);
+            case OrbitTone.MARS: return getString(R.string.orbit_mars);
             default: return getString(R.string.cyberpunk_yellow);
         }
     }
 
     /** The looks with a tone of their own (in the palette's row). */
     private static boolean toned(String aspect) {
-        return Aspect.CYBERPUNK.equals(aspect) || Aspect.DUNE.equals(aspect) || Aspect.LEGEND.equals(aspect);
+        return Aspect.CYBERPUNK.equals(aspect) || Aspect.DUNE.equals(aspect) || Aspect.LEGEND.equals(aspect)
+                || Aspect.ORBIT.equals(aspect);
     }
 
     private String toneKey(String aspect) {
+        if (Aspect.ORBIT.equals(aspect)) return OrbitTone.KEY;
         return Aspect.DUNE.equals(aspect) ? DuneTone.KEY : Aspect.LEGEND.equals(aspect) ? LegendTone.KEY : CyberpunkTone.KEY;
     }
 
     private String[] tones(String aspect) {
+        if (Aspect.ORBIT.equals(aspect)) return OrbitTone.ALL;
         return Aspect.DUNE.equals(aspect) ? DuneTone.ALL : Aspect.LEGEND.equals(aspect) ? LegendTone.ALL : CyberpunkTone.ALL;
     }
 
@@ -331,6 +337,7 @@ public final class LauncherSettingsActivity extends Activity {
         String chosen = choices.getString(toneKey(aspect), null);
         if (Aspect.DUNE.equals(aspect)) return DuneTone.of(chosen).name;
         if (Aspect.LEGEND.equals(aspect)) return LegendTone.of(chosen).name;
+        if (Aspect.ORBIT.equals(aspect)) return OrbitTone.of(chosen).name;
         return CyberpunkTone.of(chosen).name;
     }
 

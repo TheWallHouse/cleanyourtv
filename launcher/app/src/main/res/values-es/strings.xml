@@ -204,6 +204,15 @@
     <string name="legend_region_sea">Mar del Ocaso</string>
     <string name="legend_region_ash">Montes de Ceniza</string>
     <string name="legend_region_isles">Islas Calladas</string>
+    <string name="aspect_orbit">Órbita</string>
+    <string name="orbit_sunrise">Amanecer</string>
+    <string name="orbit_mars">Marte</string>
+    <string name="orbit_mission">Misión en curso</string>
+    <string name="orbit_launch">Pulsa OK para lanzar</string>
+    <string name="orbit_time">Hora local</string>
+    <string name="orbit_date">Fecha</string>
+    <string name="orbit_link">Enlace</string>
+    <string name="orbit_up">En órbita</string>
     <string name="nothing_language">Idioma</string>
     <string name="nothing_language_state">Idioma: %1$s</string>
     <string name="nothing_language_tv">Como la TV</string>
