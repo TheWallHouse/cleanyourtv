@@ -572,6 +572,7 @@ public final class LauncherSettingsActivity extends Activity {
                         : getString(R.string.wallpaper_theme_default)));
         openOnStartChoice.setText(getString(R.string.open_on_start_state, openOnStartLabel()));
         appsStyleChoice.setText(getString(R.string.nothing_apps_style_state, appsStyleLabel(NothingTone.mode(this))));
+        appsStyleChoice.setVisibility(Aspect.NOTHING.equals(Aspect.mode(this)) ? View.VISIBLE : View.GONE);
         String name = Config.load(this).greetingName;
         yourNameChoice.setText(getString(R.string.nothing_your_name_state,
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));

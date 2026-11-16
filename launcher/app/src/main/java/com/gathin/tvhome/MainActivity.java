@@ -472,6 +472,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // The base layout is CleanYourTV's plain one; the Nothing look puts its own touches on top (NothingLook).
+        if (Aspect.NOTHING.equals(Aspect.mode(this))) NothingLook.home(this);
         LauncherFont.apply(this, findViewById(android.R.id.content));   // the theme's font.ttf, if any
         density = getResources().getDisplayMetrics().density;
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
@@ -498,6 +500,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 .getString(TerminalPalette.KEY, null)) : null;
         AppAdapter.terminal = windows ? terminalPalette : null;
         AppAdapter.terminalFont = windows ? TerminalSkin.font(this) : null;
+        AppAdapter.nothingLook = Aspect.NOTHING.equals(aspect);
+        AppAdapter.lookFont = Aspect.ORBIT.equals(aspect) ? getResources().getFont(R.font.barlow_medium) : null;
         animations = cfg.animations;
         advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;
@@ -882,10 +886,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         wifiIconOnly = iconOnlyButtons && cfg.wifiLabelWidth <= 0;
         if (cfg.wifiStatusColor) {
             wifiPlainTint = btnWifi.getCompoundDrawableTintList();
-            wifiOnlineTint = getColorStateList(R.color.pill_icon_online);
+            // Nothing's icon is red when online and grey otherwise; the other looks keep the plain green, orange, red.
+            boolean nothing = AppAdapter.nothingLook;
+            wifiOnlineTint = getColorStateList(nothing ? R.color.pill_icon_online_nothing : R.color.pill_icon_online);
             if (cfg.wifiStatusWarnings) {
-                wifiNoInternetTint = getColorStateList(R.color.pill_icon_no_internet);
-                wifiOfflineTint = getColorStateList(R.color.pill_icon_offline);
+                wifiNoInternetTint = getColorStateList(nothing ? R.color.pill_icon_no_internet_nothing : R.color.pill_icon_no_internet);
+                wifiOfflineTint = getColorStateList(nothing ? R.color.pill_icon_offline_nothing : R.color.pill_icon_offline);
             }
         }
         if (cfg.topMenu) {
@@ -1044,6 +1050,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                             .getString(OrbitTone.KEY, null)), adapter, root, sky, new View[]{sky, ambient, hero},
                     (ViewGroup) clockBlock, findViewById(R.id.btnWifi), clockFormat);
         } else if (windows) {
+            // Nothing's wallpaper (its dot grid) is that look's: the terminal window sits on its palette's ground.
+            wallpaperPlayer.releaseForMemoryPressure();
+            wallpaperPlayer.close();
             terminalSkin = TerminalSkin.apply(this, terminalPalette, root, (ViewGroup) clockBlock, findViewById(R.id.topButtons),
                     greeting, findViewById(R.id.btnWifi), heroName, clockFormat, animations && !reducedMotion);
         }
@@ -2880,11 +2889,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (greetingName.isEmpty()) {
                 greeting.setText(getString(res));
             } else {
-                // Nothing edition: the name after the greeting in Nothing red.
+                // The Nothing look says the name after the greeting in Nothing red; the others in the greeting's colour.
                 String text = getString(R.string.greeting_with_name, getString(res), greetingName);
                 android.text.SpannableString styled = new android.text.SpannableString(text);
                 int at = text.lastIndexOf(greetingName);
-                if (at >= 0) styled.setSpan(new android.text.style.ForegroundColorSpan(0xFFD71921),
+                if (at >= 0 && AppAdapter.nothingLook) styled.setSpan(new android.text.style.ForegroundColorSpan(0xFFD71921),
                         at, at + greetingName.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 greeting.setText(styled);
             }

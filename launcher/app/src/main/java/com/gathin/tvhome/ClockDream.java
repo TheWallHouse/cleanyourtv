@@ -22,6 +22,7 @@ public class ClockDream extends DreamService {
         setFullscreen(true);
         setScreenBright(false);
         setContentView(R.layout.dream_clock);
+        if (Aspect.NOTHING.equals(Aspect.mode(this))) NothingLook.dream(getWindow().getDecorView());
         LauncherFont.apply(this, getWindow().getDecorView());
         ClockFormat.apply(getWindow().getDecorView(), Config.load(this).clockFormat);
         scene = new ClockScene(getWindow().getDecorView());

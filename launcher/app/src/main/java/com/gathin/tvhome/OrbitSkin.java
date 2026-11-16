@@ -66,6 +66,7 @@ final class OrbitSkin {
         int at = below != null ? Math.max(0, root.indexOfChild(below)) : 0;
         root.addView(new Backdrop(ctx, p), at, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         for (View v : hidden) if (v != null) v.setVisibility(View.GONE);
+        s.ownFonts(root);
         s.addMission(leftBlock);
         s.addTelemetry(root, clockFormat);
         if (wifi != null) {
@@ -78,6 +79,20 @@ final class OrbitSkin {
         }
         s.tick(root);
         return s;
+    }
+
+    /** Barlow on Home's own text (the top buttons and the rest) in place of Nothing's dot-matrix and other fonts. */
+    private void ownFonts(View v) {
+        if (v instanceof TextView && !(v instanceof android.widget.TextClock)) {
+            TextView t = (TextView) v;
+            t.setTypeface(medium);
+            t.setLetterSpacing(0.12f);
+            t.setAllCaps(true);
+        }
+        if (v instanceof ViewGroup) {
+            ViewGroup g = (ViewGroup) v;
+            for (int i = 0; i < g.getChildCount(); i++) ownFonts(g.getChildAt(i));
+        }
     }
 
     private int dp(float v) {

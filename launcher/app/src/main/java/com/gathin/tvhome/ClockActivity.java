@@ -25,6 +25,7 @@ public class ClockActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dream_clock);
+        if (Aspect.NOTHING.equals(Aspect.mode(this))) NothingLook.dream(findViewById(android.R.id.content));
         LauncherFont.apply(this, findViewById(android.R.id.content));
         ClockFormat.apply(getWindow().getDecorView(), Config.load(this).clockFormat);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN

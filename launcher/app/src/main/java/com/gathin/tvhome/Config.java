@@ -691,8 +691,8 @@ final class Config {
         // A theme can also switch the wallpaper off while the file is still there.
         boolean wallpaperEnabled = json == null || bool(json, "wallpaper", true);
         if (!wallpaperEnabled) wallpaper = null;
-        // Nothing edition: the dot-grid wallpaper bundled in the app when no theme put one on the TV.
-        if (wallpaper == null && wallpaperEnabled) wallpaper = NothingWallpaper.file(ctx);
+        // The Nothing look's dot-grid wallpaper, bundled in the app, when no theme put one on the TV.
+        if (wallpaper == null && wallpaperEnabled && Aspect.NOTHING.equals(Aspect.mode(ctx))) wallpaper = NothingWallpaper.file(ctx);
         int rotationMinutes = json == null ? 0 : integer(json, "wallpaper_rotation_minutes", 0, 0, 1440);
         int wallpaperDim = json == null ? 0 : integer(json, "wallpaper_dim", 0, 0, 90);
         int dockOpacity = json == null ? 100 : integer(json, "dock_opacity", 100, 30, 100);

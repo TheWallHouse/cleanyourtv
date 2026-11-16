@@ -229,7 +229,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.ctx = ctx;
         this.listener = listener;
         this.dockSize = dockSize;
-        this.nothingTiles = NothingTone.mode(ctx);
+        this.nothingTiles = nothingLook ? NothingTone.mode(ctx) : NothingTone.OFF;
         this.favourites = cfg.dockApps;
         this.fillDock = cfg.fillDock;
         this.hidden = new HashSet<>(cfg.hiddenApps);
@@ -431,9 +431,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         card.setLayoutParams(cardLp);
         View name = v.findViewById(R.id.name);
         ViewGroup.MarginLayoutParams nameLp = (ViewGroup.MarginLayoutParams) name.getLayoutParams();
-        // Nothing edition: the name wraps its text, so the red focus dot sits beside it.
-        nameLp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        ((android.widget.TextView) name).setMaxWidth(w);
+        nameLp.width = w;
+        if (nothingLook) NothingLook.tileName((TextView) name, nameLp, w);
         nameLp.topMargin = h + Math.round((dockRow ? 7 : 4) * density);
         if (!dockRow) {
             // Compact spacing (COMPACT_ITEM_EXTRA_DP): 4dp item padding and a 20dp name instead of 8dp and 22dp.
@@ -471,6 +470,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (terminalFont != null) label.setTypeface(terminalFont);
             label.setTextColor(terminal.fg);
         }
+        if (lookFont != null && name instanceof TextView) ((TextView) name).setTypeface(lookFont);
         return new Holder(v, listener, animations, advancedEffects, reducedMotion, restNameAlpha, focusOvershoot);
     }
 
@@ -930,6 +930,13 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     static TerminalPalette terminal;
     static android.graphics.Typeface terminalFont;
+    /**
+     * Home is in the Nothing look: only then do the tiles take Nothing's own touches (nothing_tiles' greyscale and
+     * reds, the red dot beside the focused name). Every other look is its own.
+     */
+    static boolean nothingLook = true;
+    /** The tiles' name font in a look of its own that keeps Home's tiles (Orbit); null leaves the layout's. */
+    static android.graphics.Typeface lookFont;
 
     /** Corner radius for a tile of this width: 16dp at the design width, proportionally less when smaller; square in a terminal look. */
     static float cornerRadius(int tileWidthPx, float density) {
