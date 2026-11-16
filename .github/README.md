@@ -20,7 +20,7 @@ phone. No ads, no accounts, no network permission.
 2. **On the phone:** install [WallHouse TV](https://github.com/TheWallHouse/wallhouse-tv/releases/latest) and let
    it find the TV on your Wi-Fi. Accept **Allow debugging?** on the TV (with Wireless debugging, type its pairing code).
 3. In WallHouse TV, install **WallHouse Launcher** and make it Home. The app downloads it from this repo's
-   [latest release](https://github.com/TheWallHouse/cleanyourtv/releases/latest) and installs it only if it is signed with this launcher's key.
+   [latest release](https://github.com/TheWallHouse/wallhouse-launcher/releases/latest) and installs it only if it is signed with this launcher's key.
 4. Pick a look and its tone in the app's **Customize** tab; the TV changes at once.
 5. **Turn debugging off** on the TV when you're done (WallHouse TV offers it).
 
@@ -30,7 +30,7 @@ Needs JDK 17 and the Android SDK (platform 34, build-tools 34.0.0). Turn on debu
 then:
 
 ```bash
-git clone https://github.com/TheWallHouse/cleanyourtv.git && cd cleanyourtv
+git clone https://github.com/TheWallHouse/wallhouse-launcher.git && cd wallhouse-launcher
 TV_HOST=192.168.1.50 launcher/build-and-install.sh   # build, install and make it Home
 ```
 
