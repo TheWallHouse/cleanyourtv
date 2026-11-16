@@ -9,13 +9,11 @@ build puts it.
 
 ```bash
 tools/docker-build.sh                                          # the launcher (assembleRelease)
-tools/docker-build.sh addons/weather                     # an add-on
 tools/docker-build.sh launcher testReleaseUnitTest lintRelease assembleRelease   # what CI runs
 ```
 
 ```powershell
 tools\docker-build.ps1
-tools\docker-build.ps1 -Project addons\weather
 tools\docker-build.ps1 -Project launcher -Tasks testReleaseUnitTest,lintRelease,assembleRelease
 ```
 
@@ -61,8 +59,7 @@ SKIP_BUILD=1 TV_HOST=<tv ip> launcher/build-and-install.sh
 $env:SKIP_BUILD = '1'; launcher\build-and-install.ps1 -TvHost <tv ip>
 ```
 
-Everything else the script does (the SDK check, the Home guard, the stock launcher) is unchanged. An add-on's APK
-is pushed and installed as [`addons/README.md`](../addons/README.md) shows, without its build step.
+Everything else the script does (the SDK check, the Home guard, the stock launcher) is unchanged.
 
 ## The signing key
 

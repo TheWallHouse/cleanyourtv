@@ -6,7 +6,7 @@
   Package names: on the TV run `pm list packages` (tools/tv.py 'pm list packages').
 -->
 <resources>
-    <!-- Nothing edition: the defaults below give the Nothing look without pushing a theme (header_white,
+    <!-- WallHouse Launcher: the defaults below give the Nothing look without pushing a theme (header_white,
          dock_glass, wifi_status_color, wifi_status_warnings, rows_below_dock, focus_overshoot, ambient_glow,
          clock_wallpaper, clock_wallpaper_dim, clock_glow, glass_style). -->
 

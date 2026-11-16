@@ -222,7 +222,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Set<String> iconTiles;
     private final List<Entry> items = new ArrayList<>();
 
-    /** Nothing edition: "nothing_tiles" in config.json, see NothingTone. */
+    /** The Nothing look's apps style ("nothing_tiles" in config.json, see NothingTone); off in the other looks. */
     private final String nothingTiles;
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {

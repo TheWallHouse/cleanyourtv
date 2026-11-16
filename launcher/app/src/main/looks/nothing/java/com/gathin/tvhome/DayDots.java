@@ -10,7 +10,7 @@ import android.view.View;
 import java.util.Calendar;
 
 /**
- * Nothing edition: the day as 24 dots under the screensaver clock. Hours gone by are white,
+ * The Nothing look: the day as 24 dots under the screensaver clock. Hours gone by are white,
  * the hours still to come dim grey, and the current hour pulses slowly in Nothing red.
  */
 public class DayDots extends View {

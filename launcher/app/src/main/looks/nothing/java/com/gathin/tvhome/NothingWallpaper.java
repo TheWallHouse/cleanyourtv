@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Nothing edition: the dot-grid wallpaper ships inside the app, so a TV set up without a computer (only the APK)
+ * The Nothing look: its dot-grid wallpaper ships inside the app, so a TV set up without a computer (only the APK)
  * gets it too. It is copied once to the app's private files and used when no theme put a wallpaper on the TV.
  */
 final class NothingWallpaper {

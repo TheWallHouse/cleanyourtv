@@ -1,7 +1,7 @@
 # Windows version of theme.sh: push a theme folder (config.json, and optionally a wallpaper.jpg or a
 # wallpapers/ collection) to the launcher on the TV and restart Home. See themes/README.md for the keys.
 #
-# Usage: tools\theme.ps1 -TvHost 192.168.1.50 themes\aurora
+# Usage: tools\theme.ps1 -TvHost 192.168.1.50 path\to\theme-folder   (config.json and optional wallpapers)
 #        tools\theme.ps1 -TvHost 192.168.1.50 -Reset
 #
 # One argument, and -Reset takes none: both together are refused rather than one of them dropped (below).

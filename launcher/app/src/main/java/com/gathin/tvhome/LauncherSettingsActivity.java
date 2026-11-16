@@ -36,7 +36,7 @@ public final class LauncherSettingsActivity extends Activity {
     private static final String[] CLOCK_FORMATS = {"system", "12", "24"};
     private final TextView[] clockChoices = new TextView[CLOCK_FORMATS.length];
     private TextView wallpaperChoice;
-    // Nothing edition: Apps style and Your name, set from the remote.
+    // WallHouse Launcher: the look and its tone, Apps style (Nothing), Your name and Language, set from the remote.
     private TextView appsStyleChoice;
     private TextView yourNameChoice;
     private TextView languageChoice;
@@ -242,7 +242,7 @@ public final class LauncherSettingsActivity extends Activity {
                 .show();
     }
 
-    // Nothing edition --------------------------------------------------------------------------------------
+    // The Nothing look's apps style ---------------------------------------------------------------------------
 
     private static final String[] APPS_STYLES = {NothingTone.MONO_RED, NothingTone.MONO, NothingTone.OFF};
 
@@ -383,7 +383,7 @@ public final class LauncherSettingsActivity extends Activity {
             case "es-ES": return "Castellano (España)";
             case "en-US": return "English (US)";
             case "gl": return "Galego";
-            default: return getString(R.string.nothing_language_tv);
+            default: return getString(R.string.launcher_language_tv);
         }
     }
 
@@ -424,7 +424,7 @@ public final class LauncherSettingsActivity extends Activity {
             if (LANGUAGES[i].equals(current)) checked = i;
         }
         new AlertDialog.Builder(this)
-                .setTitle(R.string.nothing_language)
+                .setTitle(R.string.launcher_language)
                 .setSingleChoiceItems(new LanguageAdapter(labels), checked, (dialog, which) -> {
                     dialog.dismiss();
                     if (LANGUAGES[which].isEmpty()) choices.edit().remove(Config.LOCALE_KEY).apply();
@@ -442,14 +442,14 @@ public final class LauncherSettingsActivity extends Activity {
         input.setSingleLine(true);
         input.setText(Config.load(this).greetingName);
         input.setSelection(input.getText().length());
-        input.setHint(R.string.nothing_your_name_hint);
+        input.setHint(R.string.your_name_hint);
         int pad = Math.round(24 * getResources().getDisplayMetrics().density);
         android.widget.FrameLayout box = new android.widget.FrameLayout(this);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(input);
         new AlertDialog.Builder(this)
-                .setTitle(R.string.nothing_your_name)
-                .setMessage(R.string.nothing_your_name_help)
+                .setTitle(R.string.your_name)
+                .setMessage(R.string.your_name_help)
                 .setView(box)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     choices.edit().putString(Config.GREETING_NAME_KEY, input.getText().toString().trim()).apply();
@@ -463,11 +463,11 @@ public final class LauncherSettingsActivity extends Activity {
     /** The two steps that put the TV back as it was: its own home again, then this launcher uninstalled. */
     private void showRemoveNothing() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.nothing_remove)
-                .setMessage(R.string.nothing_remove_steps)
+                .setTitle(R.string.remove_launcher)
+                .setMessage(R.string.remove_launcher_steps)
                 .setPositiveButton(R.string.home_settings, (dialog, which) ->
                         open(new Intent(this, HomeSettingsActivity.class)))
-                .setNeutralButton(R.string.nothing_remove_uninstall, (dialog, which) ->
+                .setNeutralButton(R.string.remove_launcher_uninstall, (dialog, which) ->
                         open(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                 android.net.Uri.fromParts("package", getPackageName(), null))))
                 .setNegativeButton(android.R.string.cancel, null)
@@ -581,8 +581,8 @@ public final class LauncherSettingsActivity extends Activity {
         for (int first : new int[]{R.id.columns4, R.id.rows0, R.id.dock100}) showChoiceRow(first, grid);
         wallpaperChoice.setVisibility(Aspect.NOTHING.equals(look) ? View.VISIBLE : View.GONE);
         String name = Config.load(this).greetingName;
-        yourNameChoice.setText(getString(R.string.nothing_your_name_state,
-                name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
+        yourNameChoice.setText(getString(R.string.your_name_state,
+                name.isEmpty() ? getString(R.string.your_name_none) : name));
         String aspect = Aspect.mode(this);
         aspectChoice.setText(getString(R.string.aspect_state, aspectLabel(aspect)));
         boolean toned = toned(aspect);
@@ -590,7 +590,7 @@ public final class LauncherSettingsActivity extends Activity {
         paletteChoice.setText(toned
                 ? getString(R.string.cyberpunk_tone_state, toneLabel(currentTone(aspect)))
                 : getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
-        languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
+        languageChoice.setText(getString(R.string.launcher_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }
 

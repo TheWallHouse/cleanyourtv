@@ -2,7 +2,7 @@
 # (one package per line, # comments allowed). Packages are disabled for user 0, never uninstalled.
 # Undo with tools\restore.ps1 <same file>.
 #
-# Usage: tools\disable.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
+# Usage: tools\disable.ps1 -TvHost 192.168.1.50 path\to\debloat.txt   (a TV's list, such as one of CleanYourTV's)
 # The list path is taken as typed: a folder like "tv [old]" needs no backtick escaping.
 param(
     [Parameter(Mandatory = $true, Position = 0)][string]$List,

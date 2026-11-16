@@ -1,5 +1,5 @@
 # Build the launcher or an add-on inside Docker, so this computer needs no JDK or Android SDK.
-# Usage: tools\docker-build.ps1 [-Project launcher | addons\<name>] [-Tasks <gradle task>, ...]
+# Usage: tools\docker-build.ps1 [-Project launcher] [-Tasks <gradle task>, ...]
 #   tools\docker-build.ps1
 #   tools\docker-build.ps1 -Project addons\weather
 #   tools\docker-build.ps1 -Project launcher -Tasks testReleaseUnitTest,lintRelease,assembleRelease
@@ -20,7 +20,7 @@ $KeyDir = if ($env:KEY_DIR) { $env:KEY_DIR } else { '/gradle/.android' }
 
 if (-not (Test-Path -LiteralPath (Join-Path $Root "$Project/settings.gradle")) -and
     -not (Test-Path -LiteralPath (Join-Path $Root "$Project/settings.gradle.kts"))) {
-    throw "$Project is not a Gradle project in this repository (try launcher or addons/<name>)."
+    throw "$Project is not a Gradle project in this repository (try launcher)."
 }
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { throw 'docker is not installed or not on PATH.' }
 

@@ -3,7 +3,7 @@
 # launcher on the TV and restart Home so it picks it up. The launcher reads the files from its external files
 # directory and overlays config.json on its built-in config.xml; see themes/README.md for the keys.
 #
-# Usage: TV_HOST=192.168.1.50 tools/theme.sh themes/aurora
+# Usage: TV_HOST=192.168.1.50 tools/theme.sh path/to/theme-folder   (config.json and optional wallpapers)
 #        TV_HOST=192.168.1.50 tools/theme.sh --reset        # remove the overlay, back to config.xml
 #
 # One argument, and --reset takes none: a second word is refused rather than dropped (see below). Exit status:
@@ -193,7 +193,7 @@ case "$(theme_json_kind "$THEME/config.json")" in
   "not an object") echo "$THEME/config.json is not a JSON object of theme keys, so the launcher would ignore" \
     "it and the TV would go back to its built-in config (themes/README.md). Nothing was sent to the TV." >&2
     exit 2 ;;
-  *) echo "$THEME/config.json is not valid JSON, so there is no theme to push (themes/README.md says what the" \
+  *) echo "$THEME/config.json is not valid JSON, so there is no theme to push (CleanYourTV's themes/README.md says what the" \
     "file holds). Nothing was sent to the TV." >&2; exit 2 ;;
 esac
 # Every collection name is checked before anything changes on the TV: a name refused halfway through the push

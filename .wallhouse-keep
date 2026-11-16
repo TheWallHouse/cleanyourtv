@@ -5,13 +5,10 @@
 .gitignore
 .wallhouse-keep
 LICENSE
-NOTHING.md
+LOOKS.md
 .github/README.md
 launcher/
-themes/nothing/
-themes/README.md
-docs/nothing/
-docs/TROUBLESHOOTING.md
+docs/looks/
 tools/tv.py
 tools/b64push.py
 tools/theme.sh

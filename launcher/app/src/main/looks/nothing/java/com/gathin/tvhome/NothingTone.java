@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 /**
- * Nothing edition: app banners and icons in greyscale ("mono"), or greyscale with their reds
+ * The Nothing look: app banners and icons in greyscale ("mono"), or greyscale with their reds
  * turned into Nothing red ("mono_red", the default). Set in Launcher settings or with "nothing_tiles" in config.json.
  * Each picture is converted once, when the tiles are loaded.
  */
@@ -44,7 +44,7 @@ final class NothingTone {
 
     /**
      * The apps style: Launcher settings' choice first, then "nothing_tiles" from the pushed config.json, and
-     * mono_red when neither says, the Nothing edition's own look.
+     * mono_red when neither says, the Nothing look's own.
      */
     static String mode(Context ctx) {
         String chosen = ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(KEY, null);

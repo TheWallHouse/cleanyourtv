@@ -42,7 +42,7 @@ final class Config {
     static final String SETTINGS_NAME = "launcher_settings";
     static final String ROWS_BELOW_DOCK_KEY = "rows_below_dock";
     static final String WALLPAPER_CHOICE_KEY = "wallpaper_choice";
-    /** Nothing edition: the name after the greeting, typed in Launcher settings; it wins over the theme. */
+    /** WallHouse Launcher: the name after the greeting, typed in Launcher settings; it wins over the theme. */
     static final String GREETING_NAME_KEY = "nothing_greeting_name";
     static final String DOCK_OPACITY_KEY = "dock_opacity";
     static final String CLOCK_FORMAT_KEY = "clock_format";

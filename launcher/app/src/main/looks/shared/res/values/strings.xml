@@ -14,4 +14,16 @@
     <string name="aspect">Look</string>
     <string name="aspect_state">Look: %1$s</string>
     <string name="look_settings">Settings</string>
+    <string name="your_name">Your name</string>
+    <string name="your_name_state">Your name: %1$s</string>
+    <string name="your_name_none">none</string>
+    <string name="your_name_hint">Name</string>
+    <string name="your_name_help">Shown in red after the greeting. Leave it empty for the greeting alone.</string>
+    <string name="launcher_language">Language</string>
+    <string name="launcher_language_state">Language: %1$s</string>
+    <string name="launcher_language_tv">As the TV</string>
+    <string name="remove_launcher">Remove WallHouse Launcher</string>
+    <string name="remove_launcher_help">Puts the TV back as it was before: its own home screen, and this launcher uninstalled. Nothing else on the TV changes.</string>
+    <string name="remove_launcher_steps">1. Choose your TV\'s own home screen under Choose default home. If it is not in the list, it was switched off: in the TV\'s Settings, open Apps, show the system apps, open it and choose Enable.\n\n2. Then open this launcher\'s app page and choose Uninstall.</string>
+    <string name="remove_launcher_uninstall">Uninstall page</string>
 </resources>

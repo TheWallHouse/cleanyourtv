@@ -87,7 +87,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN desactivada</string>
     <string name="home_settings">Escoller inicio predeterminado</string>
-    <string name="home_settings_help">Escolle o teu inicio orixinal para deixar de usar CleanYourTV como inicio, ou CleanYourTV para volver a el. O iniciador orixinal ten que estar activado e o televisor debe ofrecer un selector de inicio; se estaba desactivado, usa antes o script de restauración.</string>
+    <string name="home_settings_help">Escolle o teu inicio orixinal para deixar de usar WallHouse Launcher como inicio, ou WallHouse Launcher para volver a el. O iniciador orixinal ten que estar activado e o televisor debe ofrecer un selector de inicio; se estaba desactivado, usa antes o script de restauración.</string>
     <string name="rows_below_dock_label">Filas debaixo do dock</string>
     <string name="wallpaper_label">Fondo</string>
     <string name="wallpaper_state">Fondo: %1$s</string>

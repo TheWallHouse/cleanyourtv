@@ -14,4 +14,16 @@
     <string name="aspect">Aspecto</string>
     <string name="aspect_state">Aspecto: %1$s</string>
     <string name="look_settings">Axustes</string>
+    <string name="your_name">O teu nome</string>
+    <string name="your_name_state">O teu nome: %1$s</string>
+    <string name="your_name_none">ningún</string>
+    <string name="your_name_hint">Nome</string>
+    <string name="your_name_help">Aparece en vermello despois do saúdo. Déixao baleiro para que saia só o saúdo.</string>
+    <string name="launcher_language">Idioma</string>
+    <string name="launcher_language_state">Idioma: %1$s</string>
+    <string name="launcher_language_tv">Coma a TV</string>
+    <string name="remove_launcher">Quitar WallHouse Launcher</string>
+    <string name="remove_launcher_help">Deixa a TV como estaba: a súa propia pantalla de inicio, e este launcher desinstalado. Non cambia nada máis da TV.</string>
+    <string name="remove_launcher_uninstall">Páxina de desinstalación</string>
+    <string name="remove_launcher_steps">1. Escolle a pantalla de inicio propia da túa TV en Escoller inicio predeterminado. Se non está na lista, é que está desactivada: na Configuración da TV, abre Aplicacións, mostra as do sistema, ábrea e escolle Activar.\n\n2. Despois abre a páxina deste launcher e escolle Desinstalar.</string>
 </resources>

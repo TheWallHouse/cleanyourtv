@@ -3,7 +3,7 @@
 # component that owned it and the animation scales go back to their recorded values. Pass the same
 # list you used with disable.ps1.
 #
-# Usage: tools\restore.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt [-Stock stock.launcher.package]
+# Usage: tools\restore.ps1 -TvHost 192.168.1.50 path\to\debloat.txt [-Stock stock.launcher.package]
 # The list path is taken as typed: a folder like "tv [old]" needs no backtick escaping.
 param(
     [Parameter(Mandatory = $true, Position = 0)][string]$List,

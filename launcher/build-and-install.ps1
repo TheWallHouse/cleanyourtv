@@ -34,7 +34,7 @@ $ErrorActionPreference = 'Continue'
 $tvSdk = "$(@(& $py -I ..\tools\tv.py 'getprop ro.build.version.sdk' 2>$null) -join '')" -replace '[^0-9]', ''
 $ErrorActionPreference = 'Stop'
 if ($minSdk -and $tvSdk -and [int]$tvSdk -lt $minSdk) {
-    throw "this TV runs SDK $tvSdk and the launcher is built with minSdk $minSdk (app\build.gradle), so pm install would answer INSTALL_FAILED_OLDER_SDK. Nothing was built, pushed or disabled. The debloat half of the repo still applies to that set; the launcher half would need your own build with a lower minSdk (docs/TROUBLESHOOTING.md)."
+    throw "this TV runs SDK $tvSdk and the launcher is built with minSdk $minSdk (app\build.gradle), so pm install would answer INSTALL_FAILED_OLDER_SDK. Nothing was built, pushed or disabled. The launcher would need your own build with a lower minSdk (CleanYourTV's troubleshooting: https://github.com/Gathin23/cleanyourtv/blob/main/docs/TROUBLESHOOTING.md)."
 }
 
 # SKIP_BUILD=1 installs the APK already built (tools\docker-build.ps1 builds it in Docker, with no JDK here).
@@ -89,7 +89,7 @@ $out = & $py -I ..\tools\tv.py 'pm install -r /data/local/tmp/tvhome.apk; rm -f 
 Write-Host $out
 if ("$out" -match 'INSTALL_FAILED_OLDER_SDK') {
     # The preflight above missed it (getprop did not answer, or an APK built elsewhere): name the real cause.
-    throw "pm install refused the APK as too new for this set (INSTALL_FAILED_OLDER_SDK): the TV runs an older SDK than the launcher's minSdk $(if ($minSdk) { $minSdk } else { 'in app\build.gradle' }). The stock launcher was left untouched; see docs/TROUBLESHOOTING.md."
+    throw "pm install refused the APK as too new for this set (INSTALL_FAILED_OLDER_SDK): the TV runs an older SDK than the launcher's minSdk $(if ($minSdk) { $minSdk } else { 'in app\build.gradle' }). The stock launcher was left untouched; see CleanYourTV's troubleshooting: https://github.com/Gathin23/cleanyourtv/blob/main/docs/TROUBLESHOOTING.md"
 }
 if ($LASTEXITCODE -ne 0 -or "$out" -notmatch 'Success') { throw 'pm install failed; the stock launcher was left untouched' }
 # Stop the instance Android restarted mid-update, which can come up non-occluding (see build-and-install.sh,

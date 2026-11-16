@@ -34,7 +34,7 @@ firmware update), `tools/privacy.py`, `tools/bench.py`, `tools/trace.py`,
 `tools/theme_restart.py`, `tools/b64push.py`, `tools/recovery.py` and `tools/manage.py`.
 Their existing safety checks still run, and on a set whose only network ADB is Wireless
 debugging this is how the check after an update runs without opening the plaintext port with
-`adb tcpip 5555`. Back up first and follow `PROMPT.md` before changing a TV. For example:
+`adb tcpip 5555`. Back up first, and follow CleanYourTV's [PROMPT.md](https://github.com/Gathin23/cleanyourtv/blob/main/PROMPT.md) before changing a TV. For example:
 
 ```bash
 tools/venv/bin/python -I tools/tv.py --screenshot shots/before.png
@@ -127,4 +127,4 @@ ports are different. Two things to keep in mind, as it bridges rather than fixes
 - What it forwards is the plaintext port, though only from `127.0.0.1`, so nothing else on the network
   reaches the TV through it. The Python client needs no relay at all, and a window that is itself
   denied by Local Network privacy still fails: that is the macOS bullet in
-  [docs/TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md#connecting), not this one.
+  [CleanYourTV's troubleshooting](https://github.com/Gathin23/cleanyourtv/blob/main/docs/TROUBLESHOOTING.md#connecting), not this one.

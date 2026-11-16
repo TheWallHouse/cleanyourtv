@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build the launcher or an add-on inside Docker, so this computer needs no JDK or Android SDK.
-# Usage: tools/docker-build.sh [launcher | addons/<name>] [gradle task ...]
+# Usage: tools/docker-build.sh [launcher] [gradle task ...]
 #   tools/docker-build.sh                              the launcher, assembleRelease
 #   tools/docker-build.sh addons/weather         an add-on
 #   tools/docker-build.sh launcher testReleaseUnitTest lintRelease assembleRelease
@@ -21,7 +21,7 @@ KEY_DIR="${KEY_DIR:-/gradle/.android}"
 
 PROJECT="${PROJECT%/}"
 if [ ! -f "$ROOT/$PROJECT/settings.gradle" ] && [ ! -f "$ROOT/$PROJECT/settings.gradle.kts" ]; then
-  echo "ERROR: $PROJECT is not a Gradle project in this repository (try launcher or addons/<name>)." >&2
+  echo "ERROR: $PROJECT is not a Gradle project in this repository (try launcher)." >&2
   exit 1
 fi
 command -v docker >/dev/null || { echo "ERROR: docker is not installed or not on PATH." >&2; exit 1; }
