@@ -198,6 +198,7 @@
     <string name="legend_settings">Axustes</string>
     <string name="legend_all_apps">Todas as apps</string>
     <string name="legend_leagues">Leguas</string>
+    <string name="legend_scroll_hint">OK abrir · Atrás pechar</string>
     <string name="legend_region_north">Cumios do Norte</string>
     <string name="legend_region_wood">Bosque Vello</string>
     <string name="legend_region_moors">Os Páramos</string>

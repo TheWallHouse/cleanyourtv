@@ -198,6 +198,7 @@
     <string name="legend_settings">Ajustes</string>
     <string name="legend_all_apps">Todas las apps</string>
     <string name="legend_leagues">Leguas</string>
+    <string name="legend_scroll_hint">OK abrir · Atrás cerrar</string>
     <string name="legend_region_north">Cumbres del Norte</string>
     <string name="legend_region_wood">Bosque Viejo</string>
     <string name="legend_region_moors">Los Páramos</string>

@@ -47,8 +47,8 @@ final class LegendHome {
 
     /** What Legend's buttons and settings place open. */
     interface Actions {
-        void inputs();
-        void allApps();
+        /** Hands each of the TV's inputs to [sink], in the Inputs dropdown's order. */
+        void listInputs(DuneHome.InputSink sink);
         void launcherSettings();
     }
 
@@ -155,11 +155,55 @@ final class LegendHome {
             slot++;
         }
         targets.add(new Target(ctx.getString(R.string.legend_settings), SETTINGS_AT[0], SETTINGS_AT[1], SETTINGS, () -> Overlay.openTvSettings(ctx)));
-        targets.add(new Target(ctx.getString(R.string.console_inputs), 0, 0, -1, actions::inputs));
-        targets.add(new Target(ctx.getString(R.string.legend_all_apps), 0, 0, -1, actions::allApps));
+        targets.add(new Target(ctx.getString(R.string.console_inputs), 0, 0, -1, () -> openScroll(false)));
+        targets.add(new Target(ctx.getString(R.string.legend_all_apps), 0, 0, -1, () -> openScroll(true)));
         focused = 0;
         if (was != null) for (int i = 0; i < targets.size(); i++) if (targets.get(i).label.equals(was)) focused = i;
         places.layoutButtons();
+        places.invalidate();
+    }
+
+    /** An entry on the unrolled scroll: an input or an app. */
+    private static final class Entry {
+        final String label;
+        final int icon;          // an input's icon, or 0
+        final int position;      // an app's place in the adapter, or -1
+        final Runnable run;
+
+        Entry(String label, int icon, int position, Runnable run) {
+            this.label = label;
+            this.icon = icon;
+            this.position = position;
+            this.run = run;
+        }
+    }
+
+    /** The scroll over the map: null when rolled up; otherwise the inputs (a list) or every app (a grid). */
+    private List<Entry> scroll;
+    private boolean scrollApps;
+    private int scrollIndex, scrollTop;
+
+    private void openScroll(boolean apps) {
+        List<Entry> out = new ArrayList<>();
+        if (apps) {
+            for (int i = 0; i < adapter.appCount(); i++) {
+                if (adapter.isEmptyAt(i)) continue;
+                final int pos = i;
+                out.add(new Entry(adapter.labelAt(i), 0, i, () -> adapter.launchAt(pos)));
+            }
+        } else {
+            actions.listInputs((icon, label, state, open) -> out.add(new Entry(label, icon, -1, open)));
+        }
+        if (out.isEmpty()) return;
+        scroll = out;
+        scrollApps = apps;
+        scrollIndex = 0;
+        scrollTop = 0;
+        places.invalidate();
+    }
+
+    private void closeScroll() {
+        scroll = null;
         places.invalidate();
     }
 
@@ -211,6 +255,14 @@ final class LegendHome {
         return f;
     }
 
+    /** [a] towards [b] by [t] (0..1), opaque: the scroll's wooden rollers between the ink and the parchment. */
+    private static int mix(int a, int b, float t) {
+        int r = Math.round(((a >> 16) & 0xFF) * (1 - t) + ((b >> 16) & 0xFF) * t);
+        int g = Math.round(((a >> 8) & 0xFF) * (1 - t) + ((b >> 8) & 0xFF) * t);
+        int bl = Math.round((a & 0xFF) * (1 - t) + (b & 0xFF) * t);
+        return 0xFF000000 | (r << 16) | (g << 8) | bl;
+    }
+
     private static int alpha(int argb, float a) {
         return (Math.round((argb >>> 24) * a) << 24) | (argb & 0xFFFFFF);
     }
@@ -254,7 +306,8 @@ final class LegendHome {
             if (targets.get(focused).slot != -1) castle(canvas, targets.get(focused), true);
             for (int i = 0; i < targets.size(); i++) if (targets.get(i).slot == -1) button(canvas, targets.get(i), i == focused);
             cartouche(canvas);
-            ribbon(canvas, targets.get(focused).label);
+            ribbon(canvas, scroll != null ? scroll.get(scrollIndex).label : targets.get(focused).label);
+            if (scroll != null) scroll(canvas);
             canvas.restore();
         }
 
@@ -441,7 +494,7 @@ final class LegendHome {
         private boolean longPressed;
 
         private boolean onSettings(int keyCode) {
-            return !targets.isEmpty() && targets.get(focused).slot == SETTINGS && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+            return scroll == null && !targets.isEmpty() && targets.get(focused).slot == SETTINGS && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                     || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER);
         }
 
@@ -463,7 +516,170 @@ final class LegendHome {
             return super.onKeyUp(keyCode, event);
         }
 
+        // The unrolled scroll: a parchment between two wooden rollers, its title over a flourish, the entries in ink
+        // with the chosen one in the seal's red; a list of inputs or a grid of every app with their banners.
+        private final float SL = 250, ST = 92, SR = 1030, SB = 628;
+        private final int APP_COLS = 4, APP_ROWS = 3, INPUT_ROWS = 7;
+        private final float ROW_H = 54, CELL_H = 126;
+
+        private void roller(Canvas canvas, float y) {
+            r.set(SL - 22, y - 16, SR + 22, y + 16);
+            canvas.drawRoundRect(r, 16, 16, fill(mix(p.ink, p.land, 0.45f)));
+            canvas.drawRoundRect(r, 16, 16, stroke(p.ink, 2f));
+            Paint grain = stroke(alpha(p.ink, 0.35f), 1f);
+            canvas.drawLine(SL - 8, y - 5, SR + 8, y - 5, grain);
+            canvas.drawLine(SL - 8, y + 6, SR + 8, y + 6, grain);
+            canvas.drawCircle(SL - 30, y, 10, fill(p.ink));
+            canvas.drawCircle(SR + 30, y, 10, fill(p.ink));
+        }
+
+        private void scroll(Canvas canvas) {
+            canvas.drawColor(alpha(0xFF000000, 0.45f));
+            r.set(SL, ST, SR, SB);
+            canvas.drawRect(r, fill(p.land));
+            Paint edge = stroke(alpha(p.ink, 0.8f), 2f);
+            canvas.drawLine(SL, ST, SL, SB, edge);
+            canvas.drawLine(SR, ST, SR, SB, edge);
+            canvas.drawRect(SL + 14, ST + 18, SR - 14, SB - 18, stroke(alpha(p.ink, 0.35f), 1f));
+            roller(canvas, ST);
+            roller(canvas, SB);
+            // Title and flourish.
+            String title = ctx.getString(scrollApps ? R.string.legend_all_apps : R.string.console_inputs);
+            text.setTypeface(cinzelBold);
+            text.setTextSize(30);
+            text.setLetterSpacing(0.12f);
+            text.setColor(p.ink);
+            text.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(title, (SL + SR) / 2, ST + 66, text);
+            float cx = (SL + SR) / 2, fy = ST + 84;
+            Paint line = stroke(alpha(p.ink, 0.7f), 1.4f);
+            canvas.drawLine(cx - 160, fy, cx - 12, fy, line);
+            canvas.drawLine(cx + 12, fy, cx + 160, fy, line);
+            path.reset();
+            path.moveTo(cx, fy - 6);
+            path.lineTo(cx + 7, fy);
+            path.lineTo(cx, fy + 6);
+            path.lineTo(cx - 7, fy);
+            path.close();
+            canvas.drawPath(path, fill(p.accent));
+            if (scrollApps) appGrid(canvas);
+            else inputList(canvas);
+            text.setTypeface(italic);
+            text.setTextSize(14);
+            text.setLetterSpacing(0.05f);
+            text.setColor(alpha(p.ink, 0.75f));
+            canvas.drawText(ctx.getString(R.string.legend_scroll_hint), cx, SB - 30, text);
+            text.setTextAlign(Paint.Align.LEFT);
+        }
+
+        private void inputList(Canvas canvas) {
+            float left = SL + 90, right = SR - 90, top = ST + 108;
+            for (int i = scrollTop; i < Math.min(scroll.size(), scrollTop + INPUT_ROWS); i++) {
+                Entry e = scroll.get(i);
+                boolean on = i == scrollIndex;
+                float y = top + (i - scrollTop) * ROW_H;
+                r.set(left, y, right, y + ROW_H - 8);
+                if (on) {
+                    canvas.drawRect(r, fill(p.accent));
+                    canvas.drawCircle(right - 24, y + (ROW_H - 8) / 2, 10, fill(p.onAccent));
+                    canvas.drawCircle(right - 24, y + (ROW_H - 8) / 2, 6, fill(p.accent));
+                } else {
+                    canvas.drawLine(left + 20, y + ROW_H - 8, right - 20, y + ROW_H - 8, stroke(alpha(p.ink, 0.25f), 1f));
+                }
+                int ink = on ? p.onAccent : p.ink;
+                android.graphics.drawable.Drawable d = ctx.getDrawable(e.icon);
+                if (d != null) {
+                    d = d.mutate();
+                    d.setTint(ink);
+                    d.setBounds(Math.round(left + 20), Math.round(y + 10), Math.round(left + 46), Math.round(y + 36));
+                    d.draw(canvas);
+                }
+                text.setTypeface(on ? cinzelBold : cinzel);
+                text.setTextSize(20);
+                text.setLetterSpacing(0.08f);
+                text.setColor(ink);
+                text.setTextAlign(Paint.Align.LEFT);
+                canvas.drawText(e.label, left + 64, y + 31, text);
+            }
+            text.setTextAlign(Paint.Align.CENTER);
+        }
+
+        private final android.graphics.Rect saved = new android.graphics.Rect();
+
+        private void appGrid(Canvas canvas) {
+            float left = SL + 40, top = ST + 104, cw = (SR - SL - 80) / APP_COLS;
+            for (int i = scrollTop * APP_COLS; i < Math.min(scroll.size(), (scrollTop + APP_ROWS) * APP_COLS); i++) {
+                Entry e = scroll.get(i);
+                boolean on = i == scrollIndex;
+                int row = i / APP_COLS - scrollTop, col = i % APP_COLS;
+                float x = left + col * cw, y = top + row * CELL_H;
+                float bw = cw - 34, bh = bw * 9 / 16, bx = x + 17, by = y + 6;
+                r.set(bx - 4, by - 4, bx + bw + 4, by + bh + 4);
+                canvas.drawRect(r, fill(alpha(p.ink, 0.12f)));
+                if (on) canvas.drawRect(r, stroke(p.accent, 4f));
+                android.graphics.drawable.Drawable art = adapter.artworkAt(e.position);
+                if (art != null) {
+                    int iw = art.getIntrinsicWidth(), ih = art.getIntrinsicHeight();
+                    float sc = iw > 0 && ih > 0 ? Math.min(bw / iw, bh / ih) : 0;
+                    if (sc > 0) {
+                        float dw = iw * sc, dh = ih * sc;
+                        art.copyBounds(saved);
+                        art.setBounds(Math.round(bx + (bw - dw) / 2), Math.round(by + (bh - dh) / 2),
+                                Math.round(bx + (bw + dw) / 2), Math.round(by + (bh + dh) / 2));
+                        art.draw(canvas);
+                        art.setBounds(saved);
+                    }
+                }
+                text.setTypeface(on ? cinzelBold : cinzel);
+                text.setTextSize(13);
+                text.setLetterSpacing(0.06f);
+                text.setColor(on ? p.accent : p.ink);
+                text.setTextAlign(Paint.Align.CENTER);
+                String name = TextUtils.ellipsize(e.label, new android.text.TextPaint(text), bw, TextUtils.TruncateAt.END).toString();
+                canvas.drawText(name, x + cw / 2, by + bh + 24, text);
+            }
+            // More rows above or below: small arrows on the parchment.
+            text.setTypeface(cinzelBold);
+            text.setTextSize(16);
+            text.setColor(alpha(p.ink, 0.7f));
+            if (scrollTop > 0) canvas.drawText("▲", SR - 40, top + 12, text);
+            if ((scrollTop + APP_ROWS) * APP_COLS < scroll.size()) canvas.drawText("▼", SR - 40, top + APP_ROWS * CELL_H - 10, text);
+        }
+
+        private boolean scrollKey(int keyCode, KeyEvent event) {
+            int n = scroll.size(), i = scrollIndex;
+            int cols = scrollApps ? APP_COLS : 1, rows = scrollApps ? APP_ROWS : INPUT_ROWS;
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_ESCAPE:
+                    closeScroll();
+                    return true;
+                case KeyEvent.KEYCODE_DPAD_LEFT: if (scrollApps && i % cols > 0) i--; break;
+                case KeyEvent.KEYCODE_DPAD_RIGHT: if (scrollApps && i % cols < cols - 1 && i + 1 < n) i++; break;
+                case KeyEvent.KEYCODE_DPAD_UP: if (i - cols >= 0) i -= cols; break;
+                case KeyEvent.KEYCODE_DPAD_DOWN: if (i + cols < n) i += cols; else if (scrollApps && i / cols < (n - 1) / cols) i = n - 1; break;
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                    if (event.getRepeatCount() == 0) {
+                        Runnable run = scroll.get(i).run;
+                        closeScroll();
+                        run.run();
+                    }
+                    return true;
+                default:
+                    return true;   // nothing under the scroll moves while it is open
+            }
+            scrollIndex = i;
+            int row = i / cols;
+            if (row < scrollTop) scrollTop = row;
+            if (row >= scrollTop + rows) scrollTop = row - rows + 1;
+            invalidate();
+            return true;
+        }
+
         @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (scroll != null) return scrollKey(keyCode, event);
             if (targets.isEmpty()) return super.onKeyDown(keyCode, event);
             int next = -1;
             switch (keyCode) {

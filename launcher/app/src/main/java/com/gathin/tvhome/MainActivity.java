@@ -1037,8 +1037,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             legendHome = LegendHome.attach(this, LegendTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
                             .getString(LegendTone.KEY, null)), root, adapter, greeting, clockFormat,
                     new LegendHome.Actions() {
-                        @Override public void inputs() { showInputs(); }
-                        @Override public void allApps() { onLibraryRequested(); }
+                        @Override public void listInputs(DuneHome.InputSink sink) { MainActivity.this.listInputs(sink); }
                         @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             legendHome.focus();

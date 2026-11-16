@@ -212,6 +212,7 @@
     <string name="legend_settings">Settings</string>
     <string name="legend_all_apps">All apps</string>
     <string name="legend_leagues">Leagues</string>
+    <string name="legend_scroll_hint">OK to open · Back to close</string>
     <string name="legend_region_north">Northern Peaks</string>
     <string name="legend_region_wood">Old Wood</string>
     <string name="legend_region_moors">The Moors</string>
