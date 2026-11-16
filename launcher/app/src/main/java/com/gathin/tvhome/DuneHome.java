@@ -36,8 +36,9 @@ import java.util.Random;
 /**
  * Dune (Aspect.DUNE): Home as a row of monoliths on a sea of dunes, over the same apps as the tiles. The focused app's
  * name stands huge and widely spaced across the sky, under a small clock; below it the apps as tall cards, the middle
- * one largest and the others smaller and fainter towards the edges. ◀▶ walk the row, OK opens, ▲ opens the inputs and
- * ▼ swaps the dock's apps for all of them and back. Launcher and TV settings are the row's last two cards. The sky,
+ * one largest and the others smaller and fainter towards the edges. ◀▶ walk the row and OK opens; ▼ goes down to a menu
+ * bar with icons (Home, All apps, Inputs, Settings), where ◀▶ choose, OK picks and ▲ goes back up. Home and All apps
+ * choose which apps the row shows; the one shown is marked in the bar. The sky,
  * the sun or moons and the dunes are drawn once. The tile grid stays underneath, loaded and hidden, so the order, the
  * dock, hidden apps and the reloads are Home's own; this only lists and opens them.
  */
@@ -52,22 +53,39 @@ final class DuneHome {
     private final Context ctx;
     private final DuneTone p;
     private final AppAdapter adapter;
-    private final ConsoleHome.Actions actions;
+    private final Actions actions;
     private final float density;
     private final Typeface wide, light, medium;
     private final boolean motion;
     private final Locale locale;
     private final FrameLayout view;
     private TextView title;
-    private TextView down;
+    /** Focus is in the menu bar under the row, on [menuIndex]; else on the row. */
+    private boolean inMenu;
+    private int menuIndex;
+    private static final int MENU_HOME = 0, MENU_ALL = 1, MENU_INPUTS = 2, MENU_SETTINGS = 3;
     private Row row;
-    private boolean all;
+    private static final int LIST_HOME = 0, LIST_ALL = 1, LIST_INPUTS = 2;
+    /** What the row shows: the dock's apps, all of them, or the TV's inputs. */
+    private int list = LIST_HOME;
     private final List<Item> items = new ArrayList<>();
     private int index;
     /** The viewer has moved along the row: a reload keeps their card; before that the row starts at the first app. */
     private boolean moved;
 
-    private DuneHome(Context ctx, DuneTone p, AppAdapter adapter, ConsoleHome.Actions actions, boolean motion) {
+    /** What the menu bar opens. */
+    interface Actions {
+        /** Hands each of the TV's inputs to [sink], in the Inputs dropdown's order. */
+        void listInputs(InputSink sink);
+        void launcherSettings();
+    }
+
+    /** One input: its icon, its name, its connection state (TvInputManager's, or -1 unknown) and what opens it. */
+    interface InputSink {
+        void add(int icon, String label, int state, Runnable open);
+    }
+
+    private DuneHome(Context ctx, DuneTone p, AppAdapter adapter, Actions actions, boolean motion) {
         this.ctx = ctx;
         this.p = p;
         this.adapter = adapter;
@@ -83,7 +101,7 @@ final class DuneHome {
 
     /** Lays the dunes over Home's [root], as the last child, and keeps the row in step with [adapter]. */
     static DuneHome attach(Context ctx, DuneTone p, FrameLayout root, AppAdapter adapter, String clockFormat,
-                           boolean motion, ConsoleHome.Actions actions) {
+                           boolean motion, Actions actions) {
         DuneHome d = new DuneHome(ctx, p, adapter, actions, motion);
         d.build(clockFormat);
         root.addView(d.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -169,22 +187,25 @@ final class DuneHome {
         rl.topMargin = dp(190);
         view.addView(row, rl);
 
-        TextView up = text(light, 10, p.muted, 0.3f);
-        up.setText("▲  " + upper(ctx.getString(R.string.console_inputs)));
-        view.addView(up, at(Gravity.BOTTOM | Gravity.START, 0, dp(18), dp(44)));
-        down = text(light, 10, p.muted, 0.3f);
-        view.addView(down, at(Gravity.BOTTOM | Gravity.END, 0, dp(18), dp(44)));
     }
 
     private static final class Item {
         final String label;
-        final int position;   // the app's place in the adapter, or -1 for a settings card
+        final int position;   // the app's place in the adapter, or -1 for an input
         final Runnable run;
+        final int icon;       // an input's icon, or 0
+        final boolean connected;
 
         Item(String label, int position, Runnable run) {
+            this(label, position, run, 0, false);
+        }
+
+        Item(String label, int position, Runnable run, int icon, boolean connected) {
             this.label = label;
             this.position = position;
             this.run = run;
+            this.icon = icon;
+            this.connected = connected;
         }
     }
 
@@ -192,33 +213,46 @@ final class DuneHome {
     private void fill(boolean first) {
         String focusedKey = !first && moved && index < items.size() ? items.get(index).label : null;
         items.clear();
-        int n = adapter.appCount();
-        int end = all ? n : Math.min(n, Math.max(adapter.dockFilled(), 0));
-        if (!all && end == 0) end = n;   // no dock: Home is every app
-        for (int i = 0; i < end; i++) {
-            if (adapter.isEmptyAt(i)) continue;
-            final int pos = i;
-            items.add(new Item(adapter.labelAt(i), i, () -> adapter.launchAt(pos)));
-        }
-        items.add(new Item(ctx.getString(R.string.dune_launcher), -1, actions::launcherSettings));
-        items.add(new Item(ctx.getString(R.string.dune_tv), -1, () -> {
-            try {
-                ctx.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            } catch (RuntimeException ignored) {
-                // A TV without Android's settings screen: nothing to open.
+        if (list == LIST_INPUTS) {
+            actions.listInputs((icon, label, state, open) ->
+                    items.add(new Item(label, -1, open, icon, state == android.media.tv.TvInputManager.INPUT_STATE_CONNECTED)));
+        } else {
+            boolean all = list == LIST_ALL;
+            int n = adapter.appCount();
+            int end = all ? n : Math.min(n, Math.max(adapter.dockFilled(), 0));
+            if (!all && end == 0) end = n;   // no dock: Home is every app
+            for (int i = 0; i < end; i++) {
+                if (adapter.isEmptyAt(i)) continue;
+                final int pos = i;
+                items.add(new Item(adapter.labelAt(i), i, () -> adapter.launchAt(pos)));
             }
-        }));
+        }
         int keep = 0;
         if (focusedKey != null) for (int i = 0; i < items.size(); i++) if (items.get(i).label.equals(focusedKey)) keep = i;
-        index = first || !moved ? 0 : Math.min(keep, items.size() - 1);
+        index = first || !moved ? 0 : Math.max(0, Math.min(keep, items.size() - 1));
         row.jump(index);
-        down.setText("▼  " + upper(ctx.getString(all ? R.string.console_home : R.string.console_all)));
         showTitle();
     }
 
     private void showTitle() {
         int width = title.getWidth() > 0 ? title.getWidth() : view.getResources().getDisplayMetrics().widthPixels - dp(80);
         Overlay.fit(title, index < items.size() ? upper(items.get(index).label) : "", 42, 16, width);
+    }
+
+    /** OK on the menu bar's [which]. */
+    private void pick(int which) {
+        switch (which) {
+            case MENU_HOME:
+            case MENU_ALL:
+            case MENU_INPUTS:
+                list = which == MENU_HOME ? LIST_HOME : which == MENU_ALL ? LIST_ALL : LIST_INPUTS;
+                moved = false;
+                inMenu = false;
+                fill(true);
+                break;
+            default:
+                actions.launcherSettings();
+        }
     }
 
     private void move(int by) {
@@ -287,9 +321,10 @@ final class DuneHome {
         }
 
         @Override protected void onDraw(Canvas canvas) {
-            if (items.isEmpty()) return;
             float cx = getWidth() / 2f;
-            float bottom = getHeight() - dp(64);
+            menu(canvas, cx);
+            if (items.isEmpty()) return;
+            float bottom = getHeight() - dp(100);
             float gap = dp(GAP_DP);
             // Card centres: walk out from the focus, each card's half width plus the gap plus the next's half width.
             int count = items.size();
@@ -318,11 +353,27 @@ final class DuneHome {
             fill.setColor(p.card);
             fill.setAlpha(on ? 0xF0 : Math.round(Color.alpha(p.card) * a));
             canvas.drawRoundRect(box, r, r, fill);
-            stroke.setColor(on ? p.edge : p.faint);
+            stroke.setColor(on && !inMenu ? p.edge : p.faint);
             stroke.setStrokeWidth(on ? dp(2) : Math.max(1, dp(1)));
             stroke.setAlpha(Math.round(Color.alpha(on ? p.edge : p.faint) * a));
             canvas.drawRoundRect(box, r, r, stroke);
             Item item = items.get(i);
+            if (item.icon != 0) {
+                Drawable d = ctx.getDrawable(item.icon);
+                if (d != null) {
+                    d = d.mutate();
+                    d.setTint(on ? p.fg : p.muted);
+                    d.setAlpha(alpha);
+                    float s = w * 0.36f, top = box.top + h * 0.36f - s / 2;
+                    d.setBounds(Math.round(centre - s / 2), Math.round(top), Math.round(centre + s / 2), Math.round(top + s));
+                    d.draw(canvas);
+                }
+                if (item.connected) {
+                    fill.setColor(p.fg);
+                    fill.setAlpha(alpha);
+                    canvas.drawCircle(centre, bottom - dp(on ? 34 : 26), dp(3), fill);
+                }
+            }
             Drawable art = item.position >= 0 ? adapter.artworkAt(item.position) : null;
             if (art != null) {
                 int iw = art.getIntrinsicWidth(), ih = art.getIntrinsicHeight();
@@ -349,7 +400,7 @@ final class DuneHome {
 
         private void dots(Canvas canvas, float cx) {
             int count = items.size();
-            float on = dp(21), off = dp(7.5f), gap = dp(7.5f), y = getHeight() - dp(24), t = Math.max(2, dp(2));
+            float on = dp(21), off = dp(7.5f), gap = dp(7.5f), y = getHeight() - dp(86), t = Math.max(2, dp(2));
             float total = on + (count - 1) * off + (count - 1) * gap;
             if (total > getWidth() * 0.5f) return;   // too many to read as dots
             float x = cx - total / 2;
@@ -362,7 +413,87 @@ final class DuneHome {
             }
         }
 
+        private final int[] menuIcons = {R.drawable.ic_home, R.drawable.ic_apps, R.drawable.ic_input, R.drawable.ic_settings};
+        private final int[] menuNames = {R.string.console_home, R.string.console_all, R.string.console_inputs, R.string.legend_settings};
+        private final RectF pill = new RectF();
+
+        /** The menu bar along the bottom: icon and name for each, the focused one filled, the row's list marked. */
+        private void menu(Canvas canvas, float cx) {
+            label.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            label.setLetterSpacing(0.3f);
+            label.setTypeface(medium);
+            float icon = dp(15), padX = dp(16), gapIcon = dp(9), gap = dp(12), h = dp(36);
+            float[] widths = new float[menuNames.length];
+            float total = 0;
+            for (int i = 0; i < menuNames.length; i++) {
+                widths[i] = padX + icon + gapIcon + label.measureText(upper(ctx.getString(menuNames[i]))) + padX;
+                total += widths[i] + (i > 0 ? gap : 0);
+            }
+            float x = cx - total / 2, top = getHeight() - dp(22) - h;
+            boolean lightInk = (Color.red(p.fg) + Color.green(p.fg) + Color.blue(p.fg)) > 384;
+            int onText = lightInk ? 0xFF1B1209 : 0xFFFFF6E8;
+            for (int i = 0; i < menuNames.length; i++) {
+                boolean focused = inMenu && i == menuIndex;
+                boolean shown = (i == MENU_HOME && list == LIST_HOME) || (i == MENU_ALL && list == LIST_ALL)
+                        || (i == MENU_INPUTS && list == LIST_INPUTS);
+                pill.set(x, top, x + widths[i], top + h);
+                if (focused) {
+                    fill.setColor(p.fg);
+                    canvas.drawRoundRect(pill, h / 2, h / 2, fill);
+                } else {
+                    stroke.setColor(p.faint);
+                    stroke.setStrokeWidth(Math.max(1, dp(1)));
+                    canvas.drawRoundRect(pill, h / 2, h / 2, stroke);
+                }
+                int ink = focused ? onText : shown ? p.fg : p.muted;
+                Drawable d = ctx.getDrawable(menuIcons[i]);
+                if (d != null) {
+                    d = d.mutate();
+                    d.setTint(ink);
+                    float iy = top + (h - icon) / 2;
+                    d.setBounds(Math.round(x + padX), Math.round(iy), Math.round(x + padX + icon), Math.round(iy + icon));
+                    d.draw(canvas);
+                }
+                label.setColor(ink);
+                label.setTextAlign(Paint.Align.LEFT);
+                Paint.FontMetrics fm = label.getFontMetrics();
+                canvas.drawText(upper(ctx.getString(menuNames[i])), x + padX + icon + gapIcon, top + h / 2 - (fm.ascent + fm.descent) / 2, label);
+                if (shown && !focused) {
+                    fill.setColor(p.fg);
+                    canvas.drawCircle(pill.centerX(), pill.bottom + dp(6), dp(2), fill);
+                }
+                x += widths[i] + gap;
+            }
+            label.setTextAlign(Paint.Align.CENTER);
+        }
+
         @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (inMenu) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_DPAD_LEFT:
+                        menuIndex = Math.max(0, menuIndex - 1);
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_RIGHT:
+                        menuIndex = Math.min(menuNames.length - 1, menuIndex + 1);
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_UP:
+                        inMenu = false;
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_DOWN:
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_CENTER:
+                    case KeyEvent.KEYCODE_ENTER:
+                    case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                        if (event.getRepeatCount() == 0) pick(menuIndex);
+                        invalidate();
+                        return true;
+                    default:
+                        return super.onKeyDown(keyCode, event);
+                }
+            }
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_LEFT:
                     move(-1);
@@ -371,12 +502,11 @@ final class DuneHome {
                     move(1);
                     return true;
                 case KeyEvent.KEYCODE_DPAD_UP:
-                    actions.inputs();
                     return true;
                 case KeyEvent.KEYCODE_DPAD_DOWN:
-                    all = !all;
-                    index = 0;
-                    fill(true);
+                    inMenu = true;
+                    menuIndex = list == LIST_ALL ? MENU_ALL : list == LIST_INPUTS ? MENU_INPUTS : MENU_HOME;
+                    invalidate();
                     return true;
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:

@@ -1008,7 +1008,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             consoleHome = ConsoleHome.attach(this, terminalPalette, root, adapter, findViewById(R.id.btnWifi), clockFormat,
                     animations && !reducedMotion, new ConsoleHome.Actions() {
                         @Override public void inputs() { showInputs(); }
-                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                        @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             consoleHome.focus();
         } else if (Aspect.CYBERPUNK.equals(aspect)) {
@@ -1018,7 +1018,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                             .getString(CyberpunkTone.KEY, null)), root, adapter, findViewById(R.id.btnWifi), clockFormat,
                     animations && !reducedMotion, new ConsoleHome.Actions() {
                         @Override public void inputs() { showInputs(); }
-                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                        @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             cyberpunkHome.focus();
         } else if (Aspect.DUNE.equals(aspect)) {
@@ -1026,9 +1026,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             glass.setVisibility(View.GONE);
             duneHome = DuneHome.attach(this, DuneTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
                             .getString(DuneTone.KEY, null)), root, adapter, clockFormat,
-                    animations && !reducedMotion, new ConsoleHome.Actions() {
-                        @Override public void inputs() { showInputs(); }
-                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                    animations && !reducedMotion, new DuneHome.Actions() {
+                        @Override public void listInputs(DuneHome.InputSink sink) { MainActivity.this.listInputs(sink); }
+                        @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             duneHome.focus();
         } else if (Aspect.LEGEND.equals(aspect)) {
@@ -1039,7 +1039,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     new LegendHome.Actions() {
                         @Override public void inputs() { showInputs(); }
                         @Override public void allApps() { onLibraryRequested(); }
-                        @Override public void launcherSettings() { findViewById(R.id.btnSettings).performClick(); }
+                        @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             legendHome.focus();
         } else if (Aspect.ORBIT.equals(aspect)) {
@@ -3528,13 +3528,35 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         return component != null ? new Intent().setComponent(component) : new Intent(inputAction);
     }
 
+    /**
+     * Launcher settings, for the looks that cover Home (their own Settings entry). Not the gear's click: that opens
+     * the TV's settings unless launcher_settings_button, and its long press is a menu hanging from the hidden pill.
+     */
+    private void openLauncherSettings() {
+        startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
+    }
+
+    /** While set, showInputs hands each input to it (Dune shows them as cards) instead of opening the dropdown. */
+    private DuneHome.InputSink inputSink;
+
+    /** The inputs the Inputs dropdown would list, in its order, for a look that shows them its own way. */
+    void listInputs(DuneHome.InputSink sink) {
+        inputSink = sink;
+        try {
+            showInputs();
+        } finally {
+            inputSink = null;
+        }
+    }
+
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
     private void showInputs() {
         // A configured source panel and no Live TV row to offer next to it: the panel is the whole menu.
         // The BYINTEK U4 needs this, as its TvInputManager lists three HDMI ports and an AV input it doesn't have.
         List<CoocaaSources.Source> coocaa = coocaaSources ? CoocaaSources.list(this) : Collections.emptyList();
         if (coocaa.isEmpty() && !sourcePanelService.isEmpty() && liveTvIntent() == null) {
-            openSourcePanel();
+            if (inputSink != null) inputSink.add(R.drawable.ic_input, getString(R.string.inputs), -1, this::openSourcePanel);
+            else openSourcePanel();
             return;
         }
         // top_menu: the pill is gone, so the list hangs under the gear, growing inward from the right.
@@ -3721,6 +3743,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             final Intent liveTvIntent = liveTv;
             addInputRow(rows, popup, R.drawable.ic_livetv, getString(R.string.live_tv), -1, () -> open(liveTvIntent));
         }
+        if (inputSink != null) {
+            // Only listed: the dropdown is never shown.
+            if (openPopup == popup) openPopup = null;
+            return;
+        }
         if (rows.getChildCount() == 0) {
             Toast.makeText(this, R.string.no_inputs, Toast.LENGTH_SHORT).show();
             return;
@@ -3778,6 +3805,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private View addInputRow(LinearLayout rows, PopupWindow popup, int iconRes, String title, int state, Runnable action) {
+        if (inputSink != null) inputSink.add(iconRes, title, state, action);
         View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
         ((ImageView) row.findViewById(R.id.icon)).setImageResource(iconRes);
         ((TextView) row.findViewById(R.id.title)).setText(title);

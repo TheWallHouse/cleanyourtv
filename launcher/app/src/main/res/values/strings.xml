@@ -205,8 +205,6 @@
     <string name="dune_noon">Noon</string>
     <string name="dune_night">Night</string>
     <string name="dune_open">Press OK to open</string>
-    <string name="dune_launcher">Launcher</string>
-    <string name="dune_tv">TV</string>
     <string name="aspect_legend">Map</string>
     <string name="legend_parchment">Parchment</string>
     <string name="legend_embers">Embers</string>
