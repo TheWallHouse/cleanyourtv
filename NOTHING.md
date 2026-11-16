@@ -21,13 +21,35 @@ the same launcher, the same debloat lists and tools, no ads, no network permissi
 | **Built in** | The look is the default, so the APK alone is enough: the dot-grid wallpaper ships inside the app, and `config.xml` turns on the glass dock, white rim focus, no colour glow, red network icon and wallpaper behind the screensaver clock |
 | **Launcher settings** | **Apps style** and **Your name**, set with the remote; and **Remove Nothing edition**, the two steps back to the TV's own home and this app's Uninstall page |
 
+## Looks
+
+Since 3.5 the launcher has seven looks, picked in **Launcher settings → Look** or from the phone
+([WallHouse TV](https://github.com/TheWallHouse/wallhouse-tv), settings.json `aspect`). The base layouts are
+CleanYourTV's plain ones; each look adds its own touches on top, and none inherits another's (the dot-matrix font,
+the red dot and the dot-grid wallpaper belong to Nothing alone). Everything is drawn on the TV: no pictures, no blur,
+no video.
+
+| Look | Home | Tones |
+|---|---|---|
+| **Nothing** | The grid of app banners described above | Apps style: colour, mono, mono with reds |
+| **Terminal · Windows** | The grid as a tiling desktop: a bar with numbered rows, a terminal window with the greeting, square tiles, JetBrains Mono | tokyo-night, catppuccin, gruvbox, nord |
+| **Terminal · Console** | A terminal session: a fastfetch block and a big clock, the apps as a list in three tabs, a tmux status line | the same four palettes |
+| **Cyberpunk** | A game menu: slanted bars for the apps, a status panel with a glitching clock, tabs, scanlines; Chakra Petch | yellow, pink, cyan |
+| **Dune** | A row of monoliths on the dunes, the focused app's name huge across the sky; ▼ goes down to a bar (Home, All apps, Inputs, Settings), inputs shown as monoliths too; Michroma | dusk, noon, night |
+| **Map** | A made-up hand-drawn map whose castles are the dock's apps, joined by roads; Inputs and All apps open on a parchment scroll; Cinzel | parchment, night, embers |
+| **Orbit** | The grid over the Earth seen from orbit, the focused app as the "mission in progress", a telemetry strip; inputs on a mission-control panel; Barlow | night, sunrise, Mars |
+
+In every look **Settings** works as the gear does: a press opens the TV's settings, a long press the launcher's.
+Launcher settings shows each look only its own choices. The looks are moods, not anyone's world: no names, logos or
+pictures from a film, a game or a book.
+
 **Own app ID:** `io.github.thewallhouse.nothingtv` (set in `launcher/gradle.properties`, upstream's `launcherApplicationId`), so it never
 passes itself off as CleanYourTV and both can be installed. The code keeps CleanYourTV's `com.gathin.tvhome` namespace,
 so its screens are named like `io.github.thewallhouse.nothingtv/com.gathin.tvhome.ClockDream`; the fork's `tools/`
 scripts use the new ID.
 
 Not changed: permissions (still no `INTERNET`), `minSdk` 26, the Home guard, the debloat flow. The APK is
-about 700 KB, over upstream's 576 KB gate, because of the font and the wallpaper inside it.
+about 950 KB, over upstream's 576 KB gate, because of the looks' fonts and the wallpaper inside it.
 
 ## Only the changes
 
@@ -76,5 +98,9 @@ but were only built, not seen on a TV.
 - [Doto](https://github.com/oliverlalan/Doto) by Oliver Lalan, SIL Open Font License 1.1
   ([`launcher/FONT-LICENSE-DOTO-OFL.txt`](launcher/FONT-LICENSE-DOTO-OFL.txt)). Subset and with the colon
   adjusted; the OFL allows it and the font keeps its licence.
+- The looks' fonts, all under the SIL Open Font License 1.1, subset to Latin: [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono),
+  [Chakra Petch](https://github.com/cadsondemak/Chakra-Petch), [Michroma](https://github.com/googlefonts/Michroma-font),
+  [Cinzel](https://github.com/NDISCOVER/Cinzel) and [Barlow](https://github.com/jpt/barlow); their licences are in
+  `launcher/FONT-LICENSE-*-OFL.txt`.
 - Nothing OS is a trademark of Nothing Technology Limited. This fork is not affiliated with Nothing; it only
   borrows the style.

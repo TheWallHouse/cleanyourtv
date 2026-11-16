@@ -3,6 +3,10 @@
 The [CleanYourTV](https://github.com/Gathin23/cleanyourtv) launcher for Android TV with the look of **Nothing OS**:
 dot-matrix font, one red, white lines. No ads, no network.
 
+**New in 3.5: seven looks.** Nothing is one of them; pick another in Launcher settings → Look, or from your phone with
+[WallHouse TV](https://github.com/TheWallHouse/wallhouse-tv): Terminal · Windows, Terminal · Console, Cyberpunk, Dune,
+Map and Orbit. Each is its own, nothing carried over from another. See [NOTHING.md](../NOTHING.md#looks).
+
 ![Home: before and after](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/before-after-home.jpg)
 
 ![Screensaver: before and after](https://raw.githubusercontent.com/TheWallHouse/cleanyourtv/nothing/docs/nothing/before-after-screensaver.jpg)
