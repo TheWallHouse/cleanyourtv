@@ -63,6 +63,11 @@ final class Aspect {
         return ctx.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(KEY, null);
     }
 
+    /** The looks drawn over Home's own grid of tiles (Nothing, Terminal · Windows, Orbit); the others are a view of their own. */
+    static boolean grid(String aspect) {
+        return NOTHING.equals(aspect) || WINDOWS.equals(aspect) || ORBIT.equals(aspect);
+    }
+
     static boolean terminal(String aspect) {
         return WINDOWS.equals(aspect) || CONSOLE.equals(aspect);
     }

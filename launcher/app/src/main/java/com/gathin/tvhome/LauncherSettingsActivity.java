@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -573,6 +574,12 @@ public final class LauncherSettingsActivity extends Activity {
         openOnStartChoice.setText(getString(R.string.open_on_start_state, openOnStartLabel()));
         appsStyleChoice.setText(getString(R.string.nothing_apps_style_state, appsStyleLabel(NothingTone.mode(this))));
         appsStyleChoice.setVisibility(Aspect.NOTHING.equals(Aspect.mode(this)) ? View.VISIBLE : View.GONE);
+        // Each look shows only its own choices: the grid's (columns, rows under the dock, the dock bar's opacity)
+        // for the looks drawn over Home's tiles, the wallpaper for Nothing, whose wallpaper it is.
+        String look = Aspect.mode(this);
+        boolean grid = Aspect.grid(look);
+        for (int first : new int[]{R.id.columns4, R.id.rows0, R.id.dock100}) showChoiceRow(first, grid);
+        wallpaperChoice.setVisibility(Aspect.NOTHING.equals(look) ? View.VISIBLE : View.GONE);
         String name = Config.load(this).greetingName;
         yourNameChoice.setText(getString(R.string.nothing_your_name_state,
                 name.isEmpty() ? getString(R.string.nothing_your_name_none) : name));
@@ -585,6 +592,15 @@ public final class LauncherSettingsActivity extends Activity {
                 : getString(R.string.terminal_palette_state, TerminalPalette.of(choices.getString(TerminalPalette.KEY, null)).name));
         languageChoice.setText(getString(R.string.nothing_language_state, languageLabel(choices.getString(Config.LOCALE_KEY, ""))));
         followThemeChoice.setSelected(!hasOnTvChoices());
+    }
+
+    /** Shows or hides a row of choices (the row holding [firstChoice]) together with its title just above it. */
+    private void showChoiceRow(int firstChoice, boolean show) {
+        View row = (View) findViewById(firstChoice).getParent();
+        ViewGroup list = (ViewGroup) row.getParent();
+        int at = list.indexOfChild(row);
+        row.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (at > 0) list.getChildAt(at - 1).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private boolean hasOnTvChoices() {
