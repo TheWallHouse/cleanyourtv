@@ -502,6 +502,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         AppAdapter.terminalFont = windows ? TerminalSkin.font(this) : null;
         AppAdapter.nothingLook = Aspect.NOTHING.equals(aspect);
         AppAdapter.lookFont = Aspect.ORBIT.equals(aspect) ? getResources().getFont(R.font.barlow_medium) : null;
+        AppAdapter.orbitTiles = Aspect.ORBIT.equals(aspect);
         animations = cfg.animations;
         advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;

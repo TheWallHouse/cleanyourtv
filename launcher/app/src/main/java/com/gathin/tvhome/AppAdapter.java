@@ -308,7 +308,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             // The icon is only drawn (and sampled for the glow) when there is no banner, so a tile with a
             // banner skips loading and decoding it.
-            Drawable icon = banner == null ? ri.loadIcon(pm) : null;
+            // Orbit draws every tile's icon at rest (its banner only when focused), so it loads both.
+            Drawable icon = banner == null || orbitTiles ? ri.loadIcon(pm) : null;
             if (card == null) {
                 banner = NothingTone.apply(ctx, banner, nothingTiles);
                 icon = NothingTone.apply(ctx, icon, nothingTiles);
@@ -528,6 +529,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             h.label.setText(e.label);
             h.label.setVisibility(uniformTiles ? View.GONE : View.VISIBLE);
         }
+        if (orbitTiles) orbitTile(h, e, focused);
         h.card.setOnClickListener(v -> launch(e));
         h.card.setOnLongClickListener(v -> {
             if (tileMenu) {
@@ -543,6 +545,48 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             return true;
         });
+    }
+
+    private static android.graphics.ColorMatrixColorFilter grey;
+
+    /** Orbit's look for a bound tile: glass, grey icon and name at rest; the banner shown when [focused]. */
+    private void orbitTile(Holder h, Entry e, boolean focused) {
+        float d = ctx.getResources().getDisplayMetrics().density;
+        GradientDrawable glass = new GradientDrawable();
+        glass.setColor(0x14FFFFFF);
+        glass.setStroke(Math.max(1, Math.round(d)), 0x33FFFFFF);
+        glass.setCornerRadius(cornerRadius(h.card.getLayoutParams().width, d));
+        h.card.setBackground(glass);
+        if (grey == null) {
+            android.graphics.ColorMatrix m = new android.graphics.ColorMatrix();
+            m.setSaturation(0f);
+            grey = new android.graphics.ColorMatrixColorFilter(m);
+        }
+        h.icon.setImageDrawable(e.icon);
+        h.icon.setColorFilter(grey);
+        h.icon.setVisibility(e.icon != null ? View.VISIBLE : View.GONE);
+        h.label.setText(e.label == null ? "" : e.label.toUpperCase(java.util.Locale.getDefault()));
+        if (lookFont != null) h.label.setTypeface(lookFont);
+        h.label.setLetterSpacing(0.2f);
+        h.label.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 11);
+        h.label.setTextColor(0xCCFFFFFF);
+        h.label.setVisibility(View.VISIBLE);
+        h.banner.setVisibility(e.banner != null ? View.VISIBLE : View.GONE);
+        orbitFocus(h, focused, false);
+    }
+
+    /** Orbit: the focused tile's banner fades in over its glass, and out when focus leaves. */
+    static void orbitFocus(Holder h, boolean focused, boolean animate) {
+        float on = focused && h.banner.getDrawable() != null ? 1f : 0f;
+        if (animate) {
+            h.banner.animate().alpha(on).setDuration(180).start();
+            h.icon.animate().alpha(1f - on).setDuration(180).start();
+            h.label.animate().alpha(1f - on).setDuration(180).start();
+        } else {
+            h.banner.setAlpha(on);
+            h.icon.setAlpha(1f - on);
+            h.label.setAlpha(1f - on);
+        }
     }
 
     /** Opens the tile's activity by explicit component, with no extras: a card can name nothing else. */
@@ -937,6 +981,11 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static boolean nothingLook = true;
     /** The tiles' name font in a look of its own that keeps Home's tiles (Orbit); null leaves the layout's. */
     static android.graphics.Typeface lookFont;
+    /**
+     * Orbit's tiles: dark glass with a hairline, the app's icon in grey and its name spaced out inside; the banner
+     * lights up in colour only on the focused tile.
+     */
+    static boolean orbitTiles;
 
     /** Corner radius for a tile of this width: 16dp at the design width, proportionally less when smaller; square in a terminal look. */
     static float cornerRadius(int tileWidthPx, float density) {
@@ -1040,6 +1089,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             .setDuration(220).start();
                 }
                 int pos = getBindingAdapterPosition();
+                // After the cancels above, which would stop the fade.
+                if (orbitTiles) orbitFocus(this, focused, true);
                 if (focused && listener != null && pos != RecyclerView.NO_POSITION) {
                     listener.onTileFocused(pos, view);
                 }
