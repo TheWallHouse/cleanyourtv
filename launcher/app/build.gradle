@@ -3,6 +3,16 @@ plugins {
 }
 
 android {
+    // WallHouse Launcher's looks, one folder each under src/main/looks/<look>/ with its own code (java/), fonts,
+    // pictures and texts in every language (res/) and its fonts' licences. Same package as Home, so a look reaches
+    // what it needs; Aspect lists them. shared/ holds what more than one look uses.
+    sourceSets {
+        main {
+            def looks = ['shared', 'nothing', 'terminal', 'cyberpunk', 'dune', 'map', 'orbit']
+            java.srcDirs += looks.collect { "src/main/looks/$it/java" }
+            res.srcDirs += looks.collect { "src/main/looks/$it/res" }
+        }
+    }
     namespace 'com.gathin.tvhome'
     compileSdk 34
 

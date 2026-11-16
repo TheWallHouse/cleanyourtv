@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dune_dusk">Solpor</string>
+    <string name="dune_noon">Mediodía</string>
+    <string name="dune_night">Noite</string>
+    <string name="dune_open">Preme OK para abrir</string>
+</resources>

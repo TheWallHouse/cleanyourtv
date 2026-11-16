@@ -27,14 +27,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Legend (Aspect.LEGEND): Home as an old hand-drawn map, over the same apps as the tiles. The dock's apps are castles
+ * Legend (Aspect.MAP): Home as an old hand-drawn map, over the same apps as the tiles. The dock's apps are castles
  * joined by dotted roads, with Launcher settings as one more; the D-pad jumps to the nearest place that way, OK opens
  * it. The greeting, clock and date sit in a cartouche; Inputs and the installed-app picker are two buttons top right;
  * a ribbon along the bottom names the focused place. The lands, mountains, forests, rivers and their names are made
  * up and drawn once, in a 1280×720 map scaled to the screen. The tile grid stays underneath, loaded and hidden, so
  * the order, the dock, hidden apps and the reloads are Home's own; this only opens them.
  */
-final class LegendHome {
+final class MapHome {
     static final float MAP_W = 1280f, MAP_H = 720f;
     private static final long MINUTE_MS = 60_000L;
     private static final int MAX_APPS = 7;
@@ -53,7 +53,7 @@ final class LegendHome {
     }
 
     private final Context ctx;
-    private final LegendTone p;
+    private final MapTone p;
     private final AppAdapter adapter;
     private final Actions actions;
     private final String clockFormat;
@@ -67,7 +67,7 @@ final class LegendHome {
     /** The viewer has moved on the map: a reload keeps their place; before that the first app is focused. */
     private boolean moved;
 
-    private LegendHome(Context ctx, LegendTone p, AppAdapter adapter, String clockFormat, Actions actions) {
+    private MapHome(Context ctx, MapTone p, AppAdapter adapter, String clockFormat, Actions actions) {
         this.ctx = ctx;
         this.p = p;
         this.adapter = adapter;
@@ -81,9 +81,9 @@ final class LegendHome {
     }
 
     /** Lays the map over Home's [root], as the last child. [greetingView] is Home's greeting, which the cartouche repeats. */
-    static LegendHome attach(Context ctx, LegendTone p, FrameLayout root, AppAdapter adapter, TextView greetingView,
+    static MapHome attach(Context ctx, MapTone p, FrameLayout root, AppAdapter adapter, TextView greetingView,
                              String clockFormat, Actions actions) {
-        LegendHome l = new LegendHome(ctx, p, adapter, clockFormat, actions);
+        MapHome l = new MapHome(ctx, p, adapter, clockFormat, actions);
         l.build();
         root.addView(l.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         Overlay.isolate(root, l.view);
@@ -154,9 +154,9 @@ final class LegendHome {
             targets.add(new Target(adapter.labelAt(i), SLOTS[slot][0], SLOTS[slot][1], slot, () -> adapter.launchAt(pos)));
             slot++;
         }
-        targets.add(new Target(ctx.getString(R.string.legend_settings), SETTINGS_AT[0], SETTINGS_AT[1], SETTINGS, () -> Overlay.openTvSettings(ctx)));
-        targets.add(new Target(ctx.getString(R.string.console_inputs), 0, 0, -1, () -> openScroll(false)));
-        targets.add(new Target(ctx.getString(R.string.legend_all_apps), 0, 0, -1, () -> openScroll(true)));
+        targets.add(new Target(ctx.getString(R.string.look_settings), SETTINGS_AT[0], SETTINGS_AT[1], SETTINGS, () -> Overlay.openTvSettings(ctx)));
+        targets.add(new Target(ctx.getString(R.string.look_inputs), 0, 0, -1, () -> openScroll(false)));
+        targets.add(new Target(ctx.getString(R.string.map_all_apps), 0, 0, -1, () -> openScroll(true)));
         focused = 0;
         if (was != null) for (int i = 0; i < targets.size(); i++) if (targets.get(i).label.equals(was)) focused = i;
         places.layoutButtons();
@@ -469,7 +469,7 @@ final class LegendHome {
             path.lineTo(l + notch, (t + b) / 2);
             path.close();
             canvas.drawPath(path, fill(p.accent));
-            String travel = ctx.getString(R.string.legend_travel);
+            String travel = ctx.getString(R.string.map_travel);
             text.setTypeface(cinzelBold);
             text.setTextSize(24);
             text.setLetterSpacing(0.12f);
@@ -544,7 +544,7 @@ final class LegendHome {
             roller(canvas, ST);
             roller(canvas, SB);
             // Title and flourish.
-            String title = ctx.getString(scrollApps ? R.string.legend_all_apps : R.string.console_inputs);
+            String title = ctx.getString(scrollApps ? R.string.map_all_apps : R.string.look_inputs);
             text.setTypeface(cinzelBold);
             text.setTextSize(30);
             text.setLetterSpacing(0.12f);
@@ -568,7 +568,7 @@ final class LegendHome {
             text.setTextSize(14);
             text.setLetterSpacing(0.05f);
             text.setColor(alpha(p.ink, 0.75f));
-            canvas.drawText(ctx.getString(R.string.legend_scroll_hint), cx, SB - 30, text);
+            canvas.drawText(ctx.getString(R.string.map_scroll_hint), cx, SB - 30, text);
             text.setTextAlign(Paint.Align.LEFT);
         }
 
@@ -719,7 +719,7 @@ final class LegendHome {
         @Override protected void onDraw(Canvas canvas) {
             canvas.save();
             canvas.scale(getWidth() / MAP_W, getHeight() / MAP_H);
-            LegendMap.draw(canvas, p, italic, cinzelBold, ctx);
+            MapDrawing.draw(canvas, p, italic, cinzelBold, ctx);
             canvas.restore();
         }
     }

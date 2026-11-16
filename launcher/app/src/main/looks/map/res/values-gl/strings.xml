@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aspect_map">Mapa</string>
+    <string name="map_parchment">Pergamiño</string>
+    <string name="map_embers">Brasas</string>
+    <string name="map_travel">· preme OK para viaxar ·</string>
+    <string name="map_all_apps">Todas as apps</string>
+    <string name="map_leagues">Leguas</string>
+    <string name="map_scroll_hint">OK abrir · Atrás pechar</string>
+    <string name="map_region_north">Cumios do Norte</string>
+    <string name="map_region_wood">Bosque Vello</string>
+    <string name="map_region_moors">Os Páramos</string>
+    <string name="map_region_sea">Mar do Solpor</string>
+    <string name="map_region_ash">Montes de Cinza</string>
+    <string name="map_region_isles">Illas Caladas</string>
+</resources>

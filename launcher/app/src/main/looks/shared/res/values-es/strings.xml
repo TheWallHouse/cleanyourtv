@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="look_network">red</string>
+    <string name="look_uptime">activa</string>
+    <string name="look_uptime_value">%1$d h %2$d min</string>
+    <string name="look_home">inicio</string>
+    <string name="look_all">todas</string>
+    <string name="look_system">sistema</string>
+    <string name="look_inputs">Entradas</string>
+    <string name="look_hint">▲▼ elegir · OK abrir · ◀▶ pestañas</string>
+    <string name="look_tv">tele</string>
+    <string name="look_apps">apps</string>
+    <string name="look_apps_value">%1$d instaladas</string>
+    <string name="aspect">Aspecto</string>
+    <string name="aspect_state">Aspecto: %1$s</string>
+    <string name="look_settings">Ajustes</string>
+</resources>

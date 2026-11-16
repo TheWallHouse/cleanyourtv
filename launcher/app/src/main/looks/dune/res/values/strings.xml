@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aspect_dune" translatable="false">Dune</string>
+    <string name="dune_dusk">Dusk</string>
+    <string name="dune_noon">Noon</string>
+    <string name="dune_night">Night</string>
+    <string name="dune_open">Press OK to open</string>
+</resources>

@@ -233,7 +233,7 @@ final class ConsoleHome {
         right.addView(openPrompt);
         LinearLayout tabRow = new LinearLayout(ctx);
         tabRow.setPadding(0, dp(18), 0, dp(14));
-        int[] names = {R.string.console_home, R.string.console_all, R.string.console_system};
+        int[] names = {R.string.look_home, R.string.look_all, R.string.look_system};
         for (int i = 0; i < 3; i++) {
             TextView t = text(15, p.muted, false);
             t.setText((i + 1) + " " + ctx.getString(names[i]));
@@ -258,7 +258,7 @@ final class ConsoleHome {
         LinearLayout.LayoutParams scl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f);
         right.addView(scroll, scl);
         TextView hint = text(13, p.muted, false);
-        hint.setText(R.string.console_hint);
+        hint.setText(R.string.look_hint);
         hint.setPadding(0, dp(12), 0, 0);
         right.addView(hint);
 
@@ -311,8 +311,8 @@ final class ConsoleHome {
         List<Row> out = new ArrayList<>();
         int n = adapter.appCount();
         if (tab == TAB_SYSTEM) {
-            out.add(new Row(ctx.getString(R.string.console_inputs), -1, actions::inputs));
-            Row settings = new Row(ctx.getString(R.string.legend_settings), -1, () -> Overlay.openTvSettings(ctx));
+            out.add(new Row(ctx.getString(R.string.look_inputs), -1, actions::inputs));
+            Row settings = new Row(ctx.getString(R.string.look_settings), -1, () -> Overlay.openTvSettings(ctx));
             settings.longRun = actions::launcherSettings;
             out.add(settings);
             return out;
@@ -340,7 +340,7 @@ final class ConsoleHome {
             tabs[i].setTextColor(on ? p.bg : p.muted);
             tabs[i].setBackgroundColor(on ? p.accent : 0);
             tabs[i].setTypeface(on ? monoBold : mono);
-            statusTabs[i].setText((i + 1) + ":" + ctx.getString(i == 0 ? R.string.console_home : i == 1 ? R.string.console_all : R.string.console_system) + (on ? "*" : ""));
+            statusTabs[i].setText((i + 1) + ":" + ctx.getString(i == 0 ? R.string.look_home : i == 1 ? R.string.look_all : R.string.look_system) + (on ? "*" : ""));
             statusTabs[i].setTextColor(on ? p.accent : p.muted);
         }
         renderInfo();
@@ -396,16 +396,16 @@ final class ConsoleHome {
 
     private void renderInfo() {
         long minutes = SystemClock.elapsedRealtime() / MINUTE_MS;
-        String up = ctx.getString(R.string.terminal_uptime_value, (int) (minutes / 60), (int) (minutes % 60));
+        String up = ctx.getString(R.string.look_uptime_value, (int) (minutes / 60), (int) (minutes % 60));
         int apps = 0;
         for (int i = 0; i < adapter.appCount(); i++) if (!adapter.isEmptyAt(i)) apps++;
         SpannableStringBuilder b = new SpannableStringBuilder();
-        line(b, ctx.getString(R.string.console_tv), host);
+        line(b, ctx.getString(R.string.look_tv), host);
         line(b, ctx.getString(R.string.console_os), "Android " + Build.VERSION.RELEASE);
-        line(b, ctx.getString(R.string.console_apps), ctx.getString(R.string.console_apps_value, apps));
-        line(b, ctx.getString(R.string.terminal_network), networkText);
+        line(b, ctx.getString(R.string.look_apps), ctx.getString(R.string.look_apps_value, apps));
+        line(b, ctx.getString(R.string.look_network), networkText);
         line(b, ctx.getString(R.string.terminal_theme), p.name);
-        line(b, ctx.getString(R.string.terminal_uptime), up);
+        line(b, ctx.getString(R.string.look_uptime), up);
         b.delete(b.length() - 1, b.length());
         info.setText(b);
         openPrompt.setText(prompt(ctx.getString(R.string.console_open), blink));

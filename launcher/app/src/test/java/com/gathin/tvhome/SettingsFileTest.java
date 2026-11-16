@@ -124,22 +124,22 @@ public class SettingsFileTest {
     }
 
     @Test
-    public void theLegendToneIsOneOfItsThree() {
-        for (String name : LegendTone.ALL) {
-            assertEquals(name, v(LegendTone.KEY, name));
-            assertEquals(name, LegendTone.of(name).name);
+    public void theMapToneIsOneOfItsThree() {
+        for (String name : MapTone.ALL) {
+            assertEquals(name, v(MapTone.KEY, name));
+            assertEquals(name, MapTone.of(name).name);
         }
-        assertNull(v(LegendTone.KEY, "gold"));
-        assertEquals(LegendTone.PARCHMENT, LegendTone.of("gold").name);
-        assertEquals(LegendTone.PARCHMENT, LegendTone.of(null).name);
+        assertNull(v(MapTone.KEY, "gold"));
+        assertEquals(MapTone.PARCHMENT, MapTone.of("gold").name);
+        assertEquals(MapTone.PARCHMENT, MapTone.of(null).name);
     }
 
     @Test
-    public void theLegendMapIsTheSameEveryTime() {
-        LegendMap.Rng a = new LegendMap.Rng(11), b = new LegendMap.Rng(11);
+    public void theMapIsTheSameEveryTime() {
+        MapDrawing.Rng a = new MapDrawing.Rng(11), b = new MapDrawing.Rng(11);
         for (int i = 0; i < 100; i++) assertEquals(a.next(), b.next(), 0f);
         // mulberry32's first draws for seed 11, as the approved mock-up (JavaScript) makes them.
-        LegendMap.Rng r = new LegendMap.Rng(11);
+        MapDrawing.Rng r = new MapDrawing.Rng(11);
         assertEquals(0.511587f, r.next(), 1e-6f);
         assertEquals(0.5299464f, r.next(), 1e-6f);
         assertEquals(0.6081186f, r.next(), 1e-6f);

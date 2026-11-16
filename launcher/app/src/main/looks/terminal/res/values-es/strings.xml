@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="terminal_theme">tema</string>
+    <string name="terminal_palette">Paleta</string>
+    <string name="terminal_palette_state">Paleta: %1$s</string>
+    <string name="console_open">abrir</string>
+    <string name="console_os">sistema</string>
+    <string name="aspect_windows">Terminal · Ventanas</string>
+    <string name="aspect_console">Terminal · Consola</string>
+</resources>

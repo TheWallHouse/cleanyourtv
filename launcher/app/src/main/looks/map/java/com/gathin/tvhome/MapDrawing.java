@@ -18,7 +18,7 @@ import java.util.List;
  * volcano, forests, hills, rivers and a lake, region names, a double frame, a compass rose and a scale. The same seed
  * draws the same map every time. Drawn once into a view's display list; no bitmaps.
  */
-final class LegendMap {
+final class MapDrawing {
     private static final float[][] MAIN = {{330, 120}, {470, 95}, {620, 118}, {760, 88}, {900, 112}, {1040, 96}, {1150, 140},
             {1195, 230}, {1170, 320}, {1205, 400}, {1160, 480}, {1180, 560}, {1100, 630}, {960, 615}, {860, 660}, {720, 640},
             {600, 668}, {470, 630}, {360, 655}, {240, 610}, {150, 560}, {170, 470}, {110, 400}, {160, 330}, {230, 300}, {250, 230}};
@@ -28,7 +28,7 @@ final class LegendMap {
             {{990, 672}, {1030, 662}, {1046, 684}, {1004, 694}},
     };
 
-    private LegendMap() {
+    private MapDrawing() {
     }
 
     /** mulberry32, as the mock-up draws it, so the map is the one that was approved. */
@@ -150,7 +150,7 @@ final class LegendMap {
         canvas.restore();
     }
 
-    static void draw(Canvas canvas, LegendTone p, Typeface italic, Typeface bold, Context ctx) {
+    static void draw(Canvas canvas, MapTone p, Typeface italic, Typeface bold, Context ctx) {
         Rng r = new Rng(11);
         float[][] main = rough(MAIN, r, 3);
         float[][][] isles = new float[ISLES.length][][];
@@ -286,12 +286,12 @@ final class LegendMap {
         Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
         text.setTypeface(italic);
         text.setColor(alpha(p.ink, 0.72f));
-        label(canvas, text, ctx.getString(R.string.legend_region_north), 760, 116, 18, 7, -3, false);
-        label(canvas, text, ctx.getString(R.string.legend_region_wood), 386, 282, 16, 5, 0, false);
-        label(canvas, text, ctx.getString(R.string.legend_region_moors), 452, 478, 16, 6, 4, false);
-        label(canvas, text, ctx.getString(R.string.legend_region_sea), 1092, 594, 18, 5, -12, false);
-        label(canvas, text, ctx.getString(R.string.legend_region_ash), 1158, 270, 14, 4, 90, true);
-        label(canvas, text, ctx.getString(R.string.legend_region_isles), 40, 300, 13, 3, -8, false);
+        label(canvas, text, ctx.getString(R.string.map_region_north), 760, 116, 18, 7, -3, false);
+        label(canvas, text, ctx.getString(R.string.map_region_wood), 386, 282, 16, 5, 0, false);
+        label(canvas, text, ctx.getString(R.string.map_region_moors), 452, 478, 16, 6, 4, false);
+        label(canvas, text, ctx.getString(R.string.map_region_sea), 1092, 594, 18, 5, -12, false);
+        label(canvas, text, ctx.getString(R.string.map_region_ash), 1158, 270, 14, 4, 90, true);
+        label(canvas, text, ctx.getString(R.string.map_region_isles), 40, 300, 13, 3, -8, false);
 
         // The frame.
         canvas.drawRect(14, 14, 1266, 706, stroke(alpha(p.ink, 0.8f), 2.5f));
@@ -337,6 +337,6 @@ final class LegendMap {
         canvas.drawRect(80, -2.5f, 120, 2.5f, block);
         canvas.restore();
         text.setColor(alpha(p.ink, 0.8f));
-        label(canvas, text, ctx.getString(R.string.legend_leagues), 1086, 640, 13, 2, 0, false);
+        label(canvas, text, ctx.getString(R.string.map_leagues), 1086, 640, 13, 2, 0, false);
     }
 }

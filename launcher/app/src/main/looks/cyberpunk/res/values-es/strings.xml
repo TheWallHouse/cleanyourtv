@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cyberpunk_tone">Tono</string>
+    <string name="cyberpunk_tone_state">Tono: %1$s</string>
+    <string name="cyberpunk_yellow">Amarillo</string>
+    <string name="cyberpunk_pink">Rosa</string>
+    <string name="cyberpunk_cyan">Cian</string>
+    <string name="cyberpunk_online">Sistema en línea</string>
+</resources>

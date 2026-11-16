@@ -410,7 +410,7 @@ final class DuneHome {
         }
 
         private final int[] menuIcons = {R.drawable.ic_home, R.drawable.ic_apps, R.drawable.ic_input, R.drawable.ic_settings};
-        private final int[] menuNames = {R.string.console_home, R.string.console_all, R.string.console_inputs, R.string.legend_settings};
+        private final int[] menuNames = {R.string.look_home, R.string.look_all, R.string.look_inputs, R.string.look_settings};
         private final RectF pill = new RectF();
 
         /** The menu bar along the bottom: icon and name for each, the focused one filled, the row's list marked. */

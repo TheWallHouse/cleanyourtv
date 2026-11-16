@@ -272,13 +272,13 @@ final class TerminalSkin {
     private void render() {
         renderPrompt();
         long minutes = SystemClock.elapsedRealtime() / MINUTE_MS;
-        String up = ctx.getString(R.string.terminal_uptime_value, (int) (minutes / 60), (int) (minutes % 60));
+        String up = ctx.getString(R.string.look_uptime_value, (int) (minutes / 60), (int) (minutes % 60));
         SpannableStringBuilder b = new SpannableStringBuilder();
         line(b, ctx.getString(R.string.terminal_theme), p.name);
         b.append('\n');
-        line(b, ctx.getString(R.string.terminal_network), networkText);
+        line(b, ctx.getString(R.string.look_network), networkText);
         b.append('\n');
-        line(b, ctx.getString(R.string.terminal_uptime), up);
+        line(b, ctx.getString(R.string.look_uptime), up);
         info.setText(b);
     }
 

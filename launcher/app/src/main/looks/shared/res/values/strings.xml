@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="look_network">net</string>
+    <string name="look_uptime">up</string>
+    <string name="look_uptime_value">%1$d h %2$d min</string>
+    <string name="look_home">home</string>
+    <string name="look_all">all</string>
+    <string name="look_system">system</string>
+    <string name="look_inputs">Inputs</string>
+    <string name="look_hint">▲▼ choose · OK open · ◀▶ tabs</string>
+    <string name="look_tv">tv</string>
+    <string name="look_apps">apps</string>
+    <string name="look_apps_value">%1$d installed</string>
+    <string name="aspect">Look</string>
+    <string name="aspect_state">Look: %1$s</string>
+    <string name="look_settings">Settings</string>
+</resources>

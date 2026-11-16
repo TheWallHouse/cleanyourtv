@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Looked up through a string like the base UI fonts (res/values/fonts.xml). -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ReferenceType">
+    <!-- Doto dot-matrix font, ROND 100, wght 800, Latin subset, colon crosses moved up one dot to align with the digits. OFL. -->
+    <string name="font_dot" translatable="false">@font/doto</string>
+</resources>

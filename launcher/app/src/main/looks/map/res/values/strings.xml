@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aspect_map">Map</string>
+    <string name="map_parchment">Parchment</string>
+    <string name="map_embers">Embers</string>
+    <string name="map_travel">· press OK to travel ·</string>
+    <string name="map_all_apps">All apps</string>
+    <string name="map_leagues">Leagues</string>
+    <string name="map_scroll_hint">OK to open · Back to close</string>
+    <string name="map_region_north">Northern Peaks</string>
+    <string name="map_region_wood">Old Wood</string>
+    <string name="map_region_moors">The Moors</string>
+    <string name="map_region_sea">Sea of Dusk</string>
+    <string name="map_region_ash">Ash Mountains</string>
+    <string name="map_region_isles">Silent Isles</string>
+</resources>

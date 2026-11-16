@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-/** Helpers for the looks that cover Home with a view of their own (ConsoleHome, CyberpunkHome, DuneHome, LegendHome). */
+/** Helpers for the looks that cover Home with a view of their own (ConsoleHome, CyberpunkHome, DuneHome, MapHome). */
 final class Overlay {
     private Overlay() {
     }

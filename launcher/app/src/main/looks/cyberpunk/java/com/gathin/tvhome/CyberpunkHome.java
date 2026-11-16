@@ -202,7 +202,7 @@ final class CyberpunkHome {
         panes.addView(right, rl);
         LinearLayout tabRow = new LinearLayout(ctx);
         tabRow.setGravity(Gravity.END);
-        int[] names = {R.string.console_home, R.string.console_all, R.string.console_system};
+        int[] names = {R.string.look_home, R.string.look_all, R.string.look_system};
         for (int i = 0; i < 3; i++) {
             LinearLayout cell = new LinearLayout(ctx);
             cell.setOrientation(LinearLayout.VERTICAL);
@@ -239,7 +239,7 @@ final class CyberpunkHome {
         help.setBackgroundColor(p.accent);
         help.setPadding(dp(42), 0, dp(42), 0);
         TextView keys = text(11, CyberpunkTone.INK, true, 0.2f);
-        keys.setText(upper(ctx.getString(R.string.console_hint)));
+        keys.setText(upper(ctx.getString(R.string.look_hint)));
         help.addView(keys);
         help.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1f));
         TextView sign = text(11, CyberpunkTone.INK, true, 0.2f);
@@ -264,8 +264,8 @@ final class CyberpunkHome {
         List<Row> out = new ArrayList<>();
         int n = adapter.appCount();
         if (tab == TAB_SYSTEM) {
-            out.add(new Row(ctx.getString(R.string.console_inputs), actions::inputs));
-            Row settings = new Row(ctx.getString(R.string.legend_settings), () -> Overlay.openTvSettings(ctx));
+            out.add(new Row(ctx.getString(R.string.look_inputs), actions::inputs));
+            Row settings = new Row(ctx.getString(R.string.look_settings), () -> Overlay.openTvSettings(ctx));
             settings.longRun = actions::launcherSettings;
             out.add(settings);
             return out;
@@ -362,10 +362,10 @@ final class CyberpunkHome {
         int apps = 0;
         for (int i = 0; i < adapter.appCount(); i++) if (!adapter.isEmptyAt(i)) apps++;
         info.removeAllViews();
-        infoRow(ctx.getString(R.string.console_tv), host);
-        infoRow(ctx.getString(R.string.terminal_network), networkText);
-        infoRow(ctx.getString(R.string.console_apps), ctx.getString(R.string.console_apps_value, apps));
-        infoRow(ctx.getString(R.string.terminal_uptime), ctx.getString(R.string.terminal_uptime_value, (int) (minutes / 60), (int) (minutes % 60)));
+        infoRow(ctx.getString(R.string.look_tv), host);
+        infoRow(ctx.getString(R.string.look_network), networkText);
+        infoRow(ctx.getString(R.string.look_apps), ctx.getString(R.string.look_apps_value, apps));
+        infoRow(ctx.getString(R.string.look_uptime), ctx.getString(R.string.look_uptime_value, (int) (minutes / 60), (int) (minutes % 60)));
         online.setText(upper(ctx.getString(R.string.cyberpunk_online)) + (cursorOn ? " ▮" : "  "));
     }
 

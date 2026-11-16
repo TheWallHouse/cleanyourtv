@@ -226,7 +226,7 @@ final class OrbitSkin {
 
     private void renderUptime() {
         long minutes = SystemClock.elapsedRealtime() / MINUTE_MS;
-        uptime.setText(upper(ctx.getString(R.string.terminal_uptime_value, (int) (minutes / 60), (int) (minutes % 60))));
+        uptime.setText(upper(ctx.getString(R.string.look_uptime_value, (int) (minutes / 60), (int) (minutes % 60))));
     }
 
     private void tick(View root) {
@@ -355,7 +355,7 @@ final class OrbitSkin {
             c.drawCircle(box.right - dp(56), top + dp(4), dp(2.5f), paint);
             // Heading.
             float x = left + dp(24);
-            text(upper(ctx.getString(R.string.console_inputs)), medium, 12, 0.5f, p.fg, x, top + dp(32), Paint.Align.LEFT);
+            text(upper(ctx.getString(R.string.look_inputs)), medium, 12, 0.5f, p.fg, x, top + dp(32), Paint.Align.LEFT);
             text(upper(ctx.getString(R.string.orbit_inputs_sub)), light, 8, 0.4f, p.muted, x, top + dp(50), Paint.Align.LEFT);
             paint.setColor(p.line);
             c.drawRect(x, top + head - dp(10), box.right - dp(24), top + head - dp(10) + Math.max(1, dp(1)), paint);
@@ -455,7 +455,7 @@ final class OrbitSkin {
             canvas.save();
             canvas.scale(getWidth() / MAP_W, getHeight() / MAP_H);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            LegendMap.Rng r = new LegendMap.Rng(5);
+            MapDrawing.Rng r = new MapDrawing.Rng(5);
             paint.setColor(alpha(0xFFFFFF, p.starsAlpha));
             for (int i = 0; i < 220; i++) {
                 float x = r.next() * 1280, y = r.next() * 560, s = r.next() < 0.08f ? 1.3f : 0.6f;

@@ -40,7 +40,7 @@ final class SettingsFile {
         k.put(TerminalPalette.KEY, Kind.STRING);
         k.put(CyberpunkTone.KEY, Kind.STRING);
         k.put(DuneTone.KEY, Kind.STRING);
-        k.put(LegendTone.KEY, Kind.STRING);
+        k.put(MapTone.KEY, Kind.STRING);
         k.put(OrbitTone.KEY, Kind.STRING);
         KEYS = Collections.unmodifiableMap(k);
     }
@@ -87,7 +87,7 @@ final class SettingsFile {
                 if (TerminalPalette.KEY.equals(key)) return TerminalPalette.valid(s) ? s : null;
                 if (CyberpunkTone.KEY.equals(key)) return CyberpunkTone.valid(s) ? s : null;
                 if (DuneTone.KEY.equals(key)) return DuneTone.valid(s) ? s : null;
-                if (LegendTone.KEY.equals(key)) return LegendTone.valid(s) ? s : null;
+                if (MapTone.KEY.equals(key)) return MapTone.valid(s) ? s : null;
                 if (OrbitTone.KEY.equals(key)) return OrbitTone.valid(s) ? s : null;
                 if (Config.LOCALE_KEY.equals(key)) return s.isEmpty() ? REMOVE : LOCALE.matcher(s).matches() ? s : null;
                 if (Config.GREETING_NAME_KEY.equals(key)) {

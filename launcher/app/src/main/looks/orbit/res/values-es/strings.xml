@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aspect_orbit">Órbita</string>
+    <string name="orbit_sunrise">Amanecer</string>
+    <string name="orbit_mars">Marte</string>
+    <string name="orbit_mission">Misión en curso</string>
+    <string name="orbit_launch">Pulsa OK para lanzar</string>
+    <string name="orbit_time">Hora local</string>
+    <string name="orbit_date">Fecha</string>
+    <string name="orbit_link">Enlace</string>
+    <string name="orbit_up">En órbita</string>
+    <string name="orbit_inputs_sub">Selecciona destino</string>
+    <string name="orbit_inputs_hint">▲▼ elegir · OK cambiar · Atrás cerrar</string>
+</resources>

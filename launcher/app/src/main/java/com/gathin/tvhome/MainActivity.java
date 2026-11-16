@@ -155,8 +155,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private CyberpunkHome cyberpunkHome;
     /** Dune over Home (Aspect.DUNE), or null. */
     private DuneHome duneHome;
-    /** Legend over Home (Aspect.LEGEND), or null. */
-    private LegendHome legendHome;
+    /** Legend over Home (Aspect.MAP), or null. */
+    private MapHome mapHome;
     /** Orbit over Home's own tiles (Aspect.ORBIT), or null. */
     private OrbitSkin orbitSkin;
     private View ambient;
@@ -1032,16 +1032,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         @Override public void launcherSettings() { openLauncherSettings(); }
                     });
             duneHome.focus();
-        } else if (Aspect.LEGEND.equals(aspect)) {
+        } else if (Aspect.MAP.equals(aspect)) {
             ((View) clockBlock.getParent().getParent()).setVisibility(View.INVISIBLE);
             glass.setVisibility(View.GONE);
-            legendHome = LegendHome.attach(this, LegendTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
-                            .getString(LegendTone.KEY, null)), root, adapter, greeting, clockFormat,
-                    new LegendHome.Actions() {
+            mapHome = MapHome.attach(this, MapTone.of(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
+                            .getString(MapTone.KEY, null)), root, adapter, greeting, clockFormat,
+                    new MapHome.Actions() {
                         @Override public void listInputs(DuneHome.InputSink sink) { MainActivity.this.listInputs(sink); }
                         @Override public void launcherSettings() { openLauncherSettings(); }
                     });
-            legendHome.focus();
+            mapHome.focus();
         } else if (Aspect.ORBIT.equals(aspect)) {
             // The scenery takes the wallpaper's place: drop its picture and stop it rotating.
             wallpaperPlayer.releaseForMemoryPressure();
@@ -1228,7 +1228,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (consoleHome != null && !consoleHome.hasFocus()) consoleHome.focus();
         if (cyberpunkHome != null && !cyberpunkHome.hasFocus()) cyberpunkHome.focus();
         if (duneHome != null && !duneHome.hasFocus()) duneHome.focus();
-        if (legendHome != null && !legendHome.hasFocus()) legendHome.focus();
+        if (mapHome != null && !mapHome.hasFocus()) mapHome.focus();
         if (gameDay != null) gameDay.start();
         sky.update();
         wallpaperPlayer.start();
