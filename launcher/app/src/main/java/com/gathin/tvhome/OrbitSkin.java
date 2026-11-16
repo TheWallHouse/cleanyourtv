@@ -256,6 +256,170 @@ final class OrbitSkin {
         progress.setLayoutParams(l);
     }
 
+    // ---- Inputs, as a mission-control panel ----------------------------------------------------------------
+
+    /** One input on the panel. */
+    private static final class Input {
+        final int icon;
+        final String label;
+        final boolean connected;
+        final Runnable open;
+
+        Input(int icon, String label, boolean connected, Runnable open) {
+            this.icon = icon;
+            this.label = label;
+            this.connected = connected;
+            this.open = open;
+        }
+    }
+
+    /**
+     * Shows the inputs over Home as Orbit's own panel: the ground dimmed, a black panel with hairlines, the inputs
+     * numbered with their icons, the chosen one framed with a bar in the accent; ▲▼ choose, OK switches, Back closes.
+     * [list] hands each input in (MainActivity.listInputs); [back] is where focus returns.
+     */
+    void showInputs(FrameLayout root, java.util.function.Consumer<DuneHome.InputSink> list, View back) {
+        java.util.List<Input> inputs = new java.util.ArrayList<>();
+        list.accept((icon, label, state, open) -> inputs.add(new Input(icon, label,
+                state == android.media.tv.TvInputManager.INPUT_STATE_CONNECTED, open)));
+        if (inputs.isEmpty()) return;
+        Panel panel = new Panel(ctx, inputs, root, back);
+        root.addView(panel, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        panel.requestFocus();
+    }
+
+    private final class Panel extends View {
+        private final java.util.List<Input> inputs;
+        private final FrameLayout root;
+        private final View back;
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final android.graphics.RectF box = new android.graphics.RectF();
+        private int index;
+
+        Panel(Context c, java.util.List<Input> inputs, FrameLayout root, View back) {
+            super(c);
+            this.inputs = inputs;
+            this.root = root;
+            this.back = back;
+            setFocusable(true);
+            setFocusableInTouchMode(true);
+            setClickable(true);
+            // Above Home's raised views (the pills, the focused tile), which would otherwise draw through it.
+            setOutlineProvider(null);
+            setElevation(dp(100));
+        }
+
+        private void close() {
+            root.removeView(this);
+            if (back != null) back.requestFocus();
+        }
+
+        private void text(String s, Typeface face, float sp, float spacing, int color, float x, float baseline, Paint.Align align) {
+            paint.setShader(null);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setTypeface(face);
+            paint.setTextSize(sp * getResources().getDisplayMetrics().scaledDensity);
+            paint.setLetterSpacing(spacing);
+            paint.setColor(color);
+            paint.setTextAlign(align);
+            canvas.drawText(s, x, baseline, paint);
+        }
+
+        private Canvas canvas;
+
+        @Override protected void onDraw(Canvas c) {
+            canvas = c;
+            c.drawColor(0xB3000000);
+            float w = dp(420), rowH = dp(46), head = dp(74), foot = dp(44);
+            float h = head + inputs.size() * rowH + foot;
+            float left = (getWidth() - w) / 2f, top = (getHeight() - h) / 2f;
+            box.set(left, top, left + w, top + h);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(0xFF050810);
+            c.drawRect(box, paint);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(Math.max(1, dp(1)));
+            paint.setColor(p.line);
+            c.drawRect(box, paint);
+            // Corner ticks and a satellite on its orbit, top right.
+            paint.setColor(p.accent);
+            float t = dp(10);
+            c.drawLine(left, top, left + t, top, paint);
+            c.drawLine(left, top, left, top + t, paint);
+            c.drawLine(box.right, box.bottom, box.right - t, box.bottom, paint);
+            c.drawLine(box.right, box.bottom, box.right, box.bottom - t, paint);
+            paint.setColor(p.muted);
+            c.drawArc(box.right - dp(70), top - dp(20), box.right + dp(20), top + dp(46), 150, 120, false, paint);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(p.accent);
+            c.drawCircle(box.right - dp(56), top + dp(4), dp(2.5f), paint);
+            // Heading.
+            float x = left + dp(24);
+            text(upper(ctx.getString(R.string.console_inputs)), medium, 12, 0.5f, p.fg, x, top + dp(32), Paint.Align.LEFT);
+            text(upper(ctx.getString(R.string.orbit_inputs_sub)), light, 8, 0.4f, p.muted, x, top + dp(50), Paint.Align.LEFT);
+            paint.setColor(p.line);
+            c.drawRect(x, top + head - dp(10), box.right - dp(24), top + head - dp(10) + Math.max(1, dp(1)), paint);
+            // Rows.
+            for (int i = 0; i < inputs.size(); i++) {
+                Input in = inputs.get(i);
+                boolean on = i == index;
+                float y = top + head + i * rowH;
+                if (on) {
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setColor(0x14FFFFFF);
+                    c.drawRect(left + dp(12), y, box.right - dp(12), y + rowH - dp(6), paint);
+                    paint.setColor(p.accent);
+                    c.drawRect(left + dp(12), y, left + dp(15), y + rowH - dp(6), paint);
+                    paint.setStyle(Paint.Style.STROKE);
+                    paint.setColor(p.line);
+                    c.drawRect(left + dp(12), y, box.right - dp(12), y + rowH - dp(6), paint);
+                }
+                float mid = y + (rowH - dp(6)) / 2f;
+                text(String.format(java.util.Locale.ROOT, "%02d", i + 1), light, 9, 0.2f, on ? p.accent : p.muted, x + dp(4), mid + dp(4), Paint.Align.LEFT);
+                android.graphics.drawable.Drawable d = ctx.getDrawable(in.icon);
+                if (d != null) {
+                    d = d.mutate();
+                    d.setTint(on ? p.fg : p.muted);
+                    int s = dp(16);
+                    d.setBounds(Math.round(x + dp(34)), Math.round(mid - s / 2f), Math.round(x + dp(34)) + s, Math.round(mid - s / 2f) + s);
+                    d.draw(c);
+                }
+                text(upper(in.label), on ? medium : light, 13, 0.18f, on ? p.fg : p.muted, x + dp(62), mid + dp(5), Paint.Align.LEFT);
+                if (in.connected) text(upper(ctx.getString(R.string.connected)), light, 8, 0.3f, p.accent, box.right - dp(28), mid + dp(3), Paint.Align.RIGHT);
+                else if (on) text("▶", medium, 10, 0f, p.accent, box.right - dp(28), mid + dp(4), Paint.Align.RIGHT);
+            }
+            text(upper(ctx.getString(R.string.orbit_inputs_hint)), light, 8, 0.3f, p.muted, (left + box.right) / 2f, box.bottom - dp(18), Paint.Align.CENTER);
+        }
+
+        @Override public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {
+            switch (keyCode) {
+                case android.view.KeyEvent.KEYCODE_DPAD_UP:
+                    if (index > 0) index--;
+                    invalidate();
+                    return true;
+                case android.view.KeyEvent.KEYCODE_DPAD_DOWN:
+                    if (index < inputs.size() - 1) index++;
+                    invalidate();
+                    return true;
+                case android.view.KeyEvent.KEYCODE_DPAD_CENTER:
+                case android.view.KeyEvent.KEYCODE_ENTER:
+                case android.view.KeyEvent.KEYCODE_NUMPAD_ENTER:
+                    if (event.getRepeatCount() == 0) {
+                        Runnable open = inputs.get(index).open;
+                        close();
+                        open.run();
+                    }
+                    return true;
+                case android.view.KeyEvent.KEYCODE_BACK:
+                case android.view.KeyEvent.KEYCODE_ESCAPE:
+                    close();
+                    return true;
+                default:
+                    return true;   // nothing under the panel moves while it is open
+            }
+        }
+    }
+
     /** The planet's rim, its glow and lights, the stars and a faint orbit, in a 1280×720 space; drawn once. */
     private static final class Backdrop extends View {
         private final OrbitTone p;

@@ -214,6 +214,8 @@
     <string name="orbit_date">Fecha</string>
     <string name="orbit_link">Enlace</string>
     <string name="orbit_up">En órbita</string>
+    <string name="orbit_inputs_sub">Selecciona destino</string>
+    <string name="orbit_inputs_hint">▲▼ elegir · OK cambiar · Atrás cerrar</string>
     <string name="nothing_language">Idioma</string>
     <string name="nothing_language_state">Idioma: %1$s</string>
     <string name="nothing_language_tv">Como la TV</string>

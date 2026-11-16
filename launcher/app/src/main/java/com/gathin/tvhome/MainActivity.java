@@ -3550,6 +3550,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
     private void showInputs() {
+        if (orbitSkin != null && inputSink == null) {
+            // Orbit shows them on its own mission-control panel.
+            orbitSkin.showInputs(root, this::listInputs, getCurrentFocus());
+            return;
+        }
         // A configured source panel and no Live TV row to offer next to it: the panel is the whole menu.
         // The BYINTEK U4 needs this, as its TvInputManager lists three HDMI ports and an AV input it doesn't have.
         List<CoocaaSources.Source> coocaa = coocaaSources ? CoocaaSources.list(this) : Collections.emptyList();

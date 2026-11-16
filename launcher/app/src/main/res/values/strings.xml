@@ -228,6 +228,8 @@
     <string name="orbit_date">Date</string>
     <string name="orbit_link">Link</string>
     <string name="orbit_up">In orbit</string>
+    <string name="orbit_inputs_sub">Select destination</string>
+    <string name="orbit_inputs_hint">▲▼ choose · OK switch · Back close</string>
     <string name="nothing_language">Language</string>
     <string name="nothing_language_state">Language: %1$s</string>
     <string name="nothing_language_tv">As the TV</string>
