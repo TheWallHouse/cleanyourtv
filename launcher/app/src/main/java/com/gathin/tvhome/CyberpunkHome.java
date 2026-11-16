@@ -251,6 +251,8 @@ final class CyberpunkHome {
     private static final class Row {
         final String label;
         final Runnable run;
+        /** A long press's action, or null (Settings: the launcher's). */
+        Runnable longRun;
 
         Row(String label, Runnable run) {
             this.label = label;
@@ -263,14 +265,9 @@ final class CyberpunkHome {
         int n = adapter.appCount();
         if (tab == TAB_SYSTEM) {
             out.add(new Row(ctx.getString(R.string.console_inputs), actions::inputs));
-            out.add(new Row(ctx.getString(R.string.console_launcher_settings), actions::launcherSettings));
-            out.add(new Row(ctx.getString(R.string.console_tv_settings), () -> {
-                try {
-                    ctx.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (RuntimeException ignored) {
-                    // A TV without Android's settings screen: nothing to open.
-                }
-            }));
+            Row settings = new Row(ctx.getString(R.string.legend_settings), () -> Overlay.openTvSettings(ctx));
+            settings.longRun = actions::launcherSettings;
+            out.add(settings);
             return out;
         }
         int end = tab == TAB_HOME ? Math.min(n, Math.max(adapter.dockFilled(), 0)) : n;
@@ -343,6 +340,7 @@ final class CyberpunkHome {
             else b.setTranslationX(x);
         });
         b.setOnClickListener(v -> r.run.run());
+        if (r.longRun != null) b.setOnLongClickListener(v -> { r.longRun.run(); return true; });
         b.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {

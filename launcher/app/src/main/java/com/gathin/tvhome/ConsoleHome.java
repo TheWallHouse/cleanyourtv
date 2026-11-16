@@ -297,6 +297,8 @@ final class ConsoleHome {
         final String label;
         final int position;   // the app's place in the adapter, or -1 for a system row
         final Runnable run;
+        /** A long press's action, or null (Settings: the launcher's). */
+        Runnable longRun;
 
         Row(String label, int position, Runnable run) {
             this.label = label;
@@ -310,14 +312,9 @@ final class ConsoleHome {
         int n = adapter.appCount();
         if (tab == TAB_SYSTEM) {
             out.add(new Row(ctx.getString(R.string.console_inputs), -1, actions::inputs));
-            out.add(new Row(ctx.getString(R.string.console_launcher_settings), -1, actions::launcherSettings));
-            out.add(new Row(ctx.getString(R.string.console_tv_settings), -1, () -> {
-                try {
-                    ctx.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (RuntimeException ignored) {
-                    // A TV without Android's settings screen: nothing to open.
-                }
-            }));
+            Row settings = new Row(ctx.getString(R.string.legend_settings), -1, () -> Overlay.openTvSettings(ctx));
+            settings.longRun = actions::launcherSettings;
+            out.add(settings);
             return out;
         }
         int end = tab == TAB_HOME ? Math.min(n, Math.max(adapter.dockFilled(), 0)) : n;
@@ -373,6 +370,7 @@ final class ConsoleHome {
             t.setTextColor(focused ? p.accent : p.fg);
         });
         t.setOnClickListener(v -> r.run.run());
+        if (r.longRun != null) t.setOnLongClickListener(v -> { r.longRun.run(); return true; });
         t.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {

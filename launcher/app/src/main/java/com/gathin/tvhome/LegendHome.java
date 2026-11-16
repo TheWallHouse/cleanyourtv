@@ -154,7 +154,7 @@ final class LegendHome {
             targets.add(new Target(adapter.labelAt(i), SLOTS[slot][0], SLOTS[slot][1], slot, () -> adapter.launchAt(pos)));
             slot++;
         }
-        targets.add(new Target(ctx.getString(R.string.legend_settings), SETTINGS_AT[0], SETTINGS_AT[1], SETTINGS, actions::launcherSettings));
+        targets.add(new Target(ctx.getString(R.string.legend_settings), SETTINGS_AT[0], SETTINGS_AT[1], SETTINGS, () -> Overlay.openTvSettings(ctx)));
         targets.add(new Target(ctx.getString(R.string.console_inputs), 0, 0, -1, actions::inputs));
         targets.add(new Target(ctx.getString(R.string.legend_all_apps), 0, 0, -1, actions::allApps));
         focused = 0;
@@ -438,6 +438,31 @@ final class LegendHome {
             canvas.drawText(travel, x + wName + 14, base - 1, text);
         }
 
+        private boolean longPressed;
+
+        private boolean onSettings(int keyCode) {
+            return !targets.isEmpty() && targets.get(focused).slot == SETTINGS && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                    || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER);
+        }
+
+        @Override public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+            if (onSettings(keyCode)) {
+                longPressed = true;
+                actions.launcherSettings();
+                return true;
+            }
+            return super.onKeyLongPress(keyCode, event);
+        }
+
+        @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+            if (onSettings(keyCode)) {
+                if (!longPressed && event.isTracking() && !event.isCanceled()) targets.get(focused).run.run();
+                longPressed = false;
+                return true;
+            }
+            return super.onKeyUp(keyCode, event);
+        }
+
         @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
             if (targets.isEmpty()) return super.onKeyDown(keyCode, event);
             int next = -1;
@@ -449,6 +474,11 @@ final class LegendHome {
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                    // Settings, as Nothing's gear: on release the TV's, held the launcher's (onKeyLongPress).
+                    if (targets.get(focused).slot == SETTINGS) {
+                        if (event.getRepeatCount() == 0) event.startTracking();
+                        return true;
+                    }
                     if (event.getRepeatCount() == 0) targets.get(focused).run.run();
                     return true;
                 default:

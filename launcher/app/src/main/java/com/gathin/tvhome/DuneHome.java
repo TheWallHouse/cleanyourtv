@@ -37,8 +37,8 @@ import java.util.Random;
  * Dune (Aspect.DUNE): Home as a row of monoliths on a sea of dunes, over the same apps as the tiles. The focused app's
  * name stands huge and widely spaced across the sky, under a small clock; below it the apps as tall cards, the middle
  * one largest and the others smaller and fainter towards the edges. ◀▶ walk the row and OK opens; ▼ goes down to a menu
- * bar with icons (Home, All apps, Inputs, Settings), where ◀▶ choose, OK picks and ▲ goes back up. Home and All apps
- * choose which apps the row shows; the one shown is marked in the bar. The sky,
+ * bar with icons (Home, All apps, Inputs, Settings), where ◀▶ choose, OK picks and ▲ goes back up. Home, All apps
+ * and Inputs fill the row (the one shown is marked); Settings is Nothing's gear: OK the TV's, held the launcher's. The sky,
  * the sun or moons and the dunes are drawn once. The tile grid stays underneath, loaded and hidden, so the order, the
  * dock, hidden apps and the reloads are Home's own; this only lists and opens them.
  */
@@ -241,18 +241,14 @@ final class DuneHome {
 
     /** OK on the menu bar's [which]. */
     private void pick(int which) {
-        switch (which) {
-            case MENU_HOME:
-            case MENU_ALL:
-            case MENU_INPUTS:
-                list = which == MENU_HOME ? LIST_HOME : which == MENU_ALL ? LIST_ALL : LIST_INPUTS;
-                moved = false;
-                inMenu = false;
-                fill(true);
-                break;
-            default:
-                actions.launcherSettings();
+        if (which == MENU_SETTINGS) {
+            Overlay.openTvSettings(ctx);
+            return;
         }
+        list = which == MENU_HOME ? LIST_HOME : which == MENU_ALL ? LIST_ALL : LIST_INPUTS;
+        moved = false;
+        inMenu = false;
+        fill(true);
     }
 
     private void move(int by) {
@@ -467,6 +463,30 @@ final class DuneHome {
             label.setTextAlign(Paint.Align.CENTER);
         }
 
+        private boolean longPressed;
+
+        private boolean ok(int keyCode) {
+            return keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER;
+        }
+
+        @Override public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+            if (inMenu && menuIndex == MENU_SETTINGS && ok(keyCode)) {
+                longPressed = true;
+                actions.launcherSettings();
+                return true;
+            }
+            return super.onKeyLongPress(keyCode, event);
+        }
+
+        @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+            if (inMenu && menuIndex == MENU_SETTINGS && ok(keyCode)) {
+                if (!longPressed && event.isTracking() && !event.isCanceled()) pick(MENU_SETTINGS);
+                longPressed = false;
+                return true;
+            }
+            return super.onKeyUp(keyCode, event);
+        }
+
         @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
             if (inMenu) {
                 switch (keyCode) {
@@ -487,6 +507,11 @@ final class DuneHome {
                     case KeyEvent.KEYCODE_DPAD_CENTER:
                     case KeyEvent.KEYCODE_ENTER:
                     case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                        if (menuIndex == MENU_SETTINGS) {
+                            // Picked on release: a long press opens the launcher's settings instead.
+                            if (event.getRepeatCount() == 0) event.startTracking();
+                            return true;
+                        }
                         if (event.getRepeatCount() == 0) pick(menuIndex);
                         invalidate();
                         return true;

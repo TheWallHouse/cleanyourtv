@@ -25,6 +25,19 @@ final class Overlay {
         }
     }
 
+    /**
+     * Settings in every look works as Nothing's gear: a short press opens the TV's settings, a long press the
+     * launcher's. This is the short one.
+     */
+    static void openTvSettings(android.content.Context ctx) {
+        try {
+            ctx.startActivity(new android.content.Intent(android.provider.Settings.ACTION_SETTINGS)
+                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (RuntimeException ignored) {
+            // A TV without Android's settings screen: nothing to open.
+        }
+    }
+
     /** Sets [text] on [t] at the largest size from [maxSp] down to [minSp] that fits [widthPx], letter spacing included. */
     static void fit(TextView t, String text, float maxSp, float minSp, int widthPx) {
         Paint paint = new Paint(t.getPaint());
