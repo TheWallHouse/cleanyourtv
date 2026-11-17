@@ -28,7 +28,7 @@ Pure black, a dot-matrix font, one red, white lines.
 
 - **Font:** [Doto](https://github.com/oliverlalan/Doto) for the clock, greeting, date, top buttons and the focused
   app's name; a Latin subset with round dots, the colon's crosses moved up one dot to line up with the digits.
-- **Red** `#D71921`: the clock, your name after the greeting, a dot beside the focused app's name, and the network
+- **Red** `#D71921`: the clock, the custom message after the greeting, a dot beside the focused app's name, and the network
   icon while online (grey without a connection).
 - **Apps style** (`nothing_tiles`): banners in greyscale with their reds kept (YouTube and Netflix stay red), plain
   greyscale, or colour.
@@ -142,7 +142,7 @@ launcher/app/src/main/looks/
 ├── dune/        DuneHome, DuneTone, Michroma
 ├── map/         MapHome, MapDrawing, MapTone, Cinzel
 ├── orbit/       OrbitSkin, OrbitTone, Barlow
-└── shared/      what more than one look uses: Overlay and the shared texts (look_*, the language, your name…)
+└── shared/      what more than one look uses: Overlay and the shared texts (look_*, the language, the custom message…)
 ```
 
 Inside each: `java/` (the code), `res/` (fonts, pictures, and `values*/strings.xml` with its texts in English, Spanish

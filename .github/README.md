@@ -43,7 +43,7 @@ which one is Home.
 ## Change it from the TV
 
 **Settings**, in every look: a press opens the TV's settings, a long press **Launcher settings**. There:
-**Look** and its **Tone** (or **Palette** for the terminal looks), **Your name** after the greeting, **Language**,
+**Look** and its **Tone** (or **Palette** for the terminal looks), a **Custom message** after the greeting, **Language**,
 the clock, animations, and the choices that only make sense in the look you are on (apps per row and the dock in the
 looks with a grid of tiles; the apps style and the wallpaper in Nothing).
 
