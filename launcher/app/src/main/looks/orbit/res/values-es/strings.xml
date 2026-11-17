@@ -11,4 +11,5 @@
     <string name="orbit_up">En órbita</string>
     <string name="orbit_inputs_sub">Selecciona destino</string>
     <string name="orbit_inputs_hint">▲▼ elegir · OK cambiar · Atrás cerrar</string>
+    <string name="orbit_standby">En espera</string>
 </resources>

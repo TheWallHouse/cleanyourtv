@@ -19,17 +19,24 @@ public class ClockActivity extends Activity {
 
 
     private ClockScene scene;
+    private LookDream look;
 
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dream_clock);
-        if (Aspect.NOTHING.equals(Aspect.mode(this))) NothingLook.dream(findViewById(android.R.id.content));
-        LauncherFont.apply(this, findViewById(android.R.id.content));
-        ClockFormat.apply(getWindow().getDecorView(), Config.load(this).clockFormat);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        String aspect = Aspect.mode(this);
+        look = LookDream.create(this, aspect);
+        if (look != null) {   // every look but Nothing draws its own
+            setContentView(look);
+            return;
+        }
+        setContentView(R.layout.dream_clock);
+        if (Aspect.NOTHING.equals(aspect)) NothingLook.dream(findViewById(android.R.id.content));
+        LauncherFont.apply(this, findViewById(android.R.id.content));
+        ClockFormat.apply(getWindow().getDecorView(), Config.load(this).clockFormat);
         scene = new ClockScene(getWindow().getDecorView());
         scene.useHomeWallpaper(this);
     }
@@ -37,12 +44,14 @@ public class ClockActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        scene.start();
+        if (look != null) look.start();
+        else scene.start();
     }
 
     @Override
     protected void onPause() {
-        scene.stop();
+        if (look != null) look.stop();
+        else scene.stop();
         super.onPause();
         finish();   // never left behind in the back stack
     }

@@ -420,6 +420,60 @@ final class OrbitSkin {
         }
     }
 
+    /** The planet's rim, its glow and city lights, the stars and the sun on the rim, in a 1280×720 space: Home's
+     *  backdrop and the screensaver's (OrbitDream). */
+    static void planet(Canvas canvas, OrbitTone p) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        MapDrawing.Rng r = new MapDrawing.Rng(5);
+        paint.setColor(alpha(0xFFFFFF, p.starsAlpha));
+        for (int i = 0; i < 220; i++) {
+            float x = r.next() * 1280, y = r.next() * 560, s = r.next() < 0.08f ? 1.3f : 0.6f;
+            canvas.drawCircle(x, y, s, paint);
+        }
+        float cx = 640, cy = 1760, radius = 1180;
+        paint.setShader(new RadialGradient(cx, cy, 1330, new int[]{alpha(p.atm, 97), alpha(p.atm, 97), alpha(p.atm, 31), alpha(p.atm, 0)},
+                new float[]{0f, 0.86f, 0.9f, 1f}, Shader.TileMode.CLAMP));
+        canvas.drawCircle(cx, cy, 1330, paint);
+        paint.setShader(new LinearGradient(0, 580, 0, 720, p.groundTop, p.groundLow, Shader.TileMode.CLAMP));
+        canvas.drawCircle(cx, cy, radius, paint);
+        paint.setShader(null);
+        if (p.lightsAlpha > 0) {
+            paint.setColor(alpha(p.lights, p.lightsAlpha));
+            for (int i = 0; i < 420; i++) {
+                float x = r.next() * 1280, y = 585 + (float) Math.pow(r.next(), 1.6) * 135;
+                float top = cy - (float) Math.sqrt(Math.max(0, radius * radius - (x - cx) * (x - cx)));
+                float s = r.next() < 0.1f ? 1.1f : 0.55f;
+                if (y < top + 6) continue;
+                canvas.drawRect(x, y, x + s, y + s, paint);
+            }
+        }
+        Paint rim = new Paint(Paint.ANTI_ALIAS_FLAG);
+        rim.setStyle(Paint.Style.STROKE);
+        rim.setColor(alpha(p.atm, 31));
+        rim.setStrokeWidth(22);
+        canvas.drawCircle(cx, cy, radius, rim);
+        rim.setColor(alpha(p.atm, 77));
+        rim.setStrokeWidth(8);
+        canvas.drawCircle(cx, cy, radius, rim);
+        rim.setColor(alpha(p.limb, 230));
+        rim.setStrokeWidth(1.6f);
+        canvas.drawCircle(cx, cy, radius, rim);
+        if (p.sunX >= 0) {
+            float sx = p.sunX * 1280, sy = 588;
+            canvas.save();
+            canvas.scale(1f, 90f / 260f, sx, sy);
+            paint.setShader(new RadialGradient(sx, sy, 260, new int[]{0xF2FFFFFF, alpha(p.sun, 140), alpha(p.sun, 0)},
+                    new float[]{0f, 0.12f, 1f}, Shader.TileMode.CLAMP));
+            canvas.drawCircle(sx, sy, 260, paint);
+            paint.setShader(null);
+            canvas.restore();
+        }
+    }
+
+    private static int alpha(int argb, int a) {
+        return (a << 24) | (argb & 0xFFFFFF);
+    }
+
     /** The planet's rim, its glow and lights, the stars and a faint orbit, in a 1280×720 space; drawn once. */
     private static final class Backdrop extends View {
         private final OrbitTone p;
@@ -454,51 +508,8 @@ final class OrbitSkin {
             canvas.drawColor(0xFF000000);
             canvas.save();
             canvas.scale(getWidth() / MAP_W, getHeight() / MAP_H);
+            planet(canvas, p);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            MapDrawing.Rng r = new MapDrawing.Rng(5);
-            paint.setColor(alpha(0xFFFFFF, p.starsAlpha));
-            for (int i = 0; i < 220; i++) {
-                float x = r.next() * 1280, y = r.next() * 560, s = r.next() < 0.08f ? 1.3f : 0.6f;
-                canvas.drawCircle(x, y, s, paint);
-            }
-            float cx = 640, cy = 1760, radius = 1180;
-            paint.setShader(new RadialGradient(cx, cy, 1330, new int[]{alpha(p.atm, 97), alpha(p.atm, 97), alpha(p.atm, 31), alpha(p.atm, 0)},
-                    new float[]{0f, 0.86f, 0.9f, 1f}, Shader.TileMode.CLAMP));
-            canvas.drawCircle(cx, cy, 1330, paint);
-            paint.setShader(new LinearGradient(0, 580, 0, 720, p.groundTop, p.groundLow, Shader.TileMode.CLAMP));
-            canvas.drawCircle(cx, cy, radius, paint);
-            paint.setShader(null);
-            if (p.lightsAlpha > 0) {
-                paint.setColor(alpha(p.lights, p.lightsAlpha));
-                for (int i = 0; i < 420; i++) {
-                    float x = r.next() * 1280, y = 585 + (float) Math.pow(r.next(), 1.6) * 135;
-                    float top = cy - (float) Math.sqrt(Math.max(0, radius * radius - (x - cx) * (x - cx)));
-                    float s = r.next() < 0.1f ? 1.1f : 0.55f;
-                    if (y < top + 6) continue;
-                    canvas.drawRect(x, y, x + s, y + s, paint);
-                }
-            }
-            Paint rim = new Paint(Paint.ANTI_ALIAS_FLAG);
-            rim.setStyle(Paint.Style.STROKE);
-            rim.setColor(alpha(p.atm, 31));
-            rim.setStrokeWidth(22);
-            canvas.drawCircle(cx, cy, radius, rim);
-            rim.setColor(alpha(p.atm, 77));
-            rim.setStrokeWidth(8);
-            canvas.drawCircle(cx, cy, radius, rim);
-            rim.setColor(alpha(p.limb, 230));
-            rim.setStrokeWidth(1.6f);
-            canvas.drawCircle(cx, cy, radius, rim);
-            if (p.sunX >= 0) {
-                float sx = p.sunX * 1280, sy = 588;
-                canvas.save();
-                canvas.scale(1f, 90f / 260f, sx, sy);
-                paint.setShader(new RadialGradient(sx, sy, 260, new int[]{0xF2FFFFFF, alpha(p.sun, 140), alpha(p.sun, 0)},
-                        new float[]{0f, 0.12f, 1f}, Shader.TileMode.CLAMP));
-                canvas.drawCircle(sx, sy, 260, paint);
-                paint.setShader(null);
-                canvas.restore();
-            }
             Paint orbit = new Paint(Paint.ANTI_ALIAS_FLAG);
             orbit.setStyle(Paint.Style.STROKE);
             orbit.setColor(alpha(p.fg, 41));
