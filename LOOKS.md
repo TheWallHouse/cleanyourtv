@@ -46,6 +46,11 @@ The grid of apps as a tiling desktop: a bar across the top with numbered rows, t
 terminal window in place of the greeting and clock, with the greeting as a prompt, the network and the time on;
 square tiles with a thin border; JetBrains Mono throughout. Four well-known terminal palettes.
 
+**Screensaver:** the desktop at rest: a big clock with the hour going by, this month's calendar with today marked
+and a small system monitor (memory, storage, network, time on). Every ten minutes the clock swaps sides.
+
+![The Terminal · Windows screensaver](docs/looks/terminal-windows-screensaver.jpg)
+
 ## Terminal · Console
 
 ![Terminal · Console](docs/looks/terminal-console.jpg)
@@ -55,6 +60,11 @@ the time on) over a big clock; on the right the apps as a list in three tabs: th
 system's (Inputs and Settings). A tmux-style status line along the bottom.
 
 **Remote:** ▲▼ choose, ◀▶ tabs, OK opens.
+
+**Screensaver:** the classic terminal clock in blocks, the date, and the session waiting at its prompt with the
+cursor blinking.
+
+![The Terminal · Console screensaver](docs/looks/terminal-console-screensaver.jpg)
 
 ## Cyberpunk
 
@@ -66,6 +76,11 @@ the launcher's name in outline and scanlines behind; a neon help bar along the b
 
 **Remote:** ▲▼ choose, ◀▶ tabs, OK opens.
 
+**Screensaver:** the clock huge with its glitch, jerking to new offsets now and then, and the day as 24 neon
+segments: the hours gone lit, this one blinking.
+
+![The Cyberpunk screensaver](docs/looks/cyberpunk-screensaver.jpg)
+
 ## Dune
 
 ![Dune](docs/looks/dune.jpg)
@@ -75,6 +90,11 @@ app's name stands huge and widely spaced across the sky; the cards grow smaller 
 
 **Remote:** ◀▶ walk the row, OK opens. ▼ goes down to the menu bar, with icons: **Home** and **All** choose which apps
 the row shows, **Inputs** shows the TV's inputs as monoliths too, **Settings** as everywhere. ▲ goes back up.
+
+**Screensaver:** the sun crosses the sky with the real hour, rising on the left at six and setting on the right at
+eight; at night the two moons cross it instead. The time stands on the dunes, where the sun never passes.
+
+![The Dune screensaver](docs/looks/dune-screensaver.jpg)
 
 ## Map
 
@@ -89,6 +109,12 @@ open on a parchment scroll between wooden rollers: a list of the inputs or a gri
 
 Its key stays `legend`, the name it had while it was being designed, so a TV that chose it keeps its choice.
 
+**Screensaver:** a sea chart with the time in a cartouche, lit by the hour: the morning sun comes from the east, the
+evening's from the west, moonlight at night. A ship sails a lane marked with the hours from one midnight port to the
+other, the hours sailed in colour.
+
+![The Map screensaver](docs/looks/map-screensaver.jpg)
+
 ## Orbit
 
 ![Orbit](docs/looks/orbit.jpg)
@@ -98,6 +124,11 @@ orbit with a satellite. The tiles are dark glass with the app's icon in grey and
 tile's banner lights up in colour. In place of the greeting, the focused app as the "mission in progress", with its
 place in the list as a progress line; a telemetry strip shows the local time, the date, the network and the time on.
 Inputs open on a mission-control panel.
+
+**Screensaver:** the same planet with a satellite that goes once round the orbit a day, so where it is tells the
+time; the time thin with its seconds, the date and the time on as telemetry.
+
+![The Orbit screensaver](docs/looks/orbit-screensaver.jpg)
 
 ## How the looks are built
 

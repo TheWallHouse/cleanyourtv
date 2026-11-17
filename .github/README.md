@@ -47,7 +47,13 @@ which one is Home.
 the clock, animations, and the choices that only make sense in the look you are on (apps per row and the dock in the
 looks with a grid of tiles; the apps style and the wallpaper in Nothing).
 
-For the clock screensaver: TV Settings → Device Preferences → Screen saver → **Clock**.
+Every look has its own **screensaver**, in the look's tone, drifting a little every minute against burn-in. Turn it
+on in TV Settings → Device Preferences → Screen saver → **Clock**.
+
+| | | |
+|---|---|---|
+| ![Nothing](../docs/looks/nothing-screensaver.jpg) | ![Orbit](../docs/looks/orbit-screensaver.jpg) | ![Dune](../docs/looks/dune-screensaver.jpg) |
+| ![Map](../docs/looks/map-screensaver.jpg) | ![Cyberpunk](../docs/looks/cyberpunk-screensaver.jpg) | ![Terminal · Console](../docs/looks/terminal-console-screensaver.jpg) |
 
 ## Undo
 
