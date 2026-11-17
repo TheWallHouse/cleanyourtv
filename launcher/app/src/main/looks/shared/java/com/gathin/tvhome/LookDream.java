@@ -193,9 +193,10 @@ abstract class LookDream extends View {
         paint.setLetterSpacing(spacing);
         paint.setTextAlign(Paint.Align.LEFT);
         float w = paint.measureText(s);
-        // Paint's letter spacing also trails the last letter; measure it off so centred text is centred.
-        float trail = spacing * size;
-        float left = align == Paint.Align.LEFT ? x : align == Paint.Align.CENTER ? x - (w - trail) / 2 : x - (w - trail);
+        // Android spreads letter spacing half before and half after each letter, and measures both ends: shift
+        // by the half so the first (or last) letter's ink sits on x.
+        float half = spacing * size / 2;
+        float left = align == Paint.Align.LEFT ? x - half : align == Paint.Align.CENTER ? x - w / 2 : x - w + half;
         c.drawText(s, left, y, paint);
         paint.setLetterSpacing(0);
     }

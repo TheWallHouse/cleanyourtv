@@ -89,16 +89,17 @@ final class OrbitDream extends LookDream {
                 Paint.Align.LEFT, 0.6f);
 
         String hm = time(now), sec = String.format(locale, ":%02d", now.getSecond());
-        float big = 170, small = 70, spacing = 0.08f;
+        // Under the orbit's arc and above the planet, where the satellite never passes.
+        float big = 150, small = 62, spacing = 0.08f;
         float wHm = width(hm, big, light, spacing), wSec = width(sec, small, light, spacing);
         float x = 640 - (wHm + 10 + wSec) / 2;
-        text(c, hm, x, 330, big, p.fg, light, Paint.Align.LEFT, spacing);
-        text(c, sec, x + wHm + 10, 330, small, p.muted, light, Paint.Align.LEFT, spacing);
+        text(c, hm, x, 470, big, p.fg, light, Paint.Align.LEFT, spacing);
+        text(c, sec, x + wHm + 10, 470, small, p.muted, light, Paint.Align.LEFT, spacing);
         String ampm = amPm(now);
-        if (!ampm.isEmpty()) text(c, ampm, x + wHm + 10, 262, 30, p.muted, medium, Paint.Align.LEFT, 0.2f);
+        if (!ampm.isEmpty()) text(c, ampm, x + wHm + 10, 410, 26, p.muted, medium, Paint.Align.LEFT, 0.2f);
 
         String tele = date(now, "EEEdMMM").replace(",", "").replace(".", "") + "  ·  "
                 + DreamTime.uptime(SystemClock.elapsedRealtime()) + " " + ctx.getString(R.string.orbit_up);
-        text(c, tele.toUpperCase(locale), 640, 395, 20, p.muted, light, Paint.Align.CENTER, 0.5f);
+        text(c, tele.toUpperCase(locale), 640, 530, 18, p.muted, light, Paint.Align.CENTER, 0.5f);
     }
 }

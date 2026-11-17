@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  * Dune's screensaver: the dunes under a sun that crosses the sky with the real hour (DreamTime.sun): it rises on
  * the left at six, is high at one and sets on the right at eight. At night the sky is the night tone's and the two
- * moons cross it instead. The time is huge and widely spaced, like an app's name on Home.
+ * moons cross it instead. The time is widely spaced on the dunes, where the sun never passes.
  */
 final class DuneDream extends LookDream {
     private final DuneTone day, night;
@@ -95,12 +95,14 @@ final class DuneDream extends LookDream {
         paint.setColor(p.dune3);
         c.drawPath(dunes3, paint);
 
+        // On the dunes, where the sun never goes: in the sky it would pass behind the time for an hour or more.
+        int ink = DuneTone.NOON.equals(p.name) ? 0xFFFFF6E8 : p.fg;
         String hm = time(now);
-        text(c, hm, 640, 250, hm.length() > 5 ? 104 : 120, p.fg, wide, Paint.Align.CENTER, 0.5f);
+        text(c, hm, 640, 622, hm.length() > 5 ? 96 : 110, ink, wide, Paint.Align.CENTER, 0.5f);
         String sub = date(now, "EEEEdMMM").replace(",", "").replace(".", "");
         String ampm = amPm(now);
         if (!ampm.isEmpty()) sub = ampm + "  ·  " + sub;
-        text(c, sub.toUpperCase(locale), 640, 320, 20, p.muted, wide, Paint.Align.CENTER, 0.7f);
+        text(c, sub.toUpperCase(locale), 640, 674, 18, alpha(ink, 200), wide, Paint.Align.CENTER, 0.7f);
     }
 
     /** The sun or a moon with its halo. */
